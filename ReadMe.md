@@ -1,4 +1,4 @@
-### URL Classifier
+### Domain Classifier
 
 Be it understanding media consumption, or segmenting domain referrals, we need to classify the content hosted on domains. 
 
@@ -20,11 +20,11 @@ The script [api_domain_classifier](api_domain_classifier.py) takes a csv with a 
 ```
 python api_domain_classifier.py 1 1  
 ```
-Other than the neccessary command line options, following options (within the script) can be tweaked: 
-	* INPUT_FILE: Path to the Input file (Line 7)
-	* URL_COLUMN_NAME: name of the url column (Line 8)
-	* URL_CATEGORY_COLUMN_NAME: name of the url_catefoty column name in outputfile (Line 9)
-	* FINAL_OUTPUT_FILE: name of the final output file (Line 22)
+Other than the neccessary command line options, following options (within the script) can be tweaked:  
+* INPUT_FILE: Path to the Input file (Line 7)
+* URL_COLUMN_NAME: name of the url column (Line 8)
+* URL_CATEGORY_COLUMN_NAME: name of the url_catefoty column name in outputfile (Line 9)
+* FINAL_OUTPUT_FILE: name of the final output file (Line 22)
 
 #### Data
 
