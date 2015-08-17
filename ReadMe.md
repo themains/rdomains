@@ -12,7 +12,10 @@ The solution is reasonable but unsatisfactory. For instance, we don't know the n
 
 There are two simple ways to improve on such methods. One is to build a calibrated keyword classifier. Start with keywords that are good at picking URLs with particular content. And then improve and calibrate it using an API. See for instance, [Where's the Porn? Classifying Porn Domains Using a Calibrated Keyword Classifier](http://gbytes.gsood.com/2015/07/23/wheres-the-porn-classifying-porn-domains-using-a-calibrated-keyword-classifier/). Or one may simply rely on API access. See for instance, [Where's the news?: Classifying News Domains](http://gbytes.gsood.com/2015/07/23/wheres-the-news-classifying-news-domains/) for a discussion of the method and some remaining issues. 
 
-Here below is a script to get the (dominant) type of content that is hosted on each domain using the [Trusted Source API](http://www.trustedsource.org/en/feedback/url). We apply the script to browsing data from comScore, producing a set of files that contain unique domains and the content category. We then use these data to estimate false negative rate in a prominent study using the comScore data to estimate news consumption and selective exposure. 
+There are a variety of APIs in the market that provide off-the-shelf solutions for categorizing the content hosted on different domains. Prominent among them are: [Zvelvo](https://zvelo.com/), [Similar Web](https://developer.similarweb.com/website_categorization_API), [DatumBox](http://www.datumbox.com/machine-learning-api/), 
+[Fortiguard](http://www.fortiguard.com/static/webfiltering.html) and [Trusted Source](http://www.trustedsource.org/en/feedback/url).
+
+Of these, we pick [Trusted Source](http://www.trustedsource.org/en/feedback/url) because it is free. (The script for categorizing domains using the Trusted Source API is right below.) We apply the script to browsing data from comScore, producing a set of files that contain unique domains and the content category. We then use these data to estimate false negative rate in a prominent study using the comScore data to estimate news consumption and selective exposure. 
 
 #### Script
 
