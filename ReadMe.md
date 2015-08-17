@@ -33,7 +33,7 @@ Other than the neccessary command line options, following options (within the sc
 
 * Splitting Files
 	* Unix: `split -l 500 myfile segment` (Splits into 500 line chunks.)
-	
+
 * Merging multiple csv files into one big file.
 	* On Windows: `copy *.csv combined.csv`
 	* On Unix: `cat *csv > all.csv`
@@ -42,7 +42,7 @@ Other than the neccessary command line options, following options (within the sc
 
 To make it easier for researchers to exploit the comScore data, we provide categories for all unique domains in the comScore datasets. (Academic users can access the comScore browsing data from the [Wharton Research Data Service](https://wrds-web.wharton.upenn.edu/wrds/ds/comscore/index.cfm?).) Given the file sizes, the data sets are posted on Harvard DVN.
 
-* [2004 data]()
+* [2004 data](http://dx.doi.org/10.7910/DVN/BPS1OK)
 
 #### Application
 
