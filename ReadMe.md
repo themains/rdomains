@@ -29,6 +29,13 @@ Other than the neccessary command line options, following options (within the sc
 * URL_CATEGORY_COLUMN_NAME: name of the url_catefoty column name in outputfile (Line 9)
 * FINAL_OUTPUT_FILE: name of the final output file (Line 22)
 
+##### Misc. Notes
+
+**Merging multiple csv files into one big file.**  
+
+* On Windows: `copy *.csv combined.csv`
+* On Unix: `cat *csv > all.csv`
+
 #### Data
 
 To make it easier for researchers to exploit the comScore data, we provide categories for all unique domains in the comScore datasets. (Academic users can access the comScore browsing data from the [Wharton Research Data Service](https://wrds-web.wharton.upenn.edu/wrds/ds/comscore/index.cfm?).) Given the file sizes, the data sets are posted on Harvard DVN.
