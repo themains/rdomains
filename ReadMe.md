@@ -31,10 +31,12 @@ Other than the neccessary command line options, following options (within the sc
 
 ##### Misc. Notes
 
-**Merging multiple csv files into one big file.**  
-
-* On Windows: `copy *.csv combined.csv`
-* On Unix: `cat *csv > all.csv`
+* Splitting Files
+	* Unix: `split -l 500 myfile segment` (Splits into 500 line chunks.)
+	
+* Merging multiple csv files into one big file.
+	* On Windows: `copy *.csv combined.csv`
+	* On Unix: `cat *csv > all.csv`
 
 #### Data
 
