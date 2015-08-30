@@ -39,6 +39,22 @@ Other than the neccessary command line options, following options (within the sc
 	* On Windows: `copy *.csv combined.csv`
 	* On Unix: `cat *csv > all.csv`
 
+* [Trusted Source] doesn't make it clear how to encode requests in the URL. A little inspection suggests that if you want to check the category of [nytimes.com](http://www.nytimes.com), type in [http://www.trustedsource.org/en/feedback/url?action=checksingle&product=12-ts-3&url=http://www.nytimes.com](http://www.trustedsource.org/en/feedback/url?action=checksingle&product=12-ts-3&url=http://www.nytimes.com)
+
+* Some R code for implementing the same request:
+
+```{r}
+library(rvest)
+library(magrittr)
+request <- httr::GET("http://www.trustedsource.org/en/feedback/url?action=checksingle&product=12-ts-3&url=http://www.nytimes.com")
+webpage <- rvest::html(request)
+tables <- webpage %>% html_nodes("table")
+td <- tables[[4]] %>% html_nodes("td")
+html_text(td[[9]])
+# "- General News"
+```
+
+
 #### Data
 
 comScore provides content category for some domains. For instance, in [Ideological Segregation Online and Offline](http://www.nber.org/papers/w15916) (by Matthew Gentzkow and Jesse Shapiro), note:
