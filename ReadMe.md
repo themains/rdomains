@@ -1,4 +1,4 @@
-### Domain Classifier
+## Domain Classifier
 
 Be it understanding media consumption, or segmenting domain referrals, we need to classify the content hosted on domains. 
 
@@ -18,9 +18,9 @@ There are a variety of APIs in the market that provide off-the-shelf solutions f
 
 Of these, we pick [Trusted Source](http://www.trustedsource.org/en/feedback/url) because it is free. (The script for categorizing domains using the Trusted Source API is provided below.) We apply the script to 2004 comScore browsing data, producing a file that contains unique domains and the content category output by the API. 
 
-#### Script
+### Script
 
-The script [api_domain_classifier](api_domain_classifier.py) takes a csv with a column of domain names ([sample input](sample_in.csv)) and appends a column containing the content category according to [Trusted Source](http://www.trustedsource.org/en/feedback/url) ([sample output](sample_out.csv)). (Note that the script is larger than a conventional API script because Trusted Source returns HTML webpage in response to requests.) The script is very modestly tailored towards large files in the following manner: If you have a large input file, you would ideally want to split the file and run multiple scripts in parallel across potentially different servers. To ease collation of the final data, the script defaults to an output file name that tracks what portion of the file is being processed of the whole. So the output file for 1 of 8 parts will be named `url_category_part_1_8` by default. The two command line arguments `current_part`, and `total_parts` are **neccessary**. For cases where file hasn't been split, just pass 1 1. For example:
+The script [api_domain_classifier](api_domain_classifier/api_domain_classifier.py) takes a csv with a column of domain names ([api_domain_classifier/sample input](sample_in.csv)) and appends a column containing the content category according to [Trusted Source](http://www.trustedsource.org/en/feedback/url) ([sample output](api_domain_classifier/sample_out.csv)). (Note that the script is larger than a conventional API script because Trusted Source returns HTML webpage in response to requests.) The script is very modestly tailored towards large files in the following manner: If you have a large input file, you would ideally want to split the file and run multiple scripts in parallel across potentially different servers. To ease collation of the final data, the script defaults to an output file name that tracks what portion of the file is being processed of the whole. So the output file for 1 of 8 parts will be named `url_category_part_1_8` by default. The two command line arguments `current_part`, and `total_parts` are **neccessary**. For cases where file hasn't been split, just pass 1 1. For example:
 ```
 python api_domain_classifier.py 1 1  
 ```
@@ -30,7 +30,7 @@ Other than the neccessary command line options, following options (within the sc
 * URL_CATEGORY_COLUMN_NAME: name of the url_catefoty column name in outputfile (Line 9)
 * FINAL_OUTPUT_FILE: name of the final output file (Line 22)
 
-##### Misc. Notes
+#### Misc. Notes
 
 * Splitting Files
 	* Unix: `split -l 500 myfile segment` (Splits into 500 line chunks.)
@@ -54,8 +54,7 @@ html_text(td[[9]])
 # "- General News"
 ```
 
-
-#### Data
+### Data
 
 comScore provides content category for some domains. For instance, in [Ideological Segregation Online and Offline](http://www.nber.org/papers/w15916) (by Matthew Gentzkow and Jesse Shapiro), note:
 
@@ -65,7 +64,6 @@ However, as they note, the list is a bit incomplete. And the use of thirteen onl
 
 * [2004 data](http://dx.doi.org/10.7910/DVN/BPS1OK)
 
-#### License
+### License
 
-Released under the [MIT License](License.md)
-
+Released under the [MIT License](https://opensource.org/licenses/MIT)
