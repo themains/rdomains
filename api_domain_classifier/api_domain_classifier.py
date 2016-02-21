@@ -19,7 +19,7 @@ if len(sys.argv)!=3:
 else:
     CURRENT_PART = int(sys.argv[1])
     ALL_PART = int(sys.argv[2])
-FINAL_OUTPUT_FILE = "url_category_part_%s_%s.csv"%(CURRENT_PART,ALL_PART,)
+FINAL_OUTPUT_FILE = "url_category_part_{0!s}_{1!s}.csv".format(CURRENT_PART, ALL_PART)
 
 def simplifyDomain(myStr):
     domain = myStr.strip()
@@ -56,7 +56,7 @@ def findWithPattern(mystr, startPattern, endPattern):
         return "",mystr
     return mystr[:y], mystr[y+len(endPattern):]
 
-print "   Start processing the data file %s" %(INPUT_FILE,)
+print "   Start processing the data file {0!s}".format(INPUT_FILE)
 FILE_DATA = []
 first_line = True
 INPUT_DOMAIN_INDEX = -1
@@ -135,9 +135,9 @@ for line in FILE_DATA:
         if (count%10==0):
             now = time.time()
             difference = int(now - prev_timer)
-            print " + Processing line %s0th time_till_now=%s(s)"%(count/10,difference,)
+            print " + Processing line {0!s}0th time_till_now={1!s}(s)".format(count/10, difference)
 
-        print "%d - %s" %(count,domain,)
+        print "{0:d} - {1!s}".format(count, domain)
 
         if domain in CATEGORY_URL.keys():
             category = CATEGORY_URL[domain]
@@ -167,12 +167,12 @@ for line in FILE_DATA:
                         category = "UNKNOWN"
             print category
             CATEGORY_URL[domain] = category
-            my_output_file.write("%s,%s\n"%(deleteLastComma(line),category,))
+            my_output_file.write("{0!s},{1!s}\n".format(deleteLastComma(line), category))
 
 my_output_file.close()              
 
 #######################################DONE##############################################
-print "Done, write the final output into file %s" %(FINAL_OUTPUT_FILE,)
+print "Done, write the final output into file {0!s}".format(FINAL_OUTPUT_FILE)
         
             
         
