@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^.*\.travis.yml$
+^.*\appveyor.yml$
+^\.Rproj\.user$
+^.*\dev\$
