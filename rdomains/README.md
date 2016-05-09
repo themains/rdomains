@@ -12,7 +12,7 @@ To get the current development version from GitHub:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("soodoku/rdomains")
+devtools::install_github("soodoku/domain_classifier/rdomains")
 ```
 
 ### License
