@@ -1,5 +1,5 @@
 ## Classify Domains Based on Their Content
-[![Build Status](https://travis-ci.org/soodoku/rdomains.svg?branch=master)](https://travis-ci.org/soodoku/rdomains)
+[![Build Status](https://travis-ci.org/soodoku/domain_classifier.svg?branch=master)](https://travis-ci.org/soodoku/domain_classifier)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/yh856e6cv7uucaj2?svg=true)](https://ci.appveyor.com/project/soodoku/rdomains)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rdomains)](http://cran.r-project.org/web/packages/rdomains)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
