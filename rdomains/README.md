@@ -1,6 +1,6 @@
 ## Classify Domains Based on Their Content
 
-The package provides a few ways to classify domains based on their content. For now, it is limited to providing categorized based on [shallalist](http://www.shallalist.de/), virustotal API (which uses websense), and a couple of ML solutions based off shallalist data. 
+The package provides a few ways to classify domains based on their content. For now, it is limited to providing categorized based on [shallalist](http://www.shallalist.de/), virustotal API (which uses [websense](https://www.forcepoint.com/)), and a couple of ML solutions based off shallalist data. 
 
 ### Installation
 

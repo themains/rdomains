@@ -1,11 +1,13 @@
 Package: rdomains
-Title: Classify Domains by their Content 
+Title: Classify Domains by their Content
 Version: 0.1
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
-Description: Using classified domain data from shallalist, we build ML based classifier to 
-    predict content carried by a domain.
-Depends: R (>= 3.2.5)
+Description: Using classified domain data from shallalist, we build ML based
+    classifier to predict content carried by a domain.
+Depends:
+    R (>= 3.2.5)
 License: GPL v3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Author: Gaurav Sood <gsood07@gmail.com> [aut, cre]
+RoxygenNote: 5.0.1
