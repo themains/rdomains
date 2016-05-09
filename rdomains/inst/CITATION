@@ -1,0 +1,15 @@
+citHeader("To cite package 'rdomains' in publications use:")
+     
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+vers <- paste("R package version", meta$Version)
+ 
+citEntry(entry="Manual",
+		  title = "rdomains: Classify Domains Based on Their Content",
+		  author = personList(as.person("Gaurav Sood")),
+		  year = year,
+		  note = vers,
+		  textVersion =
+		  paste("Gaurav Sood (",
+				year,
+				"). rdomains: Classify Domains Based on Their Content. ",
+				vers, ".", sep=""))
