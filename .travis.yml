@@ -1,0 +1,5 @@
+
+language: r
+warnings_are_errors: true
+sudo: required
+before_install: cd rdomains
