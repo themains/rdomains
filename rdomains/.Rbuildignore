@@ -1,5 +1,7 @@
 ^.*\.Rproj$
-^.*\.travis.yml$
-^.*\appveyor.yml$
 ^\.Rproj\.user$
-^.*\dev\$
+^\.travis\.yml$
+^appveyor\.yml$
+^dev$
+^cran_comments.md$
+^data-raw$

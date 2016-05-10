@@ -10,9 +10,11 @@
 #'
 #' To learn how to use rdomains, see this vignette: \url{vignettes/rdomains.html}. 
 #' 
-#' @importFrom utils read.table
 #' @importFrom urltools suffix_extract
-#' @importFrom glmnet glmnet
+#' @importFrom Matrix Matrix
+#' @importFrom glmnet predict.cv.glmnet
+#' @importFrom stats setNames
 #' @docType package
 #' @author Gaurav Sood
 NULL
+

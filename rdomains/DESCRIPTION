@@ -6,7 +6,12 @@ Description: Using classified domain data from shallalist, we build ML based
     classifier to predict content carried by a domain.
 Depends:
     R (>= 3.2.5)
-License: GPL v3 + file LICENSE
+Imports:
+    Matrix,
+    urltools,
+    glmnet,
+    stats
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Author: Gaurav Sood <gsood07@gmail.com> [aut, cre]
