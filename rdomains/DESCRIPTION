@@ -10,7 +10,8 @@ Imports:
     Matrix,
     urltools,
     glmnet,
-    stats
+    stats,
+    httr
 Suggests:
     testthat,
     knitr (>= 1.11)

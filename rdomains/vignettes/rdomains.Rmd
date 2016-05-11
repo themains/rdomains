@@ -2,12 +2,12 @@
 title: "Using rdomains"
 author: "Gaurav Sood"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Examples illustrating how to use rdomains}
+  %\VignetteIndexEntry{Illustrating use of rdomains}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 
 ### rdomains: Get the category of content hosted by a domain
 
@@ -15,8 +15,9 @@ vignette: >
 
 The latest version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:
 
-```{r, eval=FALSE, install}
-devtools::install_github("soodoku/domain_classifier/rdomains")
+```{r install}
+library(devtools)
+install_github("soodoku/domain_classifier/rdomains")
 library(rdomains)
 ```
 
@@ -24,15 +25,15 @@ library(rdomains)
 
 To get category of the content from shallalist:
 
-```{r, eval=FALSE, shalla}
-get_shalla_cat("http://www.google.com")
+```{r shalla}
+shalla_cat("http://www.google.com")
 ```
 
 #### ML 
 
 To get category of the content based on ML (currently gives propensity of pornographic content):
 
-```{r, eval=FALSE, ml}
+```{r ml}
 name_suffix_cat("http://www.google.com")
 ```
 
@@ -43,7 +44,6 @@ Start by getting the API key from [virustotal](https://www.virustotal.com/).
 Get virustotal category by running:
 
 ```{r, eval=FALSE, virustotal}
-
-# virustotal_cat("http://www.google.com")
+virustotal_cat("http://www.google.com")
 ```
 

@@ -14,6 +14,7 @@
 #' @importFrom Matrix Matrix
 #' @importFrom glmnet predict.cv.glmnet
 #' @importFrom stats setNames
+#' @importFrom httr GET content
 #' @docType package
 #' @author Gaurav Sood
 NULL
