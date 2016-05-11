@@ -11,6 +11,10 @@ Imports:
     urltools,
     glmnet,
     stats
+Suggests:
+    testthat,
+    knitr (>= 1.11)
+VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -7,10 +7,10 @@
 #' @return data.frame with original list and content category of the domain
 #' @export
 #' @examples 
-#' get_shalla_cat(domains="http://www.google.com")
+#' shalla_cat(domains="http://www.google.com")
 #' 
 
-get_shalla_cat <- function(domains=NULL) {
+shalla_cat <- function(domains=NULL) {
 	
 	# Nuke leading and trailing spaces
 	c_domains  <- gsub("^ *| *$", "", domains)
