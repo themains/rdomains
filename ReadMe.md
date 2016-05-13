@@ -16,8 +16,9 @@ Relying on APIs is of course not optimal. For one, we don't know the error they 
 
 ### Scripts
 
-* [API Domain Classifier](trusted/)
-* [Domain Name Based Classifier](domain_name/)
+* [API Domain Classifier](trusted/) (Python)
+* [Domain Name Based Classifier](domain_name/) (R)
+* [rdomains: R package providing access to both API and ML](rdomains/) (R)
 
 ### License
 

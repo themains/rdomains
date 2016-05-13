@@ -33,7 +33,7 @@ install_github("soodoku/domain_classifier/rdomains")
 ```
 ## "C:/PROGRA~1/R/R-33~1.0/bin/x64/R" --no-site-file --no-environ --no-save  \
 ##   --no-restore --quiet CMD INSTALL  \
-##   "C:/Users/gaurav/AppData/Local/Temp/RtmpIXoItD/devtools1cb869844c40/soodoku-domain_classifier-d3040bb/rdomains"  \
+##   "C:/Users/gaurav/AppData/Local/Temp/RtmpIXoItD/devtools1cb863d07cf4/soodoku-domain_classifier-dbbf4cf/rdomains"  \
 ##   --library="C:/Users/gaurav/Documents/R/win-library/3.3"  \
 ##   --install-tests
 ```
@@ -99,5 +99,6 @@ trusted_cat("http://www.google.com")
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "trusted_cat"
+##                 NULL.V2         NULL.V3          NULL.V4      NULL.V5
+## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk
 ```
