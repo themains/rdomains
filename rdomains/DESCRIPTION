@@ -11,7 +11,9 @@ Imports:
     urltools,
     glmnet,
     stats,
-    httr
+    httr,
+    RSelenium,
+    XML
 Suggests:
     testthat,
     knitr (>= 1.11)

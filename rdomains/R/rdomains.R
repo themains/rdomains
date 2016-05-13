@@ -14,6 +14,9 @@
 #' @importFrom Matrix Matrix
 #' @importFrom glmnet predict.cv.glmnet
 #' @importFrom stats setNames
+#' @importFrom utils URLencode
+#' @importFrom XML readHTMLTable
+#' @importFrom RSelenium remoteDriver checkForServer startServer
 #' @importFrom httr GET content
 #' @docType package
 #' @author Gaurav Sood

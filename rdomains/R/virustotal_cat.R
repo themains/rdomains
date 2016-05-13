@@ -8,10 +8,10 @@
 #' @export
 #' @references \url{https://www.virustotal.com/en/documentation/public-api/}
 #' @examples \dontrun{
-#' domain_report(url="http://www.google.com")
+#' virustotal_cat(domain="http://www.google.com")
 #' }
 
-domain_report <- function(domain = NULL, apikey=NULL) {
+virustotal_cat <- function(domain = NULL, apikey=NULL) {
     
     params <- list(domain = domain, apikey=apikey)
     
