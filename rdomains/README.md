@@ -15,10 +15,10 @@ To get the current development version from GitHub:
 devtools::install_github("soodoku/domain_classifier/rdomains", build_vignettes = TRUE)
 ```
 
-To see how to use rdomains, see this [vignette](vignettes/using_rdomains.md). To launch the vignette within R: 
+To see how to use rdomains, see this [vignette](vignettes/rdomains.md). To launch the vignette within R: 
 
 ```r
-vignette("using_rdomains", package = "using_rdomains")
+vignette("rdomains", package = "rdomains")
 ```
 
 ### License
