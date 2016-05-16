@@ -26,7 +26,7 @@ name_suffix_cat <- function(domains=NULL) {
 	c_domains  <- gsub("^www.", "", c_domains)
 
 	# Initialize results 
-	res_df <- data.frame(domains=c_domains, category=NA)
+	res_df <- data.frame(domain_name=c_domains, category=NA)
 
 	# Initialize feature df
 	features  <- setNames(data.frame(matrix(ncol = length(coefs), nrow = length(domains))), coefs)
@@ -41,7 +41,7 @@ name_suffix_cat <- function(domains=NULL) {
 
 	# suffix
 	split_url  <- suffix_extract(c_domains)
-	suffixes   <- split_url$suffix[match(res_df$domains, split_url$host)]
+	suffixes   <- split_url$suffix[match(res_df$domain_name, split_url$host)]
 
 	for(t in 62:length(coefs)) {
 	  features[, t] <- grepl(coefs[t], suffixes)
