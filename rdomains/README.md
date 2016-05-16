@@ -21,6 +21,10 @@ To see how to use rdomains, see this [vignette](vignettes/rdomains.md). To launc
 vignette("rdomains", package = "rdomains")
 ```
 
+### Caveat
+
+If the package is being used to classify browsing data, an important caveat is in order. There is a strong skew in browsing data, with a few domains constituting a significant chunk of browsing time and visits. Classification error in classes gotten from APIs and generic ML classifiers implemented in the package do not weight the error by frequency of visits. We provide two ways to address the problem. First, the package includes [Alexa top 1 million domains (zip)](http://s3.amazonaws.com/alexa-static/top-1m.csv.zip). We also provide access to the Alexa API that gives traffic numbers. And build a ML classifier that weights by the traffic numbers. 
+
 ### License
 
 Scripts are released under the [MIT License](https://opensource.org/licenses/MIT).
