@@ -3,5 +3,5 @@
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^dev$
-^cran_comments.md$
+^cran-comments.md$
 ^data-raw$
