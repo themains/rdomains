@@ -10,7 +10,7 @@ trusted_cat(domain = NULL)
 \item{domain}{domain name (string)}
 }
 \value{
-data frame
+data.frame
 }
 \description{
 Get Trusted (McAfee) Category

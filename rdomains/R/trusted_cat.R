@@ -2,7 +2,7 @@
 #'
 #' @param domain domain name (string)
 #' 
-#' @return data frame
+#' @return data.frame
 #'  
 #' @export
 #' @references \url{https://www.trustedsource.org/}
