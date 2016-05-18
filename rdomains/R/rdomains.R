@@ -15,6 +15,7 @@
 #' @importFrom glmnet predict.cv.glmnet
 #' @importFrom stats setNames
 #' @importFrom utils URLencode
+#' @importFrom curl curl_download
 #' @importFrom XML readHTMLTable
 #' @importFrom RSelenium remoteDriver checkForServer startServer
 #' @importFrom httr GET content
