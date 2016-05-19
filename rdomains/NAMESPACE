@@ -2,6 +2,7 @@
 
 export(alexa_cat)
 export(dmoz_cat)
+export(get_alexa_data)
 export(get_shalla_data)
 export(glm_shalla)
 export(name_suffix_cat)
