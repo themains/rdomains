@@ -1,4 +1,6 @@
 #' Get Alexa Data
+#' 
+#' Get Top 1M most visited domains list from Alexa
 #'
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
 #' @param overwrite Optional; default is FALSE

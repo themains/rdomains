@@ -12,7 +12,7 @@ get_alexa_data(outdir = ".", overwrite = FALSE)
 \item{overwrite}{Optional; default is FALSE}
 }
 \description{
-Get Alexa Data
+Get Top 1M most visited domains list from Alexa
 }
 \examples{
 \dontrun{
