@@ -102,3 +102,8 @@ trusted_cat("http://www.google.com")
 ##                 NULL.V2         NULL.V3          NULL.V4      NULL.V5
 ## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk
 ```
+
+#### Alexa Category
+
+Get the content category from Amazon (Alexa) via DMOZ
+

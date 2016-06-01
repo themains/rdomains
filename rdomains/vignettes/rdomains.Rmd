@@ -10,6 +10,11 @@ vignette: >
 
 ### rdomains: Get the category of content hosted by a domain
 
+
+**Caveat**  
+
+If the package is being used to classify browsing data, an important caveat is in order. There is a strong skew in browsing data, with a few domains constituting a significant chunk of browsing time and visits. Classification error in classes gotten from APIs and generic ML classifiers implemented in the package do not weight the error by frequency of visits. We provide two ways to address the problem. First, the package includes [Alexa top 1 million domains (zip)](http://s3.amazonaws.com/alexa-static/top-1m.csv.zip). We also provide access to the Alexa API that gives traffic numbers. And build a ML classifier that weights by the traffic numbers. 
+
 #### Install and Load the package
 
 The latest version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:
@@ -22,7 +27,7 @@ library(rdomains)
 
 #### Shalla
 
-To get category of the content from shallalist:
+To get category of the content from [shallalist](http://www.shallalist.de):
 
 ```{r shalla}
 shalla_cat("http://www.google.com")
@@ -48,8 +53,24 @@ virustotal_cat("http://www.google.com")
 
 #### Trusted (McAfee)
 
-Get the content category of a domain by McAfee (Trusted):
+Get the content category of a domain according to McAfee (Trusted):
 
 ```{r trusted}
 trusted_cat("http://www.google.com")
+```
+
+#### Alexa Category
+
+To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from [https://aws.amazon.com/](https://aws.amazon.com/). Next, install the R package, [aws.alexa](https://github.com/cloudyr/aws.alexa). 
+
+```{r, eval=FALSE, alexa}
+install_github("cloudyr/aws.alexa")
+library(aws.alexa)
+```
+
+Next, set the secret and the key and call the function `url_info`. 
+
+```{r, eval=FALSE, alexa2}
+set_secret_key("key", "secret")
+url_info(url="http://www.google.com", response_group ="Categories")
 ```

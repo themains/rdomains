@@ -13,7 +13,7 @@ trusted_cat(domain = NULL)
 data.frame
 }
 \description{
-Get Trusted (McAfee) Category
+There is no API, so the function uses Selenium to open a browser, and the scrape the content.
 }
 \examples{
 \dontrun{

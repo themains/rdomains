@@ -1,5 +1,7 @@
 #' Get Trusted (McAfee) Category
 #'
+#' There is no API, so the function uses Selenium to open a browser, and the scrape the content.
+#' 
 #' @param domain domain name (string)
 #' 
 #' @return data.frame
@@ -24,7 +26,7 @@ trusted_cat <- function(domain = NULL) {
 	form$submitElement()
 	res_table <- remDr$findElement(using="class", value = "result-table")
  	html_tab <- res_table$getElementAttribute("outerHTML")[[1]]
-	tab <- readHTMLTable(html_tab)
+	tab      <- readHTMLTable(html_tab)
 
 	res <- as.data.frame(tab)[-1,-1]
    
