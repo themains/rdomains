@@ -4,7 +4,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rdomains)](https://cran.r-project.org/package=rdomains)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
 
-The package provides a few ways to classify domains based on their content. For now, it is limited to providing categorized based on [shallalist](http://www.shallalist.de/), [trusted (McAfee) 'API'](http://trustedsource.org), [virustotal API](http://virustotal.com) (which uses [websense](https://www.forcepoint.com/)), and a couple of ML solutions based off shallalist data. 
+The package provides a few ways to classify domains based on their content. For now, it is limited to providing categorizations based on [shallalist](http://www.shallalist.de/), [trusted (McAfee) 'API'](http://trustedsource.org), [virustotal API](http://virustotal.com) (which uses [websense](https://www.forcepoint.com/)), [Alexa API](http://docs.aws.amazon.com/AlexaWebInfoService/latest/), and [DMOZ Data](http://rdf.dmoz.org) and a couple of ML solutions based off shallalist data. 
 
 ### Installation
 

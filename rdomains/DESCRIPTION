@@ -14,7 +14,9 @@ Imports:
     stats,
     httr,
     RSelenium,
-    XML
+    XML,
+    readr,
+    curl
 Suggests:
     testthat,
     knitr (>= 1.11)

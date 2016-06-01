@@ -11,6 +11,7 @@
 #' To learn how to use rdomains, see this vignette: \url{vignettes/rdomains.html}. 
 #' 
 #' @importFrom urltools suffix_extract
+#' @importFrom readr read_file
 #' @importFrom Matrix Matrix
 #' @importFrom glmnet predict.cv.glmnet
 #' @importFrom stats setNames
@@ -22,4 +23,3 @@
 #' @docType package
 #' @author Gaurav Sood
 NULL
-
