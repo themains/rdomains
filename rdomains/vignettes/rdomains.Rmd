@@ -17,11 +17,21 @@ If the package is being used to classify browsing data, an important caveat is i
 
 #### Install and Load the package
 
-The latest version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:
+The latest development version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:
 
-```{r install}
-library(devtools)
+```{r, eval=FALSE, install}
+#library(devtools)
 install_github("soodoku/domain_classifier/rdomains")
+```
+To install the package from CRAN, type in: 
+
+```{r, eval=FALSE, cran_install}
+install.packages("rdomains")
+```
+
+Next, load the package:
+
+```{r, eval=FALSE, load_pkg}
 library(rdomains)
 ```
 
@@ -29,15 +39,19 @@ library(rdomains)
 
 To get category of the content from [shallalist](http://www.shallalist.de):
 
-```{r shalla}
+```{r, eval=FALSE, shalla}
 shalla_cat("http://www.google.com")
 ```
 
+```
+##   domain_name shalla_category
+## 1  google.com   searchengines
+```
 #### ML 
 
 To get category of the content based on ML (currently gives propensity of pornographic content based on name and suffix alone):
 
-```{r ml}
+```{r, eval=FALSE, ml}
 name_suffix_cat("http://www.google.com")
 ```
 
@@ -58,7 +72,7 @@ virustotal_cat("http://www.google.com")
 
 Get the content category of a domain according to McAfee (Trusted):
 
-```{r trusted}
+```{r, eval=FALSE, trusted}
 trusted_cat("http://www.google.com")
 ```
 

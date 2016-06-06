@@ -11,7 +11,7 @@
 
 <meta name="author" content="Gaurav Sood" />
 
-<meta name="date" content="2016-05-13" />
+<meta name="date" content="2016-06-06" />
 
 <title>Using rdomains</title>
 
@@ -118,33 +118,28 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Using rdomains</h1>
 <h4 class="author"><em>Gaurav Sood</em></h4>
-<h4 class="date"><em>2016-05-13</em></h4>
+<h4 class="date"><em>2016-06-06</em></h4>
 
 </div>
 
 
 <div id="rdomains-get-the-category-of-content-hosted-by-a-domain" class="section level3">
 <h3>rdomains: Get the category of content hosted by a domain</h3>
+<p><strong>Caveat</strong></p>
+<p>If the package is being used to classify browsing data, an important caveat is in order. There is a strong skew in browsing data, with a few domains constituting a significant chunk of browsing time and visits. Classification error in classes gotten from APIs and generic ML classifiers implemented in the package do not weight the error by frequency of visits. We provide two ways to address the problem. First, the package includes <a href="http://s3.amazonaws.com/alexa-static/top-1m.csv.zip">Alexa top 1 million domains (zip)</a>. We also provide access to the Alexa API that gives traffic numbers. And build a ML classifier that weights by the traffic numbers.</p>
 <div id="install-and-load-the-package" class="section level4">
 <h4>Install and Load the package</h4>
-<p>The latest version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:</p>
-<pre class="r"><code>library(devtools)
+<p>The latest development version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:</p>
+<pre class="r"><code>#library(devtools)
 install_github(&quot;soodoku/domain_classifier/rdomains&quot;)</code></pre>
-<pre><code>## Downloading GitHub repo soodoku/domain_classifier@master
-## from URL https://api.github.com/repos/soodoku/domain_classifier/zipball/master</code></pre>
-<pre><code>## Installing rdomains</code></pre>
-<pre><code>## &quot;C:/PROGRA~1/R/R-33~1.0/bin/x64/R&quot; --no-site-file --no-environ --no-save  \
-##   --no-restore --quiet CMD INSTALL  \
-##   &quot;C:/Users/gaurav/AppData/Local/Temp/RtmpIXoItD/devtools1cb863d07cf4/soodoku-domain_classifier-dbbf4cf/rdomains&quot;  \
-##   --library=&quot;C:/Users/gaurav/Documents/R/win-library/3.3&quot;  \
-##   --install-tests</code></pre>
-<pre><code>## </code></pre>
-<pre><code>## Reloading installed rdomains</code></pre>
+<p>To install the package from CRAN, type in:</p>
+<pre class="r"><code>install.packages(&quot;rdomains&quot;)</code></pre>
+<p>Next, load the package:</p>
 <pre class="r"><code>library(rdomains)</code></pre>
 </div>
 <div id="shalla" class="section level4">
 <h4>Shalla</h4>
-<p>To get category of the content from shallalist:</p>
+<p>To get category of the content from <a href="http://www.shallalist.de">shallalist</a>:</p>
 <pre class="r"><code>shalla_cat(&quot;http://www.google.com&quot;)</code></pre>
 <pre><code>##   domain_name shalla_category
 ## 1  google.com   searchengines</code></pre>
@@ -153,21 +148,29 @@ install_github(&quot;soodoku/domain_classifier/rdomains&quot;)</code></pre>
 <h4>ML</h4>
 <p>To get category of the content based on ML (currently gives propensity of pornographic content based on name and suffix alone):</p>
 <pre class="r"><code>name_suffix_cat(&quot;http://www.google.com&quot;)</code></pre>
-<pre><code>##      domains  category
-## 1 google.com 0.3133728</code></pre>
 </div>
 <div id="virustotal" class="section level4">
 <h4>Virustotal</h4>
 <p>Start by getting the API key from <a href="https://www.virustotal.com/">virustotal</a>.</p>
 <p>Get virustotal category by running:</p>
 <pre class="r"><code>virustotal_cat(&quot;http://www.google.com&quot;)</code></pre>
+<pre><code>##                 domain   bitdefender dr_web  alexa        google       websense             trendmicro
+## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals</code></pre>
 </div>
 <div id="trusted-mcafee" class="section level4">
 <h4>Trusted (McAfee)</h4>
-<p>Get the content category of a domain by McAfee (Trusted):</p>
+<p>Get the content category of a domain according to McAfee (Trusted):</p>
 <pre class="r"><code>trusted_cat(&quot;http://www.google.com&quot;)</code></pre>
-<pre><code>##                 NULL.V2         NULL.V3          NULL.V4      NULL.V5
-## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk</code></pre>
+</div>
+<div id="alexa-category" class="section level4">
+<h4>Alexa Category</h4>
+<p>To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from <a href="https://aws.amazon.com/"><a href="https://aws.amazon.com/" class="uri">https://aws.amazon.com/</a></a>. Next, set the environment variables:</p>
+<pre class="r"><code>Sys.setenv(&quot;AWS_ACCESS_KEY_ID&quot;, &quot;key_id&quot;) 
+Sys.getenv(&quot;AWS_SECRET_ACCESS_KEY&quot;, &quot;secret_key&quot;)</code></pre>
+<p>Then run,</p>
+<pre class="r"><code>alexa_cat(domain=&quot;http://www.google.com&quot;)[1,]</code></pre>
+<pre><code>##                   Title                                           AbsolutePath
+## 1 Search Engines/Google Top/Computers/Internet/Searching/Search_Engines/Google</code></pre>
 </div>
 </div>
 
