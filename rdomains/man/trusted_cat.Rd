@@ -17,7 +17,7 @@ There is no API, so the function uses Selenium to open a browser, and the scrape
 }
 \examples{
 \dontrun{
-trusted_cat(domain="http://www.google.com")
+trusted_cat("http://www.google.com")
 }
 }
 \references{

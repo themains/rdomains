@@ -76,6 +76,11 @@ Get the content category of a domain according to McAfee (Trusted):
 trusted_cat("http://www.google.com")
 ```
 
+```
+##                    url          status   categorization   reputation
+## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk
+```
+
 #### Alexa Category
 
 To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from [https://aws.amazon.com/](https://aws.amazon.com/). Next, set the environment variables:
