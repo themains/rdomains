@@ -50,7 +50,10 @@ Get virustotal category by running:
 ```{r, eval=FALSE, virustotal}
 virustotal_cat("http://www.google.com")
 ```
-
+```
+##                 domain   bitdefender dr_web  alexa        google       websense             trendmicro
+## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals
+```
 #### Trusted (McAfee)
 
 Get the content category of a domain according to McAfee (Trusted):
@@ -61,16 +64,20 @@ trusted_cat("http://www.google.com")
 
 #### Alexa Category
 
-To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from [https://aws.amazon.com/](https://aws.amazon.com/). Next, install the R package, [aws.alexa](https://github.com/cloudyr/aws.alexa). 
+To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from [https://aws.amazon.com/](https://aws.amazon.com/). Next, set the environment variables:
 
-```{r, eval=FALSE, alexa}
-install_github("cloudyr/aws.alexa")
-library(aws.alexa)
+```{r, eval=FALSE, set_alexa_cred}
+Sys.setenv("AWS_ACCESS_KEY_ID", "key_id") 
+Sys.getenv("AWS_SECRET_ACCESS_KEY", "secret_key")
 ```
 
-Next, set the secret and the key and call the function `url_info`. 
+Then run,
 
-```{r, eval=FALSE, alexa2}
-set_secret_key("key", "secret")
-url_info(url="http://www.google.com", response_group ="Categories")
+```{r, eval=FALSE, alexa}
+alexa_cat(domain="http://www.google.com")[1,]
+```
+
+```
+##                   Title                                           AbsolutePath
+## 1 Search Engines/Google Top/Computers/Internet/Searching/Search_Engines/Google
 ```

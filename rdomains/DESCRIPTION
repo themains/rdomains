@@ -1,22 +1,24 @@
 Package: rdomains
-Title: Classify Domains by their Content
+Title: rdomains: Classify Domains by Their Content
 Version: 0.1.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
 Description: Get the category of content hosted by a domain. Use shallalist,  
-    virustotal or McAfee APIs, or a validated ML classifier based on shallalist
-    data to get the category of content carried by a domain.
+    virustotal (which provides access to lots of services), McAfee, or a 
+    validated machine learning classifier based on shallalist data to learn 
+    about the kind of content hosted by a domain.
 Depends:
-    R (>= 3.2.5)
+    R (>= 3.3.0)
 Imports:
     Matrix,
     urltools,
     glmnet,
     stats,
-    httr,
     RSelenium,
     XML,
     readr,
-    curl
+    curl,
+    virustotal,
+    aws.alexa
 Suggests:
     testthat,
     knitr (>= 1.11)

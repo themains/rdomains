@@ -4,9 +4,14 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rdomains)](https://cran.r-project.org/package=rdomains)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
 
-The package provides a few ways to classify domains based on their content. For now, it is limited to providing categorizations based on [shallalist](http://www.shallalist.de/), [trusted (McAfee) 'API'](http://trustedsource.org), [virustotal API](http://virustotal.com) (which uses [websense](https://www.forcepoint.com/)), [Alexa API](http://docs.aws.amazon.com/AlexaWebInfoService/latest/), and [DMOZ Data](http://rdf.dmoz.org) and a couple of ML solutions based off shallalist data. 
+The package provides a few ways to classify domains based on their content. You can either get the categorizations from [shallalist](http://www.shallalist.de/), [trusted (McAfee)](http://trustedsource.org), [DMOZ](http://rdf.dmoz.org), [Alexa API](http://docs.aws.amazon.com/AlexaWebInfoService/latest/) (which uses the [DMOZ Data](http://rdf.dmoz.org)), or [virustotal API](http://virustotal.com), or use validated machine learning models based off the shallalist data. 
 
 ### Installation
+
+To get the current released version from CRAN:
+```r
+install.packages("virustotal")
+```
 
 To get the current development version from GitHub:
 
@@ -15,7 +20,9 @@ To get the current development version from GitHub:
 devtools::install_github("soodoku/domain_classifier/rdomains", build_vignettes = TRUE)
 ```
 
-To see how to use rdomains, see this [vignette](vignettes/rdomains.md). To launch the vignette within R: 
+### Usage
+
+To learn how to use rdomains, read this [vignette](vignettes/rdomains.md). Or launch the vignette within R: 
 
 ```r
 vignette("rdomains", package = "rdomains")

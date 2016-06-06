@@ -2,20 +2,25 @@
 % Please edit documentation in R/alexa_cat.R
 \name{alexa_cat}
 \alias{alexa_cat}
-\title{Get Alexa Category}
+\title{Get Category from Alexa}
 \usage{
-alexa_cat(domain = NULL, apikey = NULL)
+alexa_cat(domain = NULL, key = NULL, secret = NULL)
 }
 \arguments{
 \item{domain}{domain name}
 
-\item{apikey}{virustotal API key}
+\item{key}{Alexa Access Key ID}
+
+\item{secret}{Alexa Secret Access Key}
 }
 \value{
-data frame
+data.frame with 2 columns Title and AbsolutePath
 }
 \description{
-Get Alexa Category
+Get the Access Key ID and Secret Access Key by logging into \url{https://console.aws.amazon.com/}, 
+clicking on the username followed by security credentials. Either pass the access key and secret or 
+set two environmental variables \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY}. 
+These environment variables persist within a R session.
 }
 \examples{
 \dontrun{
@@ -23,6 +28,6 @@ alexa_cat(domain="http://www.google.com")
 }
 }
 \references{
-\url{https://docs.aws.amazon.com/AlexaWebInfoService/latest/index.html?ApiReference_UrlInfoAction.html}
+\url{https://docs.aws.amazon.com/AlexaWebInfoService/latest}
 }
 

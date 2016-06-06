@@ -11,15 +11,16 @@
 #' To learn how to use rdomains, see this vignette: \url{vignettes/rdomains.html}. 
 #' 
 #' @importFrom urltools suffix_extract
-#' @importFrom readr read_file
 #' @importFrom Matrix Matrix
 #' @importFrom glmnet predict.cv.glmnet
 #' @importFrom stats setNames
-#' @importFrom utils URLencode
+#' @importFrom utils read.table URLencode untar unzip write.csv 
 #' @importFrom curl curl_download
 #' @importFrom XML readHTMLTable
 #' @importFrom RSelenium remoteDriver checkForServer startServer
-#' @importFrom httr GET content
+#' @importFrom virustotal set_key domain_report
+#' @importFrom aws.alexa set_secret_key url_info
+#' 
 #' @docType package
 #' @author Gaurav Sood
 NULL

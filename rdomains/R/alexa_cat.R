@@ -1,33 +1,32 @@
-#' Get Alexa Category
+#' Get Category from Alexa
 #'
-#' @param domain domain name
-#' @param apikey virustotal API key
 #' 
-#' @return data frame
+#' Get the Access Key ID and Secret Access Key by logging into \url{https://console.aws.amazon.com/}, 
+#' clicking on the username followed by security credentials. Either pass the access key and secret or 
+#' set two environmental variables \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY}. 
+#' These environment variables persist within a R session. 
+#'  
+#' @param domain domain name
+#' @param key  Alexa Access Key ID
+#' @param secret Alexa Secret Access Key
+#' 
+#' @return data.frame with 2 columns Title and AbsolutePath 
 #'  
 #' @export
-#' @references \url{https://docs.aws.amazon.com/AlexaWebInfoService/latest/index.html?ApiReference_UrlInfoAction.html}
+#' @references \url{https://docs.aws.amazon.com/AlexaWebInfoService/latest}
 #' @examples \dontrun{
 #' alexa_cat(domain="http://www.google.com")
 #' }
 
-alexa_cat <- function(domain = NULL, apikey=NULL) {
+alexa_cat <- function(domain = NULL, key=NULL, secret=NULL) {
     
-    params <- list(Action="UrlInfo", AWSAccessKeyId=apikey, Url=domain, SignatureVersion=2, SignatureMethod='HmacSHA256', ResponseGroup="Categories")
-    
-     #           &=[Your AWS Access Key ID]
-     #           &Signature=[signature calculated from request]
-     #           &SignatureMethod=[HmacSha1 or HmacSha256]
-     #           &SignatureVersion=2
-     #          &Timestamp=[timestamp used in signature]
-      #          &Url=[Valid URL]
-       #         &ResponseGroup=[Valid Response Group]
+    if (identical(Sys.getenv("AWS_ACCESS_KEY_ID"), "") | (identical(Sys.getenv("AWS_SECRET_ACCESS_KEY"), ""))) {
+        set_secret_key(key, secret)
+    } 
 
-    res <- GET("http://awis.amazonaws.com/", body = params)
+    a_cat <- url_info(url="http://www.google.com", response_group = "Categories")
 
-    if (identical(content(res), NULL)) return(NULL)
+    res <- do.call(rbind, a_cat[[2]][[1]][[1]][[2]])
+    return(as.data.frame(res, row.names=1:length(res)))
 
-    as.data.frame(do.call(cbind, content(res)))
 }
-
-apikey="AKIAJCDLSOSH5N4XBGLA"

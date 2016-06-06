@@ -2,7 +2,7 @@
 % Please edit documentation in R/virustotal_cat.R
 \name{virustotal_cat}
 \alias{virustotal_cat}
-\title{Get Virustotal Category}
+\title{Get Category from Virustotal}
 \usage{
 virustotal_cat(domain = NULL, apikey = NULL)
 }
@@ -12,14 +12,20 @@ virustotal_cat(domain = NULL, apikey = NULL)
 \item{apikey}{virustotal API key}
 }
 \value{
-data frame
+data.frame with 7 columns: domain, bitdefender, dr_web, alexa, google, websense, trendmicro
 }
 \description{
-Get Virustotal Category
+Returns category of content from 6 major services including: BitDefender, Dr. Web, Alexa (DMOZ), Google, 
+Websense, and Trendmicro
+}
+\details{
+Get the API Access Key from \url{http://www.virustotal.com/}. Either pass the API Key to the function 
+or set the environmental variables \code{VirustotalToken}. These environment variables persist within 
+a R session.
 }
 \examples{
 \dontrun{
-virustotal_cat(domain="http://www.google.com")
+virustotal_cat("http://www.google.com")
 }
 }
 \references{
