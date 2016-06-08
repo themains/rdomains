@@ -9,9 +9,11 @@
 #' 
 #' @references \url{http://www.shallalist.de/licence.html}
 #' 
-#' @usage get_shalla_data()
+#' @examples \dontrun{
+#' get_shalla_data()
+#' }
 
-get_shalla_data <- function(outdir="./", overwrite=FALSE) {
+get_shalla_data <- function(outdir=".", overwrite=FALSE) {
 
 	tmp <- tempfile()
 	curl_download("http://www.shallalist.de/Downloads/shallalist.tar.gz", tmp)
@@ -46,7 +48,7 @@ get_shalla_data <- function(outdir="./", overwrite=FALSE) {
 	# Write to file
 	if (overwrite & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name.")
 
-	write.csv(shalla_unique_domain_cateory, file=output_file)
+	write.csv(res2, file=output_file)
 	
 	cat("Shallalist Data saved to the following destination:", outdir, "\n")
 

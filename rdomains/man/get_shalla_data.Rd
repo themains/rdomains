@@ -4,7 +4,7 @@
 \alias{get_shalla_data}
 \title{Get Shalla Data}
 \usage{
-get_shalla_data()
+get_shalla_data(outdir = ".", overwrite = FALSE)
 }
 \arguments{
 \item{outdir}{Optional; folder to which you want to save the file; Default is same folder}
@@ -13,6 +13,11 @@ get_shalla_data()
 }
 \description{
 Downloads, unzips and saves the latest version of shallalist data.
+}
+\examples{
+\dontrun{
+get_shalla_data()
+}
 }
 \references{
 \url{http://www.shallalist.de/licence.html}
