@@ -4,7 +4,7 @@
 \alias{get_shalla_data}
 \title{Get Shalla Data}
 \usage{
-get_shalla_data(outdir = ".", overwrite = FALSE)
+get_shalla_data(outdir = "./", overwrite = FALSE)
 }
 \arguments{
 \item{outdir}{Optional; folder to which you want to save the file; Default is same folder}

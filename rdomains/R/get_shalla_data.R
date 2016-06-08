@@ -13,7 +13,7 @@
 #' get_shalla_data()
 #' }
 
-get_shalla_data <- function(outdir=".", overwrite=FALSE) {
+get_shalla_data <- function(outdir="./", overwrite=FALSE) {
 
 	tmp <- tempfile()
 	curl_download("http://www.shallalist.de/Downloads/shallalist.tar.gz", tmp)
