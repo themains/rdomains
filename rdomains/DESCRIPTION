@@ -1,5 +1,5 @@
 Package: rdomains
-Title: Rdomains: Get The Category of Content Hosted By a Domain
+Title: Get the Category of Content Hosted by a Domain
 Version: 0.1.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
 Description: Get the category of content hosted by a domain. Use shallalist,  
