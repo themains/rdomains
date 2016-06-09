@@ -11,7 +11,7 @@
 
 <meta name="author" content="Gaurav Sood" />
 
-<meta name="date" content="2016-06-06" />
+<meta name="date" content="2016-06-09" />
 
 <title>Using rdomains</title>
 
@@ -118,15 +118,13 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Using rdomains</h1>
 <h4 class="author"><em>Gaurav Sood</em></h4>
-<h4 class="date"><em>2016-06-06</em></h4>
+<h4 class="date"><em>2016-06-09</em></h4>
 
 </div>
 
 
 <div id="rdomains-get-the-category-of-content-hosted-by-a-domain" class="section level3">
 <h3>rdomains: Get the category of content hosted by a domain</h3>
-<p><strong>Caveat</strong></p>
-<p>If the package is being used to classify browsing data, an important caveat is in order. There is a strong skew in browsing data, with a few domains constituting a significant chunk of browsing time and visits. Classification error in classes gotten from APIs and generic ML classifiers implemented in the package do not weight the error by frequency of visits. We provide two ways to address the problem. First, the package includes <a href="http://s3.amazonaws.com/alexa-static/top-1m.csv.zip">Alexa top 1 million domains (zip)</a>. We also provide access to the Alexa API that gives traffic numbers. And build a ML classifier that weights by the traffic numbers.</p>
 <div id="install-and-load-the-package" class="section level4">
 <h4>Install and Load the package</h4>
 <p>The latest development version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:</p>
@@ -146,8 +144,10 @@ install_github(&quot;soodoku/domain_classifier/rdomains&quot;)</code></pre>
 </div>
 <div id="ml" class="section level4">
 <h4>ML</h4>
-<p>To get category of the content based on ML (currently gives propensity of pornographic content based on name and suffix alone):</p>
-<pre class="r"><code>name_suffix_cat(&quot;http://www.google.com&quot;)</code></pre>
+<p>Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone:</p>
+<pre class="r"><code>adult_ml1_cat(&quot;http://www.google.com&quot;)</code></pre>
+<pre><code>##   domain_name  category
+## 1  google.com 0.3133728</code></pre>
 </div>
 <div id="virustotal" class="section level4">
 <h4>Virustotal</h4>

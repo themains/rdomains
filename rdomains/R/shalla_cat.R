@@ -1,11 +1,10 @@
 #' Get Category from Shallalist
 #'
-#' Fetches category of content hosted by domain from Shallalist. 
+#' Fetches category of content hosted by domain from Shallalist. If \code{use_file} isn't given,
+#' the function uses the shallalist file that the package ships with.
 #'
-#' 
 #' @param domains vector of domain names
 #' @param use_file path to the latest shallalist file downloaded using \code{\link{get_shalla_data}}
-#' 
 #' 
 #' @return data.frame with original list and content category of the domain
 #' 

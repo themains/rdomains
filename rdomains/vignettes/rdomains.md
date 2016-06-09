@@ -1,7 +1,7 @@
 ---
 title: "Using rdomains"
 author: "Gaurav Sood"
-date: "2016-06-06"
+date: "2016-06-09"
 vignette: >
   %\VignetteIndexEntry{Illustrating use of rdomains}
   %\VignetteEncoding{UTF-8}
@@ -10,10 +10,6 @@ vignette: >
 
 ### rdomains: Get the category of content hosted by a domain
 
-
-**Caveat**  
-
-If the package is being used to classify browsing data, an important caveat is in order. There is a strong skew in browsing data, with a few domains constituting a significant chunk of browsing time and visits. Classification error in classes gotten from APIs and generic ML classifiers implemented in the package do not weight the error by frequency of visits. We provide two ways to address the problem. First, the package includes [Alexa top 1 million domains (zip)](http://s3.amazonaws.com/alexa-static/top-1m.csv.zip). We also provide access to the Alexa API that gives traffic numbers. And build a ML classifier that weights by the traffic numbers. 
 
 #### Install and Load the package
 
@@ -24,6 +20,7 @@ The latest development version of the package will always be on GitHub. To insta
 #library(devtools)
 install_github("soodoku/domain_classifier/rdomains")
 ```
+
 To install the package from CRAN, type in: 
 
 
@@ -53,11 +50,16 @@ shalla_cat("http://www.google.com")
 ```
 #### ML 
 
-To get category of the content based on ML (currently gives propensity of pornographic content based on name and suffix alone):
+Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone: 
 
 
 ```r
-name_suffix_cat("http://www.google.com")
+adult_ml1_cat("http://www.google.com")
+```
+
+```
+##   domain_name  category
+## 1  google.com 0.3133728
 ```
 
 #### Virustotal

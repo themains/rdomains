@@ -1,9 +1,10 @@
 #' Get Alexa Data
 #' 
-#' Get Top 1M most visited domains list from Alexa. 
+#' Get Top 1M most visited domains list from Alexa. These data can be used to weight the 
+#' classification error.
 #'
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
-#' @param overwrite Optional; default is FALSE
+#' @param overwrite Optional; default is FALSE. If TRUE, the file is overwritten.
 #' 
 #'  
 #' @export

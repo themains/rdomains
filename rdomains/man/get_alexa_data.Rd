@@ -9,10 +9,11 @@ get_alexa_data(outdir = ".", overwrite = FALSE)
 \arguments{
 \item{outdir}{Optional; folder to which you want to save the file; Default is same folder}
 
-\item{overwrite}{Optional; default is FALSE}
+\item{overwrite}{Optional; default is FALSE. If TRUE, the file is overwritten.}
 }
 \description{
-Get Top 1M most visited domains list from Alexa.
+Get Top 1M most visited domains list from Alexa. These data can be used to weight the 
+classification error.
 }
 \examples{
 \dontrun{

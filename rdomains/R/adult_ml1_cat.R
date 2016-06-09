@@ -1,18 +1,18 @@
-#' Get Category Based on Domain Name, Suffix 
+#' Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone. 
 #'
 #' Uses a validated ML model that uses keywords in the domain name
-#' and suffix to predict category of content hosted by the domain. 
-#' Currently only supports classification of pornographic content.
+#' and suffix to predict probability that the domain hosts adult content. 
+#' See \url{https://github.com/soodoku/domain_classifier/tree/master/domain_name} for details. 
 #'
 #' @param domains vector of domain names
 #' 
 #' @return data.frame with original list and content category of the domain
 #' @export
 #' @examples 
-#' name_suffix_cat(domains="http://www.google.com")
+#' adult_ml1_cat(domains="http://www.google.com")
 #' 
 
-name_suffix_cat <- function(domains=NULL) {
+adult_ml1_cat <- function(domains=NULL) {
 
 	coefs <- dimnames(glm_shalla$glmnet.fit$beta)[[1]]
 
@@ -26,7 +26,7 @@ name_suffix_cat <- function(domains=NULL) {
 	c_domains  <- gsub("^www.", "", c_domains)
 
 	# Initialize results 
-	res_df <- data.frame(domain_name=c_domains, category=NA)
+	res_df <- data.frame(domain_name=c_domains, p_adult=NA)
 
 	# Initialize feature df
 	features  <- setNames(data.frame(matrix(ncol = length(coefs), nrow = length(domains))), coefs)

@@ -1,8 +1,8 @@
 context("Get Name Suffix Cat")
 
-test_that("ML cat", {
+test_that("Adult ML1 cat", {
 
-    report <- name_suffix_cat("http://www.google.com")
+    report <- adult_ml1_cat("http://www.google.com")
   	expect_that(report, is_a("data.frame"))
 })
 

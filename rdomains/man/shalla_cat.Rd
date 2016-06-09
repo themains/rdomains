@@ -15,7 +15,8 @@ shalla_cat(domains = NULL, use_file = NULL)
 data.frame with original list and content category of the domain
 }
 \description{
-Fetches category of content hosted by domain from Shallalist.
+Fetches category of content hosted by domain from Shallalist. If \code{use_file} isn't given,
+the function uses the shallalist file that the package ships with.
 }
 \examples{
 shalla_cat(domains="http://www.google.com")

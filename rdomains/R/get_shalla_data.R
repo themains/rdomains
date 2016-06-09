@@ -3,7 +3,7 @@
 #' Downloads, unzips and saves the latest version of shallalist data.
 #'  
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
-#' @param overwrite Optional; default is FALSE
+#' @param overwrite Optional; default is FALSE. If TRUE, the file is overwritten.
 #' 
 #' @export
 #' 

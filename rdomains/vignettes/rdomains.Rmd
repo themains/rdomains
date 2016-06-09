@@ -46,10 +46,15 @@ shalla_cat("http://www.google.com")
 ```
 #### ML 
 
-To get category of the content based on ML (currently gives propensity of pornographic content based on name and suffix alone):
+Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone: 
 
 ```{r, eval=FALSE, ml}
-name_suffix_cat("http://www.google.com")
+adult_ml1_cat("http://www.google.com")
+```
+
+```
+##   domain_name  category
+## 1  google.com 0.3133728
 ```
 
 #### Virustotal

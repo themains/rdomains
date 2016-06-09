@@ -9,7 +9,7 @@ get_shalla_data(outdir = "./", overwrite = FALSE)
 \arguments{
 \item{outdir}{Optional; folder to which you want to save the file; Default is same folder}
 
-\item{overwrite}{Optional; default is FALSE}
+\item{overwrite}{Optional; default is FALSE. If TRUE, the file is overwritten.}
 }
 \description{
 Downloads, unzips and saves the latest version of shallalist data.
