@@ -10,7 +10,7 @@ The package provides a few ways to classify domains based on their content. You 
 
 To get the current released version from CRAN:
 ```r
-install.packages("virustotal")
+install.packages("rdomains")
 ```
 
 To get the current development version from GitHub:
