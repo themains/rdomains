@@ -7,7 +7,7 @@
 #' 
 #' @export
 #' 
-#' @references \url{http://www.shallalist.de/licence.html}
+#' @references \url{http://www.shallalist.de/}
 #' 
 #' @examples \dontrun{
 #' get_shalla_data()
@@ -46,9 +46,9 @@ get_shalla_data <- function(outdir="./", overwrite=FALSE) {
 	output_file <- paste0(outdir, "shalla_domain_cateory.csv")	
 
 	# Write to file
-	if (overwrite & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name.")
+	if (overwrite==FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
 
-	write.csv(res2, file=output_file)
+	write.csv(res2, file=output_file, row.names=F)
 	
 	cat("Shallalist Data saved to the following destination:", outdir, "\n")
 

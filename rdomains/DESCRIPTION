@@ -15,7 +15,6 @@ Imports:
     stats,
     RSelenium,
     XML,
-    readr,
     curl,
     virustotal,
     aws.alexa

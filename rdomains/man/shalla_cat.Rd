@@ -4,20 +4,18 @@
 \alias{shalla_cat}
 \title{Get Category from Shallalist}
 \usage{
-shalla_cat(domains = NULL, use_new = FALSE)
+shalla_cat(domains = NULL, use_file = NULL)
 }
 \arguments{
 \item{domains}{vector of domain names}
 
-\item{use_new}{use new shallalist database; default is FALSE}
+\item{use_file}{path to the latest shallalist file downloaded using \code{\link{get_shalla_data}}}
 }
 \value{
 data.frame with original list and content category of the domain
 }
 \description{
-Fetches category of content hosted by domain from Shallalist. If \code{use_new} is TRUE,
-\link{\code{get_shall_data}} is invoked, which in turn checks whether the user wants to use a 
-local (but newer than what is in the package) shallalist file or download a new one.
+Fetches category of content hosted by domain from Shallalist.
 }
 \examples{
 shalla_cat(domains="http://www.google.com")

@@ -14,7 +14,7 @@
 #' @importFrom Matrix Matrix
 #' @importFrom glmnet predict.cv.glmnet
 #' @importFrom stats setNames
-#' @importFrom utils read.table URLencode untar unzip write.csv 
+#' @importFrom utils read.table URLencode untar unzip read.csv write.csv 
 #' @importFrom curl curl_download
 #' @importFrom XML readHTMLTable
 #' @importFrom RSelenium remoteDriver checkForServer startServer
