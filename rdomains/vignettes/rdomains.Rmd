@@ -4,9 +4,9 @@ author: "Gaurav Sood"
 date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{Illustrating use of rdomains}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 
 ### rdomains: Get the category of content hosted by a domain
 

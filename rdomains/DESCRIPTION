@@ -13,6 +13,7 @@ Imports:
     urltools,
     glmnet,
     stats,
+    methods,
     RSelenium,
     XML,
     curl,

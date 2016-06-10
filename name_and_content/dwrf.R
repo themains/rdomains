@@ -1,31 +1,17 @@
 ## Classifying Pornographic Domains Using Keywords and Domain Suffixes
 
-Start by setting the global option that Strings not be treated as factors.
-```{r set_global_opt}
-# Global options
 options(StringsAsFactors=FALSE)
-```
-
-Load the relevant libraries
-```{r load_libs}
-# Load libs 
 library(urltools)
 library(goji)
 library(glmnet)
-```
 
-Read in the shallalist data
-```{r load_data}
-# Load the data
-shalla <- read.csv("shalla_cat_unique_host.csv")
+setwd(githubdir)
+setwd("domain_classifier/")
+setwd("name_and_content/")
+
+shalla  <- read.csv("../domain_name/shalla_cat_unique_host.csv")
 content <- read.csv("sample_out.csv")
-```
 
-### Featurizing
-
-Keyword list based features:
-
-```{r featurize}
 # Load porn keywords
 knotty_file <- file("knotty_words.txt", "r")
 knotty      <- readLines(knotty_file, warn=F)
@@ -33,13 +19,15 @@ close(knotty_file)
 knotty      <- unlist(strsplit(knotty, ", "))
 
 # Let us just initialize new cols for each of the knotty words
-shalla[, knotty] <- NA
 
 for (j in knotty) {
 
-    shalla[, j] <- grepl(j, shalla$hostname)
+    tfs         <- grepl(j, shalla$hostname)
+    index       <- (1:nrow(shalla))[tfs]
+    shalla[, j] <- sparseVector(rep(1, length(index)), index, nrow(shalla))
+
 }
-```
+
 
 Whether or not domain name is simple an IP address:
 ```{r ip_code}

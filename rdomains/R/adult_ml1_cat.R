@@ -4,12 +4,12 @@
 #' and suffix to predict probability that the domain hosts adult content. 
 #' See \url{https://github.com/soodoku/domain_classifier/tree/master/domain_name} for details. 
 #'
-#' @param domains vector of domain names
+#' @param domains required; string; vector of domain names
 #' 
 #' @return data.frame with original list and content category of the domain
 #' @export
 #' @examples 
-#' adult_ml1_cat(domains="http://www.google.com")
+#' adult_ml1_cat("http://www.google.com")
 #' 
 
 adult_ml1_cat <- function(domains=NULL) {
@@ -29,26 +29,30 @@ adult_ml1_cat <- function(domains=NULL) {
 	res_df <- data.frame(domain_name=c_domains, p_adult=NA)
 
 	# Initialize feature df
-	features  <- setNames(data.frame(matrix(ncol = length(coefs), nrow = length(domains))), coefs)
+	features  <- spMatrix(nrow(res_df), length(coefs)) # list() # setNames(data.frame(matrix(ncol = length(coefs), nrow = length(domains))), coefs)
 
 	# length
 	for (j in 1:60) {
-		features[, j] <- grepl(coefs[j], c_domains)
+	  tfs           <- grepl(coefs[j], c_domains)
+      features[,j]  <- as(tfs, "sparseVector")
+
 	}
 
 	# num 
-	features$num <- grepl("^[0-9]*.[0-9]*.[0-9]*.[0-9]", c_domains)
+	tfs <- grepl("^[0-9]*.[0-9]*.[0-9]*.[0-9]", c_domains)
+    features[,61] <- as(tfs, "sparseVector")
 
 	# suffix
 	split_url  <- suffix_extract(c_domains)
 	suffixes   <- split_url$suffix[match(res_df$domain_name, split_url$host)]
 
 	for(t in 62:length(coefs)) {
-	  features[, t] <- grepl(coefs[t], suffixes)
+	  tfs          <- grepl(coefs[t], suffixes)
+      features[,t] <- as(tfs, "sparseVector")
 	}
 
 	# Predict
-	res_df$category   <- c(predict.cv.glmnet(glm_shalla, as.matrix(features*1), s = "lambda.min", type="response"))
+	res_df$category   <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")
 
 	res_df
 }
