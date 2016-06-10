@@ -21,6 +21,7 @@ Imports:
     aws.alexa
 Suggests:
     testthat,
+    rmarkdown,
     knitr (>= 1.11)
 VignetteBuilder: knitr
 License: MIT + file LICENSE
