@@ -1,12 +1,13 @@
 #' Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone. 
 #'
 #' Uses a validated ML model that uses keywords in the domain name
-#' and suffix to predict probability that the domain hosts adult content. 
-#' See \url{https://github.com/soodoku/domain_classifier/tree/master/domain_name} for details. 
-#'
+#' and suffix to predict probability that the domain hosts adult content. For
+#' more information see \url{https://github.com/soodoku/domain_classifier/tree/master/domain_name}
+#' 
 #' @param domains required; string; vector of domain names
 #' 
-#' @return data.frame with original list and content category of the domain
+#' @return data.frame with original list and content category of the domains
+#' 
 #' @export
 #' @examples \dontrun{
 #' adult_ml1_cat("http://www.google.com")

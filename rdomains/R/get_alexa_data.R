@@ -1,4 +1,4 @@
-#' Get Alexa Data
+#' Get Alexa Traffic Data
 #' 
 #' Get Top 1M most visited domains list from Alexa. These data can be used to weight the 
 #' classification error.
