@@ -8,11 +8,13 @@
 #' 
 #' @return data.frame with original list and content category of the domain
 #' @export
-#' @examples 
+#' @examples \dontrun{
 #' adult_ml1_cat("http://www.google.com")
-#' 
+#' }
 
 adult_ml1_cat <- function(domains=NULL) {
+
+	if (!is.character(domains)) stop("Please provide a valid vector of domain names.")
 
 	coefs <- dimnames(glm_shalla$glmnet.fit$beta)[[1]]
 
@@ -52,7 +54,7 @@ adult_ml1_cat <- function(domains=NULL) {
 	}
 
 	# Predict
-	res_df$category   <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")
+	res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")
 
 	res_df
 }

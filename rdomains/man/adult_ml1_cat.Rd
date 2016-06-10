@@ -9,7 +9,7 @@ adult_ml1_cat(domains = NULL)
 adult_ml1_cat(domains = NULL)
 }
 \arguments{
-\item{domains}{vector of domain names}
+\item{domains}{required; string; vector of domain names}
 
 \item{domains}{vector of domain names}
 }
@@ -28,8 +28,9 @@ and suffix to predict probability that the domain hosts adult content.
 See \url{https://github.com/soodoku/domain_classifier/tree/master/domain_name} for details.
 }
 \examples{
-adult_ml1_cat(domains="http://www.google.com")
-
+\dontrun{
+adult_ml1_cat("http://www.google.com")
+}
 adult_ml1_cat(domains="http://www.google.com")
 
 }
