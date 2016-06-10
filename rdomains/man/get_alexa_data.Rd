@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_alexa_data.R
 \name{get_alexa_data}
 \alias{get_alexa_data}
-\title{Get Alexa Data}
+\title{Get Alexa Traffic Data}
 \usage{
 get_alexa_data(outdir = ".", overwrite = FALSE)
 }
