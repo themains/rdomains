@@ -2,10 +2,10 @@ Package: rdomains
 Title: Get the Category of Content Hosted by a Domain
 Version: 0.1.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
-Description: Get the category of content hosted by a domain. Use shallalist,  
-    virustotal (which provides access to lots of services), McAfee, or a 
-    validated machine learning classifier based on shallalist data to learn 
-    about the kind of content hosted by a domain.
+Description: Get the category of content hosted by a domain. Use Shallalist <http://shalla.de/>,  
+    Virustotal (which provides access to lots of services) <https://www.virustotal.com/>, 
+    McAfee <https://www.trustedsource.org/>, or validated machine learning classifiers based on 
+    Shallalist data to learn about the kind of content hosted by a domain.
 Depends:
     R (>= 3.3.0)
 Imports:
