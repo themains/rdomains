@@ -22,6 +22,11 @@ The specific cost function we use for classification will vary by application. F
 * [Domain Name Based Classifier](domain_name/) (R)
 * [rdomains: R package providing access to both API and ML](rdomains/) (R)
 
+### Data
+
+* [2004 comScore Browswing Data](http://dx.doi.org/10.7910/DVN/BPS1OK) using [API Domain Classifier](trusted/)
+* [Parsed DMOZ Data](http://dx.doi.org/10.7910/DVN/OMV93V) using [DMOZ CSV](https://github.com/suriyan/dmoz_csv)
+
 ### License
 
 Released under the [MIT License](https://opensource.org/licenses/MIT)
