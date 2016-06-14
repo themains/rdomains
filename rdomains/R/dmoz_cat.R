@@ -32,12 +32,12 @@ dmoz_cat <- function(domains=NULL, use_file=NULL) {
 	if (!is.character(use_file)) {
 
 		if (!file.exists(use_file)) stop("Please provide correct path to the file.")
-		dmoz <- read.csv(use_file, headers=F)
+		dmoz <- read.csv(use_file, header =F)
 	
 	} else { 
 
 		if (!file.exists('dmoz_domain_cateory.csv')) stop("Please provide path to the dmoz file. Or download it using get_dmoz_data().")
-		dmoz <- read.csv('dmoz_domain_cateory.csv', headers=F)
+		dmoz <- read.csv('dmoz_domain_cateory.csv', header =F)
 	}
 
 	names(dmoz) <- c("hostname", "category")
