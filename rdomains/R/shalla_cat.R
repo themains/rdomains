@@ -1,7 +1,8 @@
 #' Get Category from Shallalist
 #'
-#' Fetches category of content hosted by domain from Shallalist. If \code{use_file} isn't given,
-#' the function uses the shallalist file that the package ships with.
+#' Fetches category of content hosted by a domain according to Shalla. 
+#' The function checks if path to the shalla file is provided by the user. 
+#' If not, it looks for \code{shalla_domain_cateory.csv} in the working directory. 
 #'
 #' @param domains vector of domain names
 #' @param use_file path to the latest shallalist file downloaded using \code{\link{get_shalla_data}}
@@ -25,18 +26,23 @@ shalla_cat <- function(domains=NULL, use_file=NULL) {
 	c_domains  <- gsub("^www.", "", c_domains)
 
 	# Initialize results df
+	shalla <- NA
 	domain_cat <- data.frame(domain_name = c_domains, shalla_category=NA)
 
-	if (!is.null(use_file)) {
+	if (is.character(use_file)) {
 
+		if (!file.exists(use_file)) stop("Please provide correct path to the file.")
 		shalla <- read.csv(use_file)
-		# Match
-		domain_cat$shalla_category <- shalla$category[match(c_domains, shalla$hostname)]
-		return(domain_cat)
+	
+	} else { 
+
+		if (!file.exists('shalla_domain_cateory.csv')) stop("Please provide path to the shallalist file. Or download it using get_shalla_data().")
+		shalla <- read.csv('shalla_domain_cateory.csv')
 	}
 
 	# Match
-	domain_cat$shalla_category <- shallalist$category[match(c_domains, shallalist$hostname)]
+	cats <- shalla$category[match(c_domains, shalla$hostname)]
+	domain_cat$shalla_category <- ifelse(!is.null(cats), cats, NA)
 
 	domain_cat
 }

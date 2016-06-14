@@ -15,6 +15,10 @@
 
 get_shalla_data <- function(outdir="./", overwrite=FALSE) {
 
+	# Check if file already there
+	output_file <- paste0(outdir, "shalla_domain_cateory.csv")	
+	if (overwrite==FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
+
 	tmp <- tempfile()
 	curl_download("http://www.shallalist.de/Downloads/shallalist.tar.gz", tmp)
 	untar(tmp, exdir=getwd())
@@ -42,11 +46,6 @@ get_shalla_data <- function(outdir="./", overwrite=FALSE) {
 	# Remove the 
 	unlink(paste0(outdir, paste0(all_files)), recursive = TRUE, force = TRUE)
 	unlink(paste0(outdir, "BL"), recursive = TRUE, force = TRUE)
-
-	output_file <- paste0(outdir, "shalla_domain_cateory.csv")	
-
-	# Write to file
-	if (overwrite==FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
 
 	write.csv(res2, file=output_file, row.names=F)
 	

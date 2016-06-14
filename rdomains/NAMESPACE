@@ -2,11 +2,12 @@
 
 export(adult_ml1_cat)
 export(alexa_cat)
+export(dmoz_cat)
 export(get_alexa_data)
+export(get_dmoz_data)
 export(get_shalla_data)
 export(glm_shalla)
 export(shalla_cat)
-export(shallalist)
 export(trusted_cat)
 export(virustotal_cat)
 importFrom(Matrix,Matrix)

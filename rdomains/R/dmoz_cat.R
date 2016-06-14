@@ -29,17 +29,18 @@ dmoz_cat <- function(domains=NULL, use_file=NULL) {
 	dmoz <- NA
 	domain_cat <- data.frame(domain_name = c_domains, shalla_category=NA)
 
-	if (!is.character(use_file)) {
+	if (is.character(use_file)) {
 
 		if (!file.exists(use_file)) stop("Please provide correct path to the file.")
 		dmoz <- read.csv(use_file, header =F)
 	
 	} else { 
 
-		if (!file.exists('dmoz_domain_cateory.csv')) stop("Please provide path to the dmoz file. Or download it using get_dmoz_data().")
-		dmoz <- read.csv('dmoz_domain_cateory.csv', header =F)
+		if (!file.exists('dmoz_domain_category.csv')) stop("Please provide path to the dmoz file. Or download it using get_dmoz_data().")
+		dmoz <- read.csv('dmoz_domain_category.csv', header =F)
 	}
 
+	dmoz <- dmoz[, 1:2]
 	names(dmoz) <- c("hostname", "category")
 
 	# Match
