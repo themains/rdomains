@@ -17,7 +17,7 @@
 get_dmoz_data <- function(outdir=".", overwrite=FALSE) {
 
 	tmp <- tempfile()
-	curl_download("https://github.com/soodoku/domain_classifier/blob/master/rdomains/data-raw/dmoz/dmoz_domain_cateory.csv.zip?raw=true", tmp)
+	curl_download("https://github.com/soodoku/domain_classifier/blob/master/rdomains/data-raw/dmoz/dmoz_domain_cateory.zip?raw=true", tmp)
 
 	dmoz_file <- paste0(outdir, "dmoz_domain_cateory.csv")	
 
