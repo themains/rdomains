@@ -33,7 +33,13 @@ library(rdomains)
 
 #### Shalla
 
-To get category of the content from [shallalist](http://www.shallalist.de):
+To get category of the content from [shallalist](http://www.shallalist.de), first download the latest file using:
+
+```{r, eval=FALSE, down_shalla}
+get_shalla_data()
+```
+
+And then, get the category using: 
 
 ```{r, eval=FALSE, shalla}
 shalla_cat("http://www.google.com")
@@ -43,6 +49,21 @@ shalla_cat("http://www.google.com")
 ##   domain_name shalla_category
 ## 1  google.com   searchengines
 ```
+
+#### DMOZ
+
+To get category of the content from [DMOZ](dmoz.org), first download the archived parsed CSV file using:
+
+```{r, eval=FALSE, down_dmoz}
+get_dmoz_data()
+```
+
+And then, get the category using: 
+
+```{r, eval=FALSE, dmoz}
+dmoz_cat("http://www.google.com")
+```
+
 #### ML 
 
 Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone: 
@@ -69,6 +90,7 @@ virustotal_cat("http://www.google.com")
 ##                 domain   bitdefender dr_web  alexa        google       websense             trendmicro
 ## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals
 ```
+
 #### Trusted (McAfee)
 
 Get the content category of a domain according to McAfee (Trusted):
