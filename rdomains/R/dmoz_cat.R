@@ -10,9 +10,9 @@
 #' @return data.frame with original list and content category of the domain
 #' 
 #' @export
-#' @examples 
+#' @examples \dontrun{
 #' dmoz_cat(domains="http://www.google.com")
-#' 
+#' }
 
 dmoz_cat <- function(domains=NULL, use_file=NULL) {
 	
@@ -31,7 +31,7 @@ dmoz_cat <- function(domains=NULL, use_file=NULL) {
 
 	if (is.character(use_file)) {
 
-		if (!file.exists(use_file)) stop("Please provide correct path to the file.")
+		if (!file.exists(use_file)) stop("Please provide correct path to the file. Or download it using get_dmoz_data().")
 		dmoz <- read.csv(use_file, header =F)
 	
 	} else { 

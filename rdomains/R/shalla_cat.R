@@ -10,9 +10,9 @@
 #' @return data.frame with original list and content category of the domain
 #' 
 #' @export
-#' @examples 
+#' @examples \dontrun{
 #' shalla_cat(domains="http://www.google.com")
-#' 
+#' }
 
 shalla_cat <- function(domains=NULL, use_file=NULL) {
 	
@@ -31,7 +31,7 @@ shalla_cat <- function(domains=NULL, use_file=NULL) {
 
 	if (is.character(use_file)) {
 
-		if (!file.exists(use_file)) stop("Please provide correct path to the file.")
+		if (!file.exists(use_file)) stop("Please provide correct path to the file. Or download it using get_shalla_data().")
 		shalla <- read.csv(use_file)
 	
 	} else { 

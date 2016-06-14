@@ -20,7 +20,8 @@ The function checks if path to the dmoz file is provided by the user.
 If not, it looks for \code{dmoz_domain_cateory.csv} in the working directory.
 }
 \examples{
+\dontrun{
 dmoz_cat(domains="http://www.google.com")
-
+}
 }
 

@@ -20,7 +20,8 @@ The function checks if path to the shalla file is provided by the user.
 If not, it looks for \code{shalla_domain_cateory.csv} in the working directory.
 }
 \examples{
+\dontrun{
 shalla_cat(domains="http://www.google.com")
-
+}
 }
 
