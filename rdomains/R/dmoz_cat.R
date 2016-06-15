@@ -27,7 +27,7 @@ dmoz_cat <- function(domains=NULL, use_file=NULL) {
 
 	# Initialize results df
 	dmoz <- NA
-	domain_cat <- data.frame(domain_name = c_domains, shalla_category=NA)
+	domain_cat <- data.frame(domain_name = c_domains, dmoz_category=NA)
 
 	if (is.character(use_file)) {
 
