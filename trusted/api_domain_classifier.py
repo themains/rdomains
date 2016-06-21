@@ -21,40 +21,40 @@ else:
     ALL_PART = int(sys.argv[2])
 FINAL_OUTPUT_FILE = "url_category_part_{0!s}_{1!s}.csv".format(CURRENT_PART, ALL_PART)
 
-def simplify_domain(myStr):
-    domain = myStr.strip()
+def simplify_domain(my_str):
+    domain = my_str.strip()
     domain = domain.replace("http://","")
     domain = domain.replace("www.","")
     domain = domain.split("/")[0].strip()
     return domain
 
-def deleteLastComma(myStr):
-    domain = myStr.strip().replace("\n","")
-    if myStr[-1:]==",":
-        myStr = myStr[:-1]
-    return myStr
+def deleteLastComma(my_str):
+    domain = my_str.strip().replace("\n","")
+    if my_str[-1:]==",":
+        my_str = my_str[:-1]
+    return my_str
 
 ###############################Read the input domains#####################################
 
-def find_with_pattern(mystr, startPattern, endPattern):
+def find_with_pattern(my_str, startPattern, endPattern):
     """
-    Find the string that starts with <startPattern> and ends with <endPattern> in the orginal string <mystr>.
+    Find the string that starts with <startPattern> and ends with <endPattern> in the orginal string <my_str>.
     Args:
-        + mystr: orginal string.
+        + my_str: orginal string.
         + startPattern: 
         + endPattern: 
     Returns:
         + The found string,
         + and the remained part of the orginal string.
     """
-    x = mystr.find(startPattern)
+    x = my_str.find(startPattern)
     if x==-1:
-        return "",mystr
-    mystr = mystr[x + len(startPattern):]
-    y = mystr.find(endPattern)
+        return "",my_str
+    my_str = my_str[x + len(startPattern):]
+    y = my_str.find(endPattern)
     if y==-1:
-        return "",mystr
-    return mystr[:y], mystr[y+len(endPattern):]
+        return "",my_str
+    return my_str[:y], my_str[y+len(endPattern):]
 
 print "   Start processing the data file {0!s}".format(INPUT_FILE)
 FILE_DATA = []
