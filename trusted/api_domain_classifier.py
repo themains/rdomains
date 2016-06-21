@@ -21,7 +21,7 @@ else:
     ALL_PART = int(sys.argv[2])
 FINAL_OUTPUT_FILE = "url_category_part_{0!s}_{1!s}.csv".format(CURRENT_PART, ALL_PART)
 
-def simplifyDomain(myStr):
+def simplify_domain(myStr):
     domain = myStr.strip()
     domain = domain.replace("http://","")
     domain = domain.replace("www.","")
@@ -113,8 +113,8 @@ for line in my_output_file:
                     if OUTPUT_DOMAIN_INDEX==-1 or OUTPUT_CATEGORY_INDEX==-1 :
                         break
     else:
-                    domain = simplifyDomain(line.split(",")[OUTPUT_DOMAIN_INDEX])
-                    category = simplifyDomain(line.split(",")[OUTPUT_CATEGORY_INDEX])
+                    domain = simplify_domain(line.split(",")[OUTPUT_DOMAIN_INDEX])
+                    category = simplify_domain(line.split(",")[OUTPUT_CATEGORY_INDEX])
                     CATEGORY_URL[domain] = category
     
 
@@ -129,7 +129,7 @@ if OUTPUT_DOMAIN_INDEX==-1 or OUTPUT_CATEGORY_INDEX==-1:
 count = 0
 prev_timer= time.time()
 for line in FILE_DATA:
-        domain = simplifyDomain(line.split(",")[INPUT_DOMAIN_INDEX])
+        domain = simplify_domain(line.split(",")[INPUT_DOMAIN_INDEX])
         count = count + 1
         # Monitor the progress
         if (count%10==0):
@@ -172,7 +172,4 @@ for line in FILE_DATA:
 my_output_file.close()              
 
 #######################################DONE##############################################
-print "Done, write the final output into file {0!s}".format(FINAL_OUTPUT_FILE)
-        
-            
-        
+print "Done, write the final output into file {0!s}".format(FINAL_OUTPUT_FILE) 
