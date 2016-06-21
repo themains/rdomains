@@ -30,7 +30,7 @@ def simplifyDomain(myStr):
 
 def deleteLastComma(myStr):
     domain = myStr.strip().replace("\n","")
-    if myStr[len(myStr)-1]==",":
+    if myStr[-1:]==",":
         myStr = myStr[:-1]
     return myStr
 
