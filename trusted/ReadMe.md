@@ -1,5 +1,7 @@
 ## API Based Domain Classifier
 
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/318c0373047d405e94b0242bdf04733c/badge.svg)](https://www.quantifiedcode.com/app/project/318c0373047d405e94b0242bdf04733c)
+
 Relying on APIs is of course not optimal. For one, we don't know the error they make in classifying the content of domains. So to calibrate the error, one may want to handcode a large random sample of domains and report the confusion matrix. Or better yet perhaps, one may want to devise own algorithm to categorize domains. Both are easy enough to do but need some doing. For now, APIs. 
 
 There are a variety of APIs in the market that provide off-the-shelf solutions for categorizing the content hosted on different domains. Prominent among them are: [Zvelvo](https://zvelo.com/), [Similar Web](https://developer.similarweb.com/website_categorization_API), [DatumBox](http://www.datumbox.com/machine-learning-api/), [Fortiguard](http://www.fortiguard.com/static/webfiltering.html) and [Trusted Source](http://www.trustedsource.org/en/feedback/url).
