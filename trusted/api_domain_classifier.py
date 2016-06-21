@@ -36,7 +36,7 @@ def deleteLastComma(myStr):
 
 ###############################Read the input domains#####################################
 
-def findWithPattern(mystr, startPattern, endPattern):
+def find_with_pattern(mystr, startPattern, endPattern):
     """
     Find the string that starts with <startPattern> and ends with <endPattern> in the orginal string <mystr>.
     Args:
@@ -151,7 +151,7 @@ for line in FILE_DATA:
                 print "CONNECTION ERROR"
                 continue
 
-            categoryDiv,tmp = findWithPattern(data,'<b>Categorization</b>','</table>')
+            categoryDiv,tmp = find_with_pattern(data,'<b>Categorization</b>','</table>')
             items = categoryDiv.split('<td align="left" valign="top" nowrap="nowrap">')
             if len (items)>=3:
                 category = items[3]
@@ -172,4 +172,4 @@ for line in FILE_DATA:
 my_output_file.close()              
 
 #######################################DONE##############################################
-print "Done, write the final output into file {0!s}".format(FINAL_OUTPUT_FILE) 
+print "Done, write the final output into file {0!s}".format(FINAL_OUTPUT_FILE)
