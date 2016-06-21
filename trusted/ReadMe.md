@@ -1,24 +1,24 @@
-## API Based Domain Classifier
+## Trusted (McAfee) Domain Classifier
 
 [![Code Issues](https://www.quantifiedcode.com/api/v1/project/318c0373047d405e94b0242bdf04733c/badge.svg)](https://www.quantifiedcode.com/app/project/318c0373047d405e94b0242bdf04733c)
 
-Relying on APIs is of course not optimal. For one, we don't know the error they make in classifying the content of domains. So to calibrate the error, one may want to handcode a large random sample of domains and report the confusion matrix. Or better yet perhaps, one may want to devise own algorithm to categorize domains. Both are easy enough to do but need some doing. For now, APIs. 
+Relying on commercial APIs is not optimal. For one, we generally don't know the error they make in classifying the content of domains. (To my knowledge, no one publishes error rates. But even where they do, it would be inadvisable to take them on faith.) So to calibrate the error, one may want to handcode a large random sample of domains and report the confusion matrix. Or better yet perhaps, one may want to devise own algorithm to categorize domains. Both are easy enough to do but need some doing. For now, APIs. 
 
 There are a variety of APIs in the market that provide off-the-shelf solutions for categorizing the content hosted on different domains. Prominent among them are: [Zvelvo](https://zvelo.com/), [Similar Web](https://developer.similarweb.com/website_categorization_API), [DatumBox](http://www.datumbox.com/machine-learning-api/), [Fortiguard](http://www.fortiguard.com/static/webfiltering.html) and [Trusted Source](http://www.trustedsource.org/en/feedback/url).
 
-Of these, we pick [Trusted Source](http://www.trustedsource.org/en/feedback/url) because it is free. (The script for categorizing domains using the Trusted Source API is provided below.) We apply the script to 2004 comScore browsing data, producing a file that contains unique domains and the content category output by the API. 
+Of these, we pick [Trusted Source](http://www.trustedsource.org/en/feedback/url) (McAfee) because it is free. (The script for categorizing domains using the Trusted Source API is provided below.) We apply the script to 2004 comScore browsing data, producing a file that contains unique domains and the content category output by the API. 
 
-### API Script
+### Script
 
 The script [api_domain_classifier](api_domain_classifier.py) takes a csv with a column of domain names ([sample input](sample_in.csv)) and appends a column containing the content category according to [Trusted Source](http://www.trustedsource.org/en/feedback/url) ([sample output](sample_out.csv)). (Note that the script is larger than a conventional API script because Trusted Source returns HTML webpage in response to requests.) The script is very modestly tailored towards large files in the following manner: If you have a large input file, you would ideally want to split the file and run multiple scripts in parallel across potentially different servers. To ease collation of the final data, the script defaults to an output file name that tracks what portion of the file is being processed of the whole. So the output file for 1 of 8 parts will be named `url_category_part_1_8` by default. The two command line arguments `current_part`, and `total_parts` are **neccessary**. For cases where file hasn't been split, just pass 1 1. For example:
 ```
 python api_domain_classifier.py 1 1  
 ```
 Other than the neccessary command line options, following options (within the script) can be tweaked:  
-* INPUT_FILE: Path to the Input file (Line 7)
+* INPUT_FILE: Path to the Input file (Line 7) 
 * URL_COLUMN_NAME: name of the url column (Line 8)
 * URL_CATEGORY_COLUMN_NAME: name of the url_catefoty column name in outputfile (Line 9)
-* FINAL_OUTPUT_FILE: name of the final output file (Line 22)
+* FINAL_OUTPUT_FILE: name of the final output file (Line 22) 
 
 #### Misc. Notes
 
