@@ -22,13 +22,16 @@ else:
 FINAL_OUTPUT_FILE = "url_category_part_{0!s}_{1!s}.csv".format(CURRENT_PART, ALL_PART)
 
 def simplify_domain(my_str):
+    """
+    Get the host name. Strip http, slashes, www etc.
+    """
     domain = my_str.strip()
     domain = domain.replace("http://","")
     domain = domain.replace("www.","")
     domain = domain.split("/")[0].strip()
     return domain
 
-def deleteLastComma(my_str):
+def delete_last_comma(my_str):
     domain = my_str.strip().replace("\n","")
     if my_str[-1:]==",":
         my_str = my_str[:-1]
@@ -121,7 +124,7 @@ for line in my_output_file:
 # Write file the first time
 if OUTPUT_DOMAIN_INDEX==-1 or OUTPUT_CATEGORY_INDEX==-1:
     my_output_file = open(FINAL_OUTPUT_FILE,"w")
-    my_output_file.write(deleteLastComma(INPUT_HEADER)+","+URL_CATEGORY_COLUMN_NAME+"\n")
+    my_output_file.write(delete_last_comma(INPUT_HEADER)+","+URL_CATEGORY_COLUMN_NAME+"\n")
     my_output_file.close()
     my_output_file = open(FINAL_OUTPUT_FILE,"ab+")
 
@@ -167,7 +170,7 @@ for line in FILE_DATA:
                         category = "UNKNOWN"
             print category
             CATEGORY_URL[domain] = category
-            my_output_file.write("{0!s},{1!s}\n".format(deleteLastComma(line), category))
+            my_output_file.write("{0!s},{1!s}\n".format(delete_last_comma(line), category))
 
 my_output_file.close()              
 
