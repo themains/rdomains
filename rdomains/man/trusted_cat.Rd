@@ -4,10 +4,12 @@
 \alias{trusted_cat}
 \title{Get Trusted (McAfee) Category}
 \usage{
-trusted_cat(domain = NULL)
+trusted_cat(domain = NULL, log = FALSE)
 }
 \arguments{
-\item{domain}{domain name (string)}
+\item{domain}{domain name (string). Default value is \code{NULL}.}
+
+\item{log}{set whether or not a log file is generated with Selenium. (Boolean). Default value is \code{FALSE}.}
 }
 \value{
 data.frame
