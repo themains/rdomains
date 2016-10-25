@@ -55,7 +55,7 @@ adult_ml1_cat <- function(domains=NULL) {
 	}
 
 	# Predict
-	res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")
+	res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")[,1]
 
 	res_df
 }
