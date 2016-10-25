@@ -20,7 +20,7 @@ dmoz_cat <- function(domains=NULL, use_file=NULL) {
 	c_domains  <- gsub("^ *| *$", "", domains)
 
 	# nuke leading http://
-	c_domains  <- gsub("^http://", "", c_domains)
+	c_domains_http  <- gsub("^http://", "", c_domains)
 
 	# nuke leading www.
 	c_domains  <- gsub("^www.", "", c_domains)
@@ -44,6 +44,7 @@ dmoz_cat <- function(domains=NULL, use_file=NULL) {
 	names(dmoz) <- c("hostname", "category")
 
 	# Match
-	domain_cat$dmoz_category <- dmoz$category[match(c_domains, dmoz$hostname)]
+	domain_cat$dmoz_category <- dmoz$category[match(c_domains_http, dmoz$hostname)]
+	domain_cat$dmoz_category <- ifelse(is.na(domain_cat$dmoz_category), dmoz$category[match(c_domains, dmoz$hostname)], domain_cat$dmoz_category)
 	domain_cat
 }
