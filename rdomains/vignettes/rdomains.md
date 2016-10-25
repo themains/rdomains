@@ -1,9 +1,10 @@
 ---
 title: "Using rdomains"
 author: "Gaurav Sood"
-date: "2016-06-14"
+date: "2016-06-15"
 vignette: >
   %\VignetteIndexEntry{Illustrating use of rdomains}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 

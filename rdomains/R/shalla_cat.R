@@ -32,12 +32,12 @@ shalla_cat <- function(domains=NULL, use_file=NULL) {
 	if (is.character(use_file)) {
 
 		if (!file.exists(use_file)) stop("Please provide correct path to the file. Or download it using get_shalla_data().")
-		shalla <- read.csv(use_file)
+		shalla <- read.csv(use_file, stringsAsFactors = FALSE)
 	
 	} else { 
 
 		if (!file.exists('shalla_domain_cateory.csv')) stop("Please provide path to the shallalist file. Or download it using get_shalla_data().")
-		shalla <- read.csv('shalla_domain_cateory.csv')
+		shalla <- read.csv('shalla_domain_cateory.csv', stringsAsFactors = FALSE)
 	}
 
 	# Match

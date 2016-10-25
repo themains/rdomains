@@ -32,12 +32,12 @@ dmoz_cat <- function(domains=NULL, use_file=NULL) {
 	if (is.character(use_file)) {
 
 		if (!file.exists(use_file)) stop("Please provide correct path to the file. Or download it using get_dmoz_data().")
-		dmoz <- read.csv(use_file, header =F)
+		dmoz <- read.csv(use_file, header =F, stringsAsFactors = FALSE)
 	
 	} else { 
 
 		if (!file.exists('dmoz_domain_category.csv')) stop("Please provide path to the dmoz file. Or download it using get_dmoz_data().")
-		dmoz <- read.csv('dmoz_domain_category.csv', header =F)
+		dmoz <- read.csv('dmoz_domain_category.csv', header =F, stringsAsFactors = FALSE)
 	}
 
 	dmoz <- dmoz[, 1:2]
