@@ -41,8 +41,7 @@ shalla_cat <- function(domains=NULL, use_file=NULL) {
 	}
 
 	# Match
-	cats <- shalla$category[match(c_domains, shalla$hostname)]
-	domain_cat$shalla_category <- ifelse(!is.null(cats), cats, NA)
+	domain_cat$shalla_category <- shalla$category[match(c_domains, shalla$hostname)]
 
 	domain_cat
 }
