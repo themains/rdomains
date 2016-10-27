@@ -16,7 +16,8 @@ data.frame with 7 columns: domain, bitdefender, dr_web, alexa, google, websense,
 }
 \description{
 Returns category of content from 6 major services including: BitDefender, Dr. Web, Alexa (DMOZ), Google, 
-Websense, and Trendmicro
+Websense, and Trendmicro. Not all services will have categories for all the domains. When the categories are
+not returned for a particular domain, we return a NA.
 }
 \details{
 Get the API Access Key from \url{http://www.virustotal.com/}. Either pass the API Key to the function 
