@@ -2,6 +2,8 @@ dev/
 keyword/
 ms/
 rdomains/dev/
+rdomains/data-raw/dmoz/*.gz
+rdomains/data-raw/dmoz/*.u8
 .Rproj.user
 .Rhistory
 .RData
