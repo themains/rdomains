@@ -20,7 +20,7 @@ Websense, and Trendmicro
 }
 \details{
 Get the API Access Key from \url{http://www.virustotal.com/}. Either pass the API Key to the function 
-or set the environmental variables \code{VirustotalToken}. These environment variables persist within 
+or set the environmental variable: \code{VirustotalToken}. Environment variables persist within 
 a R session.
 }
 \examples{
