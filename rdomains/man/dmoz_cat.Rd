@@ -15,13 +15,15 @@ dmoz_cat(domains = NULL, use_file = NULL)
 data.frame with original list and content category of the domain
 }
 \description{
-Fetches category of content hosted by a domain according to DMOZ. 
-The function checks if path to the dmoz file is provided by the user. 
-If not, it looks for \code{dmoz_domain_cateory.csv} in the working directory.
+Fetches category (or categories) of content hosted by a domain according to DMOZ. 
+The function checks if path to the DMOZ file is provided by the user. 
+If not, it looks for \code{dmoz_domain_cateory.csv} in the working directory. It also returns
+results for prominent subdomains.
 }
 \examples{
 \dontrun{
 dmoz_cat(domains="http://www.google.com")
+dmoz_cat(domains=c("http://www.google.com", "http://plus.google.com"))
 }
 }
 
