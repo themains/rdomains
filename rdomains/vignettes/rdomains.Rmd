@@ -4,7 +4,7 @@ author: "Gaurav Sood"
 date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{Illustrating use of rdomains}
-  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
