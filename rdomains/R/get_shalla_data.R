@@ -16,7 +16,7 @@
 get_shalla_data <- function(outdir="./", overwrite=FALSE) {
 
 	# Check if file already there
-	output_file <- paste0(outdir, "shalla_domain_cateory.csv")	
+	output_file <- paste0(outdir, "shalla_domain_category.csv")	
 	if (overwrite==FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
 
 	tmp <- tempfile()
