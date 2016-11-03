@@ -37,7 +37,7 @@ shalla_cat <- function(domains=NULL, use_file=NULL) {
 	} else { 
 
 		if (!file.exists('shalla_domain_category.csv')) stop("Please provide path to the shallalist file. Or download it using get_shalla_data().")
-		shalla <- read.csv('shalla_domain_cateory.csv', stringsAsFactors = FALSE)
+		shalla <- read.csv('shalla_domain_category.csv', stringsAsFactors = FALSE)
 	}
 
 	# Match
