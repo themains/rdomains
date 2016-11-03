@@ -17,7 +17,7 @@ data.frame with original list and content category of the domain
 \description{
 Fetches category of content hosted by a domain according to Shalla. 
 The function checks if path to the shalla file is provided by the user. 
-If not, it looks for \code{shalla_domain_cateory.csv} in the working directory.
+If not, it looks for \code{shalla_domain_category.csv} in the working directory.
 }
 \examples{
 \dontrun{

@@ -1,6 +1,7 @@
 #' Get Shalla Data
 #'
-#' Downloads, unzips and saves the latest version of shallalist data.
+#' Downloads, unzips and saves the latest version of shallalist data. By default, saves shalla data  
+#' as \code{shalla_domain_category.csv}.
 #'  
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
 #' @param overwrite Optional; default is FALSE. If TRUE, the file is overwritten.
