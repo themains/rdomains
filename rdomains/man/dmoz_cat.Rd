@@ -26,4 +26,3 @@ dmoz_cat(domains="http://www.google.com")
 dmoz_cat(domains=c("http://www.google.com", "http://plus.google.com"))
 }
 }
-

@@ -30,4 +30,3 @@ alexa_cat(domain="http://www.google.com")
 \references{
 \url{https://docs.aws.amazon.com/AlexaWebInfoService/latest}
 }
-

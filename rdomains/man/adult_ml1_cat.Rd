@@ -22,4 +22,3 @@ more information see \url{https://github.com/soodoku/domain_classifier/tree/mast
 adult_ml1_cat("http://www.google.com")
 }
 }
-

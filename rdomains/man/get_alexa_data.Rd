@@ -23,4 +23,3 @@ get_alexa_data()
 \references{
 \url{https://support.alexa.com/hc/en-us/articles/200461990-Can-I-get-a-list-of-top-sites-from-an-API-}
 }
-

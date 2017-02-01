@@ -23,4 +23,3 @@ get_shalla_data()
 \references{
 \url{http://www.shallalist.de/}
 }
-

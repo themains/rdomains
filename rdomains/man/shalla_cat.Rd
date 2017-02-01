@@ -24,4 +24,3 @@ If not, it looks for \code{shalla_domain_category.csv} in the working directory.
 shalla_cat(domains="http://www.google.com")
 }
 }
-

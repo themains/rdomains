@@ -2,8 +2,8 @@
 % Please edit documentation in R/rdomains.R
 \docType{package}
 \name{rdomains-package}
-\alias{rdomains}
 \alias{rdomains-package}
+\alias{rdomains}
 \title{rdomains: Classify Domains by their Content}
 \description{
 Want to know what kind of content is carried on a domain?
@@ -16,4 +16,3 @@ To learn how to use rdomains, see this vignette: \url{vignettes/rdomains.html}.
 \author{
 Gaurav Sood
 }
-

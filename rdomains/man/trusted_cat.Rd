@@ -25,4 +25,3 @@ trusted_cat("http://www.google.com")
 \references{
 \url{https://www.trustedsource.org/}
 }
-
