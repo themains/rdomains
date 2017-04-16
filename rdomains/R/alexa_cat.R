@@ -15,18 +15,18 @@
 #' @export
 #' @references \url{https://docs.aws.amazon.com/AlexaWebInfoService/latest}
 #' @examples \dontrun{
-#' alexa_cat(domain="http://www.google.com")
+#' alexa_cat(domain = "http://www.google.com")
 #' }
 
-alexa_cat <- function(domain = NULL, key=NULL, secret=NULL) {
-    
-    if (identical(Sys.getenv("AWS_ACCESS_KEY_ID"), "") | (identical(Sys.getenv("AWS_SECRET_ACCESS_KEY"), ""))) {
-        set_secret_key(key, secret)
-    } 
+alexa_cat <- function(domain = NULL, key = NULL, secret = NULL) {
+  
+  if (identical(Sys.getenv("AWS_ACCESS_KEY_ID"), "") | (identical(Sys.getenv("AWS_SECRET_ACCESS_KEY"), ""))) {
+    set_secret_key(key, secret)
+  } 
 
-    a_cat <- url_info(url="http://www.google.com", response_group = "Categories")
+  a_cat <- url_info(url = "http://www.google.com", response_group = "Categories")
 
-    res <- do.call(rbind, a_cat[[2]][[1]][[1]][[2]])
-    return(as.data.frame(res, row.names=1:length(res)))
+  res <- do.call(rbind, a_cat[[2]][[1]][[1]][[2]])
+  return(as.data.frame(res, row.names=1:length(res)))
 
 }

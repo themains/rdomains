@@ -14,42 +14,42 @@
 #' get_shalla_data()
 #' }
 
-get_shalla_data <- function(outdir="./", overwrite=FALSE) {
+get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
 
-	# Check if file already there
-	output_file <- paste0(outdir, "shalla_domain_category.csv")	
-	if (overwrite==FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
+  # Check if file already there
+  output_file <- paste0(outdir, "shalla_domain_category.csv")  
+  if (overwrite==FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
 
-	tmp <- tempfile()
-	curl_download("http://www.shallalist.de/Downloads/shallalist.tar.gz", tmp)
-	untar(tmp, exdir=getwd())
-	list_of_files <- untar(tmp, list=TRUE)
-	unlink(tmp)
+  tmp <- tempfile()
+  curl_download("http://www.shallalist.de/Downloads/shallalist.tar.gz", tmp)
+  untar(tmp, exdir = getwd())
+  list_of_files <- untar(tmp, list = TRUE)
+  unlink(tmp)
 
-	# All the shallalist domain files
-	all_files    <- list_of_files
-	domain_files <- all_files[grepl("domains", all_files)]
-	domain_cats  <- sapply(strsplit(domain_files, "/"), "[", 2)
+  # All the shallalist domain files
+  all_files    <- list_of_files
+  domain_files <- all_files[grepl("domains", all_files)]
+  domain_cats  <- sapply(strsplit(domain_files, "/"), "[", 2)
 
-	# Iterate through domain_files and get a list of data.frames
-	j <- 1
-	res <- list()
-	for (i in paste0(outdir, domain_files)) {
-		cat       <- domain_cats[j]
-		domains   <- read.table(i)
-		res[[j]]  <- data.frame(hostname=unlist(domains), category=cat)
-		j <- j + 1
-	}
-	
-	# rbind all the data.frames	
-	res2 <- do.call(rbind, res)
+  # Iterate through domain_files and get a list of data.frames
+  j <- 1
+  res <- list()
+  for (i in paste0(outdir, domain_files)) {
+    cat       <- domain_cats[j]
+    domains   <- read.table(i)
+    res[[j]]  <- data.frame(hostname = unlist(domains), category = cat)
+    j <- j + 1
+  }
+ 
+  # rbind all the data.frames  
+  res2 <- do.call(rbind, res)
 
-	# Remove the 
-	unlink(paste0(outdir, paste0(all_files)), recursive = TRUE, force = TRUE)
-	unlink(paste0(outdir, "BL"), recursive = TRUE, force = TRUE)
+  # Remove the 
+  unlink(paste0(outdir, paste0(all_files)), recursive = TRUE, force = TRUE)
+  unlink(paste0(outdir, "BL"), recursive = TRUE, force = TRUE)
 
-	write.csv(res2, file=output_file, row.names=F)
-	
-	cat("Shallalist Data saved to the following destination:", outdir, "\n")
+  write.csv(res2, file = output_file, row.names = F)
+ 
+  cat("Shallalist Data saved to the following destination:", outdir, "\n")
 
 }

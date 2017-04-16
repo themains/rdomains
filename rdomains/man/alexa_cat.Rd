@@ -24,7 +24,7 @@ These environment variables persist within a R session.
 }
 \examples{
 \dontrun{
-alexa_cat(domain="http://www.google.com")
+alexa_cat(domain = "http://www.google.com")
 }
 }
 \references{

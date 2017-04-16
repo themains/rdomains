@@ -37,4 +37,3 @@ not_news <- function(url_list = NULL) {
 
    data.frame(url_list, not_news, news)
 }
-

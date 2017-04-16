@@ -14,18 +14,18 @@
 #' get_dmoz_data()
 #' }
 
-get_dmoz_data <- function(outdir=".", overwrite=FALSE) {
+get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
 
-	# Check if file exists
-	dmoz_file <- paste0(outdir, "dmoz_domain_category.csv")	
-	if (file.exists(dmoz_file) & overwrite==FALSE) stop(paste0("There already exists a file with the same name.\n The file was last updated on ", 
-																file.info(dmoz_file)$mtime,
-																".\n If you want to update the file, set overwrite to TRUE"))
-	tmp <- tempfile()
-	curl_download("https://github.com/soodoku/domain_classifier/blob/master/rdomains/data-raw/dmoz/dmoz_domain_category.zip?raw=true", tmp)
-	unzip(tmp, exdir=outdir, overwrite=overwrite)
-	unlink(tmp)
-	
-	cat("DMOZ Data saved to the following destination:", outdir, "\n")
+  # Check if file exists
+  dmoz_file <- paste0(outdir, "dmoz_domain_category.csv")  
+  if (file.exists(dmoz_file) & overwrite==FALSE) stop(paste0("There already exists a file with the same name.\n The file was last updated on ", 
+                                file.info(dmoz_file)$mtime,
+                                ".\n If you want to update the file, set overwrite to TRUE"))
+  tmp <- tempfile()
+  curl_download("https://github.com/soodoku/domain_classifier/blob/master/rdomains/data-raw/dmoz/dmoz_domain_category.zip?raw=true", tmp)
+  unzip(tmp, exdir = outdir, overwrite = overwrite)
+  unlink(tmp)
+  
+  cat("DMOZ Data saved to the following destination:", outdir, "\n")
 
 }

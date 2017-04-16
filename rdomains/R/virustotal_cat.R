@@ -20,29 +20,25 @@
 #' virustotal_cat("http://www.google.com")
 #' }
 
-virustotal_cat <- function(domain = NULL, apikey=NULL) {
-  
+virustotal_cat <- function(domain = NULL, apikey = NULL) {
+
   if (identical(domain, NULL)) stop("Please provide a valid domain.")
 
   if (identical(Sys.getenv("VirustotalToken"), "")) {
-      set_key(apikey)
-   } 
+    set_key(apikey)
+  } 
 
   # Get domain report 
   res <-  domain_report(domain)
 
   # Companies from which virustotal returns domain categories 
-  cat_names <- c("BitDefender category" = "bitdefender", 
-                 "Dr.Web category" = "dr_web", 
-                 "Alexa category" ="alexa", 
-                 "categories" ="google", 
-                 "Websense ThreatSeeker category" ="websense", 
-                 "TrendMicro category"="trendmicro")
+  cat_names <- c("BitDefender category" = "bitdefender", "Dr.Web category" = "dr_web", "Alexa category" = "alexa",  
+                 "categories" = "google", "Websense ThreatSeeker category" = "websense", "TrendMicro category" = "trendmicro")
 
   # If domain not found, return a data.frame with domain name + NAs
-  if (res$verbose_msg=="Domain not found") {
-      d_res     <- read.table(text = "", col.names=cat_names)
-      d_res[1,] <- NA
+  if (res$verbose_msg == "Domain not found") {
+      d_res      <- read.table(text = "", col.names = cat_names)
+      d_res[1, ] <- NA
   } else {
     # If results are returned
     # do.call(rbind, lapply(sapply(res[which(names(res) %in% cat_names)], cbind), as.data.frame)) (multiple cat by Google)
@@ -53,7 +49,5 @@ virustotal_cat <- function(domain = NULL, apikey=NULL) {
   }
 
   # Return
-  data.frame(domain, d_res)         
-  
+  data.frame(domain, d_res)
 }
-

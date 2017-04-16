@@ -21,6 +21,6 @@ If not, it looks for \code{shalla_domain_category.csv} in the working directory.
 }
 \examples{
 \dontrun{
-shalla_cat(domains="http://www.google.com")
+shalla_cat(domains = "http://www.google.com")
 }
 }
