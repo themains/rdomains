@@ -17,7 +17,7 @@
 #' }
 
 dmoz_cat <- function(domains = NULL, use_file = NULL) {
-  
+
   # Nuke leading and trailing spaces
   c_domains  <- gsub("^ *| *$", "", domains)
 
@@ -37,7 +37,6 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
 
     if (!file.exists(use_file)) stop("Please provide correct path to the file. Or download it using get_dmoz_data().")
     dmoz <- read.csv(use_file, header = FALSE, stringsAsFactors = FALSE)
-  
   } else { 
 
     if (!file.exists('dmoz_domain_category.csv')) stop("Please provide path to the dmoz file. Or download it using get_dmoz_data().")

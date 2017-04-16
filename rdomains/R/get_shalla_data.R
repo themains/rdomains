@@ -18,7 +18,7 @@ get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
 
   # Check if file already there
   output_file <- paste0(outdir, "shalla_domain_category.csv")  
-  if (overwrite==FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
+  if (overwrite == FALSE & file.exists(output_file)) stop("There is already a file with that name in the location. Pick another name or location.")
 
   tmp <- tempfile()
   curl_download("http://www.shallalist.de/Downloads/shallalist.tar.gz", tmp)
@@ -40,16 +40,15 @@ get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
     res[[j]]  <- data.frame(hostname = unlist(domains), category = cat)
     j <- j + 1
   }
- 
-  # rbind all the data.frames  
+
+  # rbind all the data.frames
   res2 <- do.call(rbind, res)
 
-  # Remove the 
+  # Remove the files
   unlink(paste0(outdir, paste0(all_files)), recursive = TRUE, force = TRUE)
   unlink(paste0(outdir, "BL"), recursive = TRUE, force = TRUE)
 
   write.csv(res2, file = output_file, row.names = F)
- 
-  cat("Shallalist Data saved to the following destination:", outdir, "\n")
 
+  cat("Shallalist Data saved to the following destination:", outdir, "\n")
 }

@@ -28,34 +28,36 @@ adult_ml1_cat <- function(domains = NULL) {
   # nuke leading www.
   c_domains  <- gsub("^www.", "", c_domains)
 
-  # Initialize results 
+  # Initialize results
   res_df <- data.frame(domain_name = c_domains, p_adult = NA)
 
   # Initialize feature df
-  features  <- spMatrix(nrow(res_df), length(coefs)) # list() # setNames(data.frame(matrix(ncol = length(coefs), nrow = length(domains))), coefs)
+  features  <- spMatrix(nrow(res_df), length(coefs)) 
+  # list() 
+  # setNames(data.frame(matrix(ncol = length(coefs), nrow = length(domains))), coefs)
 
   # length
   for (j in 1:60) {
     tfs           <- grepl(coefs[j], c_domains)
-    features[,j]  <- as(tfs, "sparseVector")
+    features[, j]  <- as(tfs, "sparseVector")
 
   }
 
-  # num 
+  # num
   tfs <- grepl("^[0-9]*.[0-9]*.[0-9]*.[0-9]", c_domains)
-  features[,61] <- as(tfs, "sparseVector")
+  features[, 61] <- as(tfs, "sparseVector")
 
   # suffix
   split_url  <- suffix_extract(c_domains)
   suffixes   <- split_url$suffix[match(res_df$domain_name, split_url$host)]
 
-  for(t in 62:length(coefs)) {
+  for (t in 62:length(coefs)) {
     tfs          <- grepl(coefs[t], suffixes)
-    features[,t] <- as(tfs, "sparseVector")
+    features[, t] <- as(tfs, "sparseVector")
   }
 
   # Predict
-  res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")[,1]
+  res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")[, 1]
 
   res_df
 }

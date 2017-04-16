@@ -15,7 +15,7 @@
 #' }
 
 shalla_cat <- function(domains = NULL, use_file = NULL) {
-  
+
   # Nuke leading and trailing spaces
   c_domains  <- gsub("^ *| *$", "", domains)
 
@@ -33,11 +33,10 @@ shalla_cat <- function(domains = NULL, use_file = NULL) {
 
     if (!file.exists(use_file)) stop("Please provide correct path to the file. Or download it using get_shalla_data().")
     shalla <- read.csv(use_file, stringsAsFactors = FALSE)
-  
-  } else { 
+  } else {
 
-    if (!file.exists('shalla_domain_category.csv')) stop("Please provide path to the shallalist file. Or download it using get_shalla_data().")
-    shalla <- read.csv('shalla_domain_category.csv', stringsAsFactors = FALSE)
+    if (!file.exists("shalla_domain_category.csv")) stop("Please provide path to the shallalist file. Or download it using get_shalla_data().")
+    shalla <- read.csv("shalla_domain_category.csv", stringsAsFactors = FALSE)
   }
 
   # Match

@@ -15,8 +15,8 @@
 #' }
 
 trusted_cat <- function(domain = NULL, log = FALSE) {
-    
-    if (!is.character(domain)) stop("Please provide a valid domain name.") 
+
+    if (!is.character(domain)) stop("Please provide a valid domain name.")
 
     domain_f <- URLencode(domain, reserved = TRUE)
 
@@ -32,7 +32,7 @@ trusted_cat <- function(domain = NULL, log = FALSE) {
    html_tab  <- res_table$getElementAttribute("outerHTML")[[1]]
   tab       <- readHTMLTable(html_tab)
 
-  res <- as.data.frame(tab)[-1,-1]
+  res <- as.data.frame(tab)[-1, -1]
     names(res) <- c("url", "status", "categorization", "reputation")
     rownames(res) <- 1:length(res)
   res
