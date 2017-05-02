@@ -32,9 +32,13 @@ not_news <- function(url_list = NULL) {
 
   if (identical(url_list, NULL)) stop("Please provide a valid URL.")
 
-   not_news <- grepl("sport|entertainment|arts|fashion|style|lifestyle|leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget", url_list, ignore.case = TRUE)
+   not_news <- grepl("sport|entertainment|arts|fashion|style|lifestyle|
+       leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget",
+       url_list, ignore.case = TRUE)
 
-   news     <- grepl("politi|usnews|world|national|state|elect|vote|govern|campaign|war|polic|econ|unemploy|racis|energy|abortion|educa|healthcare|immigration", url_list, ignore.case = TRUE)
+   news     <- grepl("politi|usnews|world|national|state|elect|vote|govern|
+      campaign|war|polic|econ|unemploy|racis|energy|abortion|educa|healthcare|
+      immigration", url_list, ignore.case = TRUE)
 
    data.frame(url_list, not_news, news)
 }

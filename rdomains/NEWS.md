@@ -1,6 +1,7 @@
 # rdomains 0.1.6 
 
 * Adds not_news classifier that classifies not news based on published work.
+* passes expect_lint_free
 
 # rdomains 0.1.5
 

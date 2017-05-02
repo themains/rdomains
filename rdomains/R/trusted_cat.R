@@ -16,24 +16,28 @@
 
 trusted_cat <- function(domain = NULL, log = FALSE) {
 
-    if (!is.character(domain)) stop("Please provide a valid domain name.")
+  if (!is.character(domain)) stop("Please provide a valid domain name.")
 
-    domain_f <- URLencode(domain, reserved = TRUE)
+  domain_f <- URLencode(domain, reserved = TRUE)
 
   checkForServer()
   startServer(log = log) # run Selenium Server binary
-  remDr <- remoteDriver(browserName = "firefox", port = 4444) # instantiate remote driver to connect to Selenium Server
+  # instantiate remote driver to connect to Selenium Server
+  remDr <- remoteDriver(browserName = "firefox", port = 4444)
   remDr$open(silent = TRUE) # open web browser
-  site <- paste0("https://www.trustedsource.org/en/feedback/url?action=checksingle&url=", domain_f, "&product=12-ts-3") 
-    remDr$navigate(site) # navigates to webpage
+  site <- paste0(
+    "https://www.trustedsource.org/en/feedback/url?action=checksingle&url=",
+     domain_f, "&product=12-ts-3")
+
+  remDr$navigate(site) # navigates to webpage
   form  <- remDr$findElement("class", "contactForm")
   form$submitElement()
   res_table <- remDr$findElement(using = "class", value = "result-table")
-   html_tab  <- res_table$getElementAttribute("outerHTML")[[1]]
+  html_tab  <- res_table$getElementAttribute("outerHTML")[[1]]
   tab       <- readHTMLTable(html_tab)
 
   res <- as.data.frame(tab)[-1, -1]
-    names(res) <- c("url", "status", "categorization", "reputation")
-    rownames(res) <- 1:length(res)
+  names(res) <- c("url", "status", "categorization", "reputation")
+  rownames(res) <- 1:length(res)
   res
 }

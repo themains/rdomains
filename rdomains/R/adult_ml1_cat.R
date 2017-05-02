@@ -15,7 +15,9 @@
 
 adult_ml1_cat <- function(domains = NULL) {
 
-  if (!is.character(domains)) stop("Please provide a valid vector of domain names.")
+  if (!is.character(domains)) {
+    stop("Please provide a valid vector of domain names.")
+  }
 
   coefs <- dimnames(glm_shalla$glmnet.fit$beta)[[1]]
 
@@ -32,15 +34,12 @@ adult_ml1_cat <- function(domains = NULL) {
   res_df <- data.frame(domain_name = c_domains, p_adult = NA)
 
   # Initialize feature df
-  features  <- spMatrix(nrow(res_df), length(coefs)) 
-  # list() 
-  # setNames(data.frame(matrix(ncol = length(coefs), nrow = length(domains))), coefs)
+  features  <- spMatrix(nrow(res_df), length(coefs))
 
   # length
   for (j in 1:60) {
     tfs           <- grepl(coefs[j], c_domains)
     features[, j]  <- as(tfs, "sparseVector")
-
   }
 
   # num
@@ -57,7 +56,9 @@ adult_ml1_cat <- function(domains = NULL) {
   }
 
   # Predict
-  res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features, s = "lambda.min", type="response")[, 1]
+  res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features,
+                                         s = "lambda.min",
+                                         type = "response")[, 1]
 
   res_df
 }

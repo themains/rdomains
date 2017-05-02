@@ -8,3 +8,4 @@
 ^data-raw$
 ^_pkgdown\.yml$
 ^revdep$
+.lintr

@@ -32,7 +32,12 @@ virustotal_cat <- function(domain = NULL, apikey = NULL) {
   res <-  domain_report(domain)
 
   # Companies from which virustotal returns domain categories
-  cat_names <- c("BitDefender category" = "bitdefender", "Dr.Web category" = "dr_web", "Alexa category" = "alexa", "categories" = "google", "Websense ThreatSeeker category" = "websense", "TrendMicro category" = "trendmicro")
+  cat_names <- c("BitDefender category" = "bitdefender",
+                 "Dr.Web category" = "dr_web",
+                 "Alexa category" = "alexa",
+                 "categories" = "google",
+                 "Websense ThreatSeeker category" = "websense",
+                 "TrendMicro category" = "trendmicro")
 
   # If domain not found, return a data.frame with domain name + NAs
   if (res$verbose_msg == "Domain not found") {
@@ -40,15 +45,17 @@ virustotal_cat <- function(domain = NULL, apikey = NULL) {
       d_res[1, ] <- NA
   } else {
 
-    # If results are returned
-    # do.call(rbind, lapply(sapply(res[which(names(res) %in% cat_names)], cbind), as.data.frame)) (multiple cat by Google)
+  # If results are returned
+  d_res <- as.data.frame(
+    do.call(cbind, sapply(res[which(names(res) %in% names(cat_names))],
+    "[", 1)))
 
-    d_res <- as.data.frame(do.call(cbind, sapply(res[which(names(res) %in% names(cat_names))], "[", 1)))
-    names(d_res) <- cat_names[match(names(d_res), names(cat_names))]
-    d_res[, cat_names[!(cat_names %in% names(d_res))]] <- NA
-    d_res <- d_res[, names(d_res)[order(cat_names)]] # Reorder so that we always get same order of columns
+  names(d_res) <- cat_names[match(names(d_res), names(cat_names))]
+  d_res[, cat_names[!(cat_names %in% names(d_res))]] <- NA
+
+  # Reorder so that we always get same order of columns
+  d_res <- d_res[, names(d_res)[order(cat_names)]]
   }
 
-  # Return
   data.frame(domain, d_res)
 }

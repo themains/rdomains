@@ -17,13 +17,15 @@ Imports:
     methods,
     RSelenium,
     XML,
+    xml2,
     curl,
     virustotal,
     aws.alexa
 Suggests:
     testthat,
     rmarkdown,
-    knitr (>= 1.11)
+    knitr (>= 1.11),
+    lintr
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8

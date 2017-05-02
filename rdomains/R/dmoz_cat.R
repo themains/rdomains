@@ -35,18 +35,35 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
 
   if (is.character(use_file)) {
 
-    if (!file.exists(use_file)) stop("Please provide correct path to the file. Or download it using get_dmoz_data().")
-    dmoz <- read.csv(use_file, header = FALSE, stringsAsFactors = FALSE)
-  } else { 
+    if (!file.exists(use_file)) {
+      stop("Please provide correct path to the file.
+            Or download it using get_dmoz_data().")
+    }
 
-    if (!file.exists('dmoz_domain_category.csv')) stop("Please provide path to the dmoz file. Or download it using get_dmoz_data().")
-    dmoz <- read.csv('dmoz_domain_category.csv', header = FALSE, stringsAsFactors = FALSE)
+    dmoz <- read.csv(use_file, header = FALSE, stringsAsFactors = FALSE)
+    } else {
+
+    if (!file.exists("dmoz_domain_category.csv")) {
+      stop("Please provide path to the dmoz file.
+            Or download it using get_dmoz_data().")
+    }
+
+    dmoz <- read.csv("dmoz_domain_category.csv",
+                     header = FALSE, stringsAsFactors = FALSE)
   }
 
   names(dmoz) <- c("hostname", "category")
 
   # Match
-  domain_cat$dmoz_category <- dmoz$category[match(c_domains_http, dmoz$hostname)]
-  domain_cat$dmoz_category <- ifelse(is.na(domain_cat$dmoz_category), dmoz$category[match(c_domains, dmoz$hostname)], domain_cat$dmoz_category)
+  domain_cat$dmoz_category <-
+                      dmoz$category[match(c_domains_http, dmoz$hostname)]
+
+  domain_cat$dmoz_category <-
+                      ifelse(
+                            is.na(domain_cat$dmoz_category),
+                            dmoz$category[match(c_domains, dmoz$hostname)],
+                            domain_cat$dmoz_category
+                           )
+
   domain_cat
 }
