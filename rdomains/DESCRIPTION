@@ -17,6 +17,7 @@ Imports:
     methods,
     RSelenium,
     XML,
+    httr,
     xml2,
     curl,
     virustotal,
