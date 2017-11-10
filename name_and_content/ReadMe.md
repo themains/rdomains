@@ -1,5 +1,0 @@
-## Classifying Pornographic Domains Using Keywords, features of Domain Names and Meta Data
-
-We build a model about whether or not a particular domain carries pornographic content using whether or not a short list of keywords is present in the domain name or the meta data and some other features based on the domain name. To build the model, we use data from [Shallalist](http://www.shallalist.de/), which maintains a database of category of content hosted by a domain. Details about the method are outlined in [Where's the Porn? Classifying Porn Domains Using a Calibrated Keyword Classifier](http://gbytes.gsood.com/2015/07/23/wheres-the-porn-classifying-porn-domains-using-a-calibrated-keyword-classifier/). 
-
-The [meta classifier](meta_shalla.md) using the following [shallalist data](shalla_cat_unique_host.csv), [list of keywords](knotty_words.txt) and [domain suffixes](https://publicsuffix.org/list/) achieves an accuracy of nearly XX%. (The difference from the following [classifier](../domain_name) is that we download the pages and search for keywords in the meta data as well as the domain name.)

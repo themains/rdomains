@@ -1,32 +1,35 @@
-## Domain Classifier
+## Classify Domains Based on Their Content
+[![Build Status](https://travis-ci.org/soodoku/domain_classifier.svg?branch=master)](https://travis-ci.org/soodoku/domain_classifier)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/yh856e6cv7uucaj2?svg=true)](https://ci.appveyor.com/project/soodoku/rdomains)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rdomains)](https://cran.r-project.org/package=rdomains)
+![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
+[![codecov](https://codecov.io/gh/soodoku/domain_classifier/branch/master/graph/badge.svg)](https://codecov.io/gh/soodoku/domain_classifier)
+[![Research software impact](http://depsy.org/api/package/cran/rdomains/badge.svg)](http://depsy.org/package/r/rdomains)
 
-Be it understanding media consumption, or segmenting domain referrals, we need to classify the content hosted on domains. 
+The package provides a few ways to classify domains based on their content. You can either get the categorizations from [shallalist](http://www.shallalist.de/), [trusted (McAfee)](http://trustedsource.org), [DMOZ](http://rdf.dmoz.org), [Alexa API](http://docs.aws.amazon.com/AlexaWebInfoService/latest/) (which uses the [DMOZ Data](http://rdf.dmoz.org)), or [virustotal API](http://virustotal.com), or use validated machine learning models based off the shallalist data. 
 
-When faced with the task, often enough, researchers resort to heuristic solutions. For instance, 
+### Installation
 
-> We select an initial universe of news outlets (i.e., web domains) via the Open Directory Project (ODP, dmoz.org), a collective of tens of thousands of editors who hand-label websites into a classification hierarchy. This gives 7,923 distinct domains labeled as: news, politics/news, politics/media, and regional/news. Since the vast majority of these news sites receive relatively little traffic, to simplify our analysis we restrict to the one hundred domains that attracted the largest number of unique visitors from our sample of toolbar users. This list of popular news sites includes every major national news source, well-known blogs and many regional dailies, and collectively accounts for over 98% of page views of news sites in the full ODP list (as estimated via our toolbar sample). The complete list of 100 domains is given in the Appendix.
+To get the current released version from CRAN:
+```r
+install.packages("rdomains")
+```
 
-[Filter Bubbles, Echo Chambers, and Online News Consumption](https://5harad.com/papers/bubbles.pdf)
+To get the current development version from GitHub:
 
-The solution is reasonable but unsatisfactory. For instance, we don't know the number of false positives and negatives. 
+```r
+# install.packages("devtools")
+devtools::install_github("soodoku/domain_classifier/rdomains", build_vignettes = TRUE)
+```
 
-There are two simple ways to improve on such methods. One is to build a calibrated keyword classifier. Start with keywords that are good at picking domains with particular content. And then improve and calibrate it using an API. See for instance, [Where's the Porn? Classifying Porn Domains Using a Calibrated Keyword Classifier](http://gbytes.gsood.com/2015/07/23/wheres-the-porn-classifying-porn-domains-using-a-calibrated-keyword-classifier/). Or one may simply rely on APIs. See for instance, [Where's the news?: Classifying News Domains](http://gbytes.gsood.com/2015/07/23/wheres-the-news-classifying-news-domains/) for a discussion of the method and some remaining issues. 
+### Usage
 
-Relying on APIs is of course not optimal. For one, we don't know the error they make in classifying the content of domains. So to calibrate the error, one may want to handcode a large random sample of domains and report the confusion matrix. Or better yet perhaps, one may want to devise own algorithm to categorize domains. 
+To learn how to use rdomains, read this [vignette](vignettes/rdomains.md). Or launch the vignette within R: 
 
-The specific cost function we use for classification will vary by application. For instance, if the output of the classification is being used to classify browsing data, one must account for the strong skew in browsing data---a few domains constitute a significant chunk of browsing time and visits. Classification error in algorithms behind APIs and generic ML classifiers do not weight the error by frequency of visits. To address the issues, one may want to weight error by traffic to the site. The traffic to the sites can be estimated over the entirety of the sample, by using [Alexa top 1 million domains (zip)](http://s3.amazonaws.com/alexa-static/top-1m.csv.zip), which is provided as part of the [rdomains R package](rdomains/), or by using the Alexa API, which can be accessed using the [aws.alexa R package](https://github.com/cloudyr/aws.alexa). 
-
-### Scripts
-
-* [API Domain Classifier](trusted/) (Python)
-* [Domain Name Based Classifier](domain_name/) (R)
-* [rdomains: R package providing access to both API and ML](rdomains/) (R)
-
-### Data
-
-* [2004 comScore Browswing Data](http://dx.doi.org/10.7910/DVN/BPS1OK) using [API Domain Classifier](trusted/)
-* [Parsed DMOZ Data](http://dx.doi.org/10.7910/DVN/OMV93V) using [DMOZ CSV](https://github.com/suriyan/dmoz_csv)
+```r
+vignette("rdomains", package = "rdomains")
+```
 
 ### License
 
-Released under the [MIT License](https://opensource.org/licenses/MIT)
+Scripts are released under the [MIT License](https://opensource.org/licenses/MIT).
