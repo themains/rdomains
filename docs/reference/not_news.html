@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>rdomains: Classify Domains by their Content — rdomains-package â€¢ rdomains</title>
+<title>Classify News and Non-News Based on keywords in the URL — not_news â€¢ rdomains</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -81,28 +81,63 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>rdomains: Classify Domains by their Content</h1>
+    <h1>Classify News and Non-News Based on keywords in the URL</h1>
     </div>
 
     
-    <p>Want to know what kind of content is carried on a domain?
-Get the results quickly using rdomains. The package provides access to virustotal
-API, shalla, brightcloud, aws, and validated ML model based off 
-shallalist data to predict content of a domain.</p>
-<p>To learn how to use rdomains, see this vignette: <a href='vignettes/rdomains.html'>vignettes/rdomains.html</a>.</p>
+    <p>Based on a slightly amended version of the regular expression used to classify news, and non-news in: 
+``Exposure to ideologically diverse news and opinion on Facebook'' 
+by Bakshy, Messing, and Adamic. Science. 2015.</p>
     
 
-        
+    <pre class="usage"><span class='fu'>not_news</span>(<span class='kw'>url_list</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>url_list</th>
+      <td><p>vector of URLs</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>data.frame with 3 columns: url, not_news, news</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Amendment: sport rather than sports</p>
+<p>URL containing any of the following words is classified as soft news:
+"sport|entertainment|arts|fashion|style|lifestyle|leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget"</p>
+<p>URL containing any of following words is classified as hard news:
+"politi|usnews|world|national|state|elect|vote|govern|campaign|war|polic|econ|unemploy|racis|energy|abortion|educa|healthcare|immigration"</p>
+<p>Note that it is based on patterns existing in a small set of domains. See paper for details.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p><a href='http://science.sciencemag.org/content/348/6239/1130'>http://science.sciencemag.org/content/348/6239/1130</a></p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>not_news</span>(<span class='st'>"http://www.bbc.com/sport"</span>)
+<span class='fu'>not_news</span>(<span class='fu'>c</span>(<span class='st'>"http://www.bbc.com/sport"</span>, <span class='st'>"http://www.washingtontimes.com/news/politics/"</span>))
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
 
-    <h2>Author</h2>
-    
-Gaurav Sood
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

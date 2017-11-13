@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>rdomains: Classify Domains by their Content — rdomains-package â€¢ rdomains</title>
+<title>Get Category from Brightcloud — brightcloud_cat â€¢ rdomains</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -81,28 +81,64 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>rdomains: Classify Domains by their Content</h1>
+    <h1>Get Category from Brightcloud</h1>
     </div>
 
     
-    <p>Want to know what kind of content is carried on a domain?
-Get the results quickly using rdomains. The package provides access to virustotal
-API, shalla, brightcloud, aws, and validated ML model based off 
-shallalist data to predict content of a domain.</p>
-<p>To learn how to use rdomains, see this vignette: <a href='vignettes/rdomains.html'>vignettes/rdomains.html</a>.</p>
+    <p>Returns category of content from Brighcloud</p>
     
 
-        
+    <pre class="usage"><span class='fu'>brightcloud_cat</span>(<span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>secret</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>domain</th>
+      <td><p>domain name</p></td>
+    </tr>
+    <tr>
+      <th>key</th>
+      <td><p>brightcloud API consumer key</p></td>
+    </tr>
+    <tr>
+      <th>secret</th>
+      <td><p>brightcloud API consumer secret</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>named list</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Get the API Consumer Key and Secret from <a href='http://www.brightcloud.com/'>http://www.brightcloud.com/</a>.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p><a href='http://www.brightcloud.com/'>http://www.brightcloud.com/</a></p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>brightcloud_cat</span>(<span class='st'>"http://www.google.com"</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"XXXX"</span>, <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"XXXX"</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
 
-    <h2>Author</h2>
-    
-Gaurav Sood
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
