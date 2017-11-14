@@ -13,7 +13,7 @@ get_dmoz_data(outdir = ".", overwrite = FALSE)
 }
 \description{
 Downloads, unzips and saves archived version of the DMOZ data. For more details, check:
-\url{https://github.com/soodoku/domain_classifier/tree/master/rdomains/data-raw/dmoz}
+\url{https://github.com/themains/rdomains/tree/master/data-raw/dmoz/}
 }
 \examples{
 \dontrun{

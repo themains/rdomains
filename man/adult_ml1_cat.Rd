@@ -15,7 +15,7 @@ data.frame with original list and content category of the domains
 \description{
 Uses a validated ML model that uses keywords in the domain name
 and suffix to predict probability that the domain hosts adult content. For
-more information see \url{https://github.com/soodoku/domain_classifier/tree/master/domain_name}
+more information see \url{https://github.com/themains/keyword_porn}
 }
 \examples{
 \dontrun{
