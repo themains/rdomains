@@ -28,8 +28,7 @@ get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
 
   tmp <- tempfile()
   curl_download(
-    paste0("https://github.com/soodoku/domain_classifier/",
-           "blob/master/rdomains/data-raw/dmoz/",
+    paste0("https://github.com/themains/rdomains/tree/master/data-raw/dmoz/",
            "dmoz_domain_category.zip?raw=true"),
            tmp
            )

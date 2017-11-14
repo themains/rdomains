@@ -1,4 +1,5 @@
 ## Classify Domains Based on Their Content
+
 [![Build Status](https://travis-ci.org/themains/rdomains.svg?branch=master)](https://travis-ci.org/themains/rdomains)
 [![Build status](https://ci.appveyor.com/api/projects/status/3vjmwn7jyf1s17e4?svg=true)](https://ci.appveyor.com/project/soodoku/rdomains)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rdomains)](https://cran.r-project.org/package=rdomains)
@@ -9,7 +10,7 @@ The package provides a few ways to classify domains based on their content. You 
 
 ### Installation
 
-To get the current released version from CRAN:
+To get the current release version from CRAN:
 ```r
 install.packages("rdomains")
 ```
