@@ -21,5 +21,5 @@ get_dmoz_data()
 }
 }
 \references{
-\url{http://www.dmoz.org/}
+\url{https://dmoztools.net}
 }
