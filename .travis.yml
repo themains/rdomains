@@ -4,8 +4,6 @@ sudo: required
 
 warnings_are_errors: true
 
-before_install: cd rdomains
-
 r_github_packages:
   - jimhester/covr
 
