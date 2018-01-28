@@ -21,7 +21,8 @@ Imports:
     xml2,
     curl,
     virustotal,
-    aws.alexa
+    aws.alexa,
+    rlang
 Suggests:
     testthat,
     rmarkdown,

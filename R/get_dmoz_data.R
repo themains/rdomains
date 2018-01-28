@@ -28,8 +28,8 @@ get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
 
   tmp <- tempfile()
   curl_download(
-    paste0("https://github.com/themains/rdomains/tree/master/data-raw/dmoz/",
-           "dmoz_domain_category.zip?raw=true"),
+    paste0("https://github.com/themains/rdomains/blob/master/data-raw/dmoz/",
+           "dmoz_domain_category.zip?raw=TRUE"),
            tmp
            )
   unzip(tmp, exdir = outdir, overwrite = overwrite)
