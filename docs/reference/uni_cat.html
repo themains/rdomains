@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get Category from DMOZ — dmoz_cat â€¢ rdomains</title>
+<title>Get Category from University Domain List — uni_cat â€¢ rdomains</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -81,17 +81,15 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get Category from DMOZ</h1>
+    <h1>Get Category from University Domain List</h1>
     </div>
 
     
-    <p>Fetches category (or categories) of content hosted by a domain according to DMOZ. 
-The function checks if path to the DMOZ file is provided by the user. 
-If not, it looks for <code>dmoz_domain_cateory.csv</code> in the working directory. It also returns
-results for prominent subdomains.</p>
+    <p>Fetches university domain json from: 
+<a href='https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json'>https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json</a></p>
     
 
-    <pre class="usage"><span class='fu'>dmoz_cat</span>(<span class='kw'>domains</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>use_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>uni_cat</span>(<span class='kw'>domains</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -100,21 +98,16 @@ results for prominent subdomains.</p>
       <th>domains</th>
       <td><p>vector of domain names</p></td>
     </tr>
-    <tr>
-      <th>use_file</th>
-      <td><p>path to the dmoz file, which can be downloaded using <code><a href='get_dmoz_data.html'>get_dmoz_data</a></code></p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.frame with original list and content category of the domain</p>
+    <p>data.frame with original list and all the other columns from the university json</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>dmoz_cat</span>(<span class='kw'>domains</span> <span class='kw'>=</span> <span class='st'>"http://www.google.com"</span>)
-<span class='fu'>dmoz_cat</span>(<span class='kw'>domains</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"http://www.google.com"</span>, <span class='st'>"http://plus.google.com"</span>))
+<span class='fu'>uni_cat</span>(<span class='kw'>domains</span> <span class='kw'>=</span> <span class='st'>"http://www.google.com"</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

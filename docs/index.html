@@ -58,16 +58,16 @@
     <div id="classify-domains-based-on-their-content" class="section level2">
 <h2 class="hasAnchor">
 <a href="#classify-domains-based-on-their-content" class="anchor"></a>Classify Domains Based on Their Content</h2>
-<p><a href="https://travis-ci.org/soodoku/domain_classifier"><img src="https://travis-ci.org/soodoku/domain_classifier.svg?branch=master" alt="Build Status"></a> <a href="https://ci.appveyor.com/project/soodoku/rdomains"><img src="https://ci.appveyor.com/api/projects/status/yh856e6cv7uucaj2?svg=true" alt="Appveyor Build status"></a> <a href="https://cran.r-project.org/package=rdomains"><img src="http://www.r-pkg.org/badges/version/rdomains" alt="CRAN_Status_Badge"></a> <img src="http://cranlogs.r-pkg.org/badges/grand-total/rdomains"><a href="https://codecov.io/gh/soodoku/domain_classifier"><img src="https://codecov.io/gh/soodoku/domain_classifier/branch/master/graph/badge.svg" alt="codecov"></a> <a href="http://depsy.org/package/r/rdomains"><img src="http://depsy.org/api/package/cran/rdomains/badge.svg" alt="Research software impact"></a></p>
-<p>The package provides a few ways to classify domains based on their content. You can either get the categorizations from <a href="http://www.shallalist.de/">shallalist</a>, <a href="http://trustedsource.org">trusted (McAfee)</a>, <a href="http://rdf.dmoz.org">DMOZ</a>, <a href="http://docs.aws.amazon.com/AlexaWebInfoService/latest/">Alexa API</a> (which uses the <a href="http://rdf.dmoz.org">DMOZ Data</a>), or <a href="http://virustotal.com">virustotal API</a>, or use validated machine learning models based off the shallalist data.</p>
+<p><a href="https://travis-ci.org/themains/rdomains"><img src="https://travis-ci.org/themains/rdomains.svg?branch=master" alt="Build Status"></a> <a href="https://ci.appveyor.com/project/soodoku/rdomains"><img src="https://ci.appveyor.com/api/projects/status/3vjmwn7jyf1s17e4?svg=true" alt="Build status"></a> <a href="https://cran.r-project.org/package=rdomains"><img src="http://www.r-pkg.org/badges/version/rdomains" alt="CRAN_Status_Badge"></a> <img src="http://cranlogs.r-pkg.org/badges/grand-total/rdomains"><a href="https://codecov.io/gh/themains/rdomains"><img src="https://codecov.io/gh/themains/rdomains/branch/master/graph/badge.svg" alt="codecov"></a></p>
+<p>The package provides a few ways to classify domains based on their content. You can either get the categorizations from <a href="http://www.shallalist.de/">shallalist</a>, <a href="http://trustedsource.org">trusted (McAfee)</a>, <a href="https://dmoztools.net">DMOZ</a> (the service has ended), <a href="http://docs.aws.amazon.com/AlexaWebInfoService/latest/">Alexa API</a> (which uses the <a href="https://dmoztools.net">DMOZ Data</a>), or <a href="http://virustotal.com">virustotal API</a>, or use validated machine learning models based off the shallalist data.</p>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
-<p>To get the current released version from CRAN:</p>
+<p>To get the current release version from CRAN:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"rdomains"</span>)</code></pre></div>
 <p>To get the current development version from GitHub:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools::<span class="kw">install_github</span>(<span class="st">"soodoku/domain_classifier/rdomains"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</code></pre></div>
+devtools::<span class="kw">install_github</span>(<span class="st">"themains/rdomains"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="usage" class="section level3">
 <h3 class="hasAnchor">
