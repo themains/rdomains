@@ -1,0 +1,11 @@
+url: http://themains.github.io/rdomains/
+
+template:
+  params:
+    bootswatch: cosmo
+    docsearch:
+      api_key: 
+      index: rdomains
+authors:
+  Gaurav Sood:
+    href: https://github.com/soodoku

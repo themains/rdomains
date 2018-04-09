@@ -11,20 +11,23 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Function reference" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -33,6 +36,11 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+
+
+<!-- docsearch -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
 
   </head>
 
@@ -47,8 +55,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rdomains</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rdomains</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -58,19 +70,26 @@
   </a>
 </li>
 <li>
-  <a href="../articles/rdomains.html">Get Started</a>
+  <a href="../articles/rdomains.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
+      
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -78,118 +97,119 @@
       
       </header>
 
-      <div class="row">
-  <div class="col-md-9">
+<div class="row">
+  <div class="contents col-md-9">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.1.8</small>
-      </h1>
+      <h1>Reference</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    <table class="ref-index">
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <colgroup>
+      <col class="alias" />
+      <col class="title" />
+    </colgroup>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="adult_ml1_cat.html">adult_ml1_cat</a></code> </p>
-          </td>
-          <td><p>Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="alexa_cat.html">alexa_cat</a></code> </p>
-          </td>
-          <td><p>Get Category from Alexa</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="brightcloud_cat.html">brightcloud_cat</a></code> </p>
-          </td>
-          <td><p>Get Category from Brightcloud</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="dmoz_cat.html">dmoz_cat</a></code> </p>
-          </td>
-          <td><p>Get Category from DMOZ</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="get_alexa_data.html">get_alexa_data</a></code> </p>
-          </td>
-          <td><p>Get Alexa Traffic Data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="get_dmoz_data.html">get_dmoz_data</a></code> </p>
-          </td>
-          <td><p>Get DMOZ Data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="get_shalla_data.html">get_shalla_data</a></code> </p>
-          </td>
-          <td><p>Get Shalla Data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="glm_shalla.html">glm_shalla</a></code> </p>
-          </td>
-          <td><p>ML Model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="not_news.html">not_news</a></code> </p>
-          </td>
-          <td><p>Classify News and Non-News Based on keywords in the URL</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="rdomains-package.html">rdomains-package</a></code> </p>
-          </td>
-          <td><p>rdomains: Classify Domains by their Content</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="shalla_cat.html">shalla_cat</a></code> </p>
-          </td>
-          <td><p>Get Category from Shallalist</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="trusted_cat.html">trusted_cat</a></code> </p>
-          </td>
-          <td><p>Get Trusted (McAfee) Category</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="uni_cat.html">uni_cat</a></code> </p>
-          </td>
-          <td><p>Get Category from University Domain List</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="virustotal_cat.html">virustotal_cat</a></code> </p>
-          </td>
-          <td><p>Get Category from Virustotal</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="adult_ml1_cat.html">adult_ml1_cat()</a></code> </p>
+        </td>
+        <td><p>Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="alexa_cat.html">alexa_cat()</a></code> </p>
+        </td>
+        <td><p>Get Category from Alexa</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="brightcloud_cat.html">brightcloud_cat()</a></code> </p>
+        </td>
+        <td><p>Get Category from Brightcloud</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="dmoz_cat.html">dmoz_cat()</a></code> </p>
+        </td>
+        <td><p>Get Category from DMOZ</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="get_alexa_data.html">get_alexa_data()</a></code> </p>
+        </td>
+        <td><p>Get Alexa Traffic Data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="get_dmoz_data.html">get_dmoz_data()</a></code> </p>
+        </td>
+        <td><p>Get DMOZ Data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="get_shalla_data.html">get_shalla_data()</a></code> </p>
+        </td>
+        <td><p>Get Shalla Data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="glm_shalla.html">glm_shalla</a></code> </p>
+        </td>
+        <td><p>ML Model</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="install_data_package.html">install_data_package()</a></code> </p>
+        </td>
+        <td><p>Install the <code>rdomainsdata</code> package after checking with the user</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="not_news.html">not_news()</a></code> </p>
+        </td>
+        <td><p>Classify News and Non-News Based on keywords in the URL</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="rdomains-package.html">rdomains-package</a></code> </p>
+        </td>
+        <td><p>rdomains: Classify Domains by their Content</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="shalla_cat.html">shalla_cat()</a></code> </p>
+        </td>
+        <td><p>Get Category from Shallalist</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="trusted_cat.html">trusted_cat()</a></code> </p>
+        </td>
+        <td><p>Get Trusted (McAfee) Category</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="uni_cat.html">uni_cat()</a></code> </p>
+        </td>
+        <td><p>Get Category from University Domain List</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="virustotal_cat.html">virustotal_cat()</a></code> </p>
+        </td>
+        <td><p>Get Category from Virustotal</p></td>
+      </tr>
+    </tbody>
+    </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -202,15 +222,29 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Gaurav Sood.</p>
+  <p>Developed by <a href='https://github.com/soodoku'>Gaurav Sood</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+  docsearch({
+    
+    apiKey: '',
+    indexName: '',
+    inputSelector: 'input#search-input.form-control',
+    debug: false // Set debug to true if you want to inspect the dropdown
+  });
+</script>
+
+
   </body>
 </html>
+
