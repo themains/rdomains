@@ -24,8 +24,12 @@ uni_cat <- function(domains = NULL) {
   c_domains  <- gsub("^www.", "", c_domains)
 
   # Get list of university domain names
-  uni_list <- fromJSON("https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json")
+  uni_list <- fromJSON(paste0("https://raw.githubusercontent.com/Hipo/",
+                              "university-domains-list/master/",
+                              "world_universities_and_domains.json"))
 
   # Match
-  data.frame(domain_name = c_domains, uni_list[match(c_domains, uni_list$domains), ], row.names = NULL)
+  data.frame(domain_name = c_domains,
+             uni_list[match(c_domains, uni_list$domains), ],
+             row.names = NULL)
 }
