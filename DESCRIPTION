@@ -5,7 +5,7 @@ Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut",
 Description: Get the category of content hosted by a domain. Use Shallalist <http://shalla.de/>,  
     Virustotal (which provides access to lots of services) <https://www.virustotal.com/>, 
     McAfee <https://www.trustedsource.org/>, Alexa <https://aws.amazon.com/awis/>, 
-    DMOZ <http://www.dmoz.org/>, University Domain list 
+    DMOZ <http://curlie.org>, University Domain list 
     <https://github.com/Hipo/university-domains-list> or validated machine learning 
     classifiers based on Shallalist data to learn about the kind of content hosted by a domain.
 Depends:
@@ -24,8 +24,10 @@ Imports:
     virustotal,
     aws.alexa,
     rlang,
-    jsonlite
+    jsonlite,
+    devtools
 Suggests:
+    rdomainsdata,
     testthat,
     rmarkdown,
     knitr (>= 1.11),

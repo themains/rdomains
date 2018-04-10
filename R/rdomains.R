@@ -13,6 +13,7 @@
 #' @importFrom urltools suffix_extract
 #' @importFrom Matrix Matrix spMatrix sparseVector
 #' @importFrom glmnet predict.cv.glmnet
+#' @importFrom jsonlite fromJSON
 #' @importFrom stats setNames
 #' @importFrom methods as
 #' @importFrom utils read.table URLencode untar unzip read.csv write.csv 
@@ -23,6 +24,7 @@
 #' @importFrom RSelenium remoteDriver checkForServer startServer
 #' @importFrom virustotal set_key domain_report
 #' @importFrom aws.alexa set_secret_key url_info
+#' @importFrom devtools install_github
 #' 
 #' @docType package
 #' @author Gaurav Sood

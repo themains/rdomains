@@ -29,7 +29,7 @@ install_data_package <- function() {
                          title = "Install the rdomainsdata package?")
     if (input == 1) {
       message("Installing the rdomainsdata package.")
-      tryCatch(devtools::install_github("https://github.com/themains/rdomainsdata"),
+      tryCatch(install_github("https://github.com/themains/rdomainsdata"),
                error = error_func, warning = error_func)
     } else {
       stop(paste("The rdomainsdata package provides the data you requested.\n",

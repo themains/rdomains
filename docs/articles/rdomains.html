@@ -99,9 +99,9 @@
 <h4 class="hasAnchor">
 <a href="#shalla" class="anchor"></a>Shalla</h4>
 <p>To get category of the content from <a href="http://www.shallalist.de">shallalist</a>, first download the latest file using:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/get_shalla_data">get_shalla_data</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../reference/get_shalla_data.html">get_shalla_data</a></span>()</a></code></pre></div>
 <p>And then, get the category using:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/shalla_cat">shalla_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/shalla_cat.html">shalla_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
 <pre><code>##   domain_name shalla_category
 ## 1  google.com   searchengines</code></pre>
 </div>
@@ -109,15 +109,15 @@
 <h4 class="hasAnchor">
 <a href="#dmoz" class="anchor"></a>DMOZ</h4>
 <p>To get category of the content from <a href="dmoz.org">DMOZ</a>, first download the archived parsed CSV file using:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/get_dmoz_data">get_dmoz_data</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="../reference/get_dmoz_data.html">get_dmoz_data</a></span>()</a></code></pre></div>
 <p>And then, get the category using:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/dmoz_cat">dmoz_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="../reference/dmoz_cat.html">dmoz_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
 </div>
 <div id="ml" class="section level4">
 <h4 class="hasAnchor">
 <a href="#ml" class="anchor"></a>ML</h4>
 <p>Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/adult_ml1_cat">adult_ml1_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/adult_ml1_cat.html">adult_ml1_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
 <pre><code>##   domain_name  category
 ## 1  google.com 0.3133728</code></pre>
 </div>
@@ -126,7 +126,7 @@
 <a href="#virustotal" class="anchor"></a>Virustotal</h4>
 <p>Start by getting the API key from <a href="https://www.virustotal.com/">virustotal</a>.</p>
 <p>Get virustotal category by running:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/virustotal_cat">virustotal_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="../reference/virustotal_cat.html">virustotal_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
 <pre><code>##                 domain   bitdefender dr_web  alexa        google       websense             trendmicro
 ## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals</code></pre>
 </div>
@@ -134,7 +134,7 @@
 <h4 class="hasAnchor">
 <a href="#trusted-mcafee" class="anchor"></a>Trusted (McAfee)</h4>
 <p>Get the content category of a domain according to McAfee (Trusted):</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/trusted_cat">trusted_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="../reference/trusted_cat.html">trusted_cat</a></span>(<span class="st">"http://www.google.com"</span>)</a></code></pre></div>
 <pre><code>##                    url          status   categorization   reputation
 ## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk</code></pre>
 </div>
@@ -145,7 +145,7 @@
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">Sys.setenv</span>(<span class="st">"AWS_ACCESS_KEY_ID"</span>, <span class="st">"key_id"</span>) </a>
 <a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw">Sys.getenv</span>(<span class="st">"AWS_SECRET_ACCESS_KEY"</span>, <span class="st">"secret_key"</span>)</a></code></pre></div>
 <p>Then run,</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/rdomains/topics/alexa_cat">alexa_cat</a></span>(<span class="dt">domain=</span><span class="st">"http://www.google.com"</span>)[<span class="dv">1</span>,]</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="../reference/alexa_cat.html">alexa_cat</a></span>(<span class="dt">domain=</span><span class="st">"http://www.google.com"</span>)[<span class="dv">1</span>,]</a></code></pre></div>
 <pre><code>##                   Title                                           AbsolutePath
 ## 1 Search Engines/Google Top/Computers/Internet/Searching/Search_Engines/Google</code></pre>
 </div>
