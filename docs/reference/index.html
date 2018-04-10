@@ -113,7 +113,7 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <h2 id="section-get-content-category" class="hasAnchor"><a href="#section-get-content-category" class="anchor"></a>Get Content Category</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -144,48 +144,6 @@
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="get_alexa_data.html">get_alexa_data()</a></code> </p>
-        </td>
-        <td><p>Get Alexa Traffic Data</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="get_dmoz_data.html">get_dmoz_data()</a></code> </p>
-        </td>
-        <td><p>Get DMOZ Data</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="get_shalla_data.html">get_shalla_data()</a></code> </p>
-        </td>
-        <td><p>Get Shalla Data</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="glm_shalla.html">glm_shalla</a></code> </p>
-        </td>
-        <td><p>ML Model</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="install_data_package.html">install_data_package()</a></code> </p>
-        </td>
-        <td><p>Install the <code>rdomainsdata</code> package after checking with the user</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="not_news.html">not_news()</a></code> </p>
-        </td>
-        <td><p>Classify News and Non-News Based on keywords in the URL</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="rdomains-package.html">rdomains-package</a></code> </p>
-        </td>
-        <td><p>rdomains: Classify Domains by their Content</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="shalla_cat.html">shalla_cat()</a></code> </p>
         </td>
         <td><p>Get Category from Shallalist</p></td>
@@ -208,6 +166,20 @@
         </td>
         <td><p>Get Category from Virustotal</p></td>
       </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-not-news" class="hasAnchor"><a href="#section-not-news" class="anchor"></a>Not News</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="not_news.html">not_news()</a></code> </p>
+        </td>
+        <td><p>Classify News and Non-News Based on keywords in the URL</p></td>
+      </tr>
     </tbody>
     </table>
   </div>
@@ -215,7 +187,8 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-get-content-category">Get Content Category</a></li>
+      <li><a href="#section-not-news">Not News</a></li>
     </ul>
   </div>
 </div>
@@ -238,7 +211,7 @@
   docsearch({
     
     apiKey: '',
-    indexName: '',
+    indexName: 'rdomains',
     inputSelector: 'input#search-input.form-control',
     debug: false // Set debug to true if you want to inspect the dropdown
   });

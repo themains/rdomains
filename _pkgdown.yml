@@ -5,7 +5,16 @@ template:
     bootswatch: cosmo
     docsearch:
       api_key: 
-      index: rdomains
+      index_name: rdomains
+
 authors:
   Gaurav Sood:
     href: https://github.com/soodoku
+
+reference:
+  - title: Get Content Category
+    contents:
+      - ends_with("_cat")
+  - title: Not News
+    contents:
+    - not_news
