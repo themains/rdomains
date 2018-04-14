@@ -4,7 +4,7 @@ template:
   params:
     bootswatch: cosmo
     docsearch:
-      api_key: 
+      api_key: 1c4068cac9a28dd1a323400f274d7169
       index_name: rdomains
 
 authors:
