@@ -1,3 +1,7 @@
+# rdomains 0.1.9
+
+* R package supporting headless browsing has been abandoned. So removing trusted_cat. Sigh. 
+
 # rdomains 0.1.8
 
 * Function for checking if domain a university domain using https://github.com/Hipo/university-domains-list

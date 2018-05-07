@@ -21,7 +21,6 @@
 #' @importFrom httr content GET oauth_app oauth_signature add_headers
 #' @importFrom xml2 read_xml as_list
 #' @importFrom XML readHTMLTable
-#' @importFrom RSelenium remoteDriver checkForServer startServer
 #' @importFrom virustotal set_key domain_report
 #' @importFrom aws.alexa set_secret_key url_info
 #' @importFrom devtools install_github
