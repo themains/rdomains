@@ -4,7 +4,9 @@
 \name{glm_shalla}
 \alias{glm_shalla}
 \title{ML Model}
-\format{A list}
+\format{
+A list
+}
 \source{
 ML model based on shallalist using keywords and domain suffixes,
 }

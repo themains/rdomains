@@ -1,6 +1,6 @@
 # rdomains 0.1.9
 
-* R package supporting headless browsing has been abandoned. So removing trusted_cat. Sigh. 
+* R package supporting headless browsing has been abandoned. So removing trusted_cat. Sigh.
 
 # rdomains 0.1.8
 
@@ -11,7 +11,7 @@
 * Changes due to move to a new repo.
 * Basic brightcloud function added
 
-# rdomains 0.1.6 
+# rdomains 0.1.6
 
 * Adds not_news classifier that classifies not news based on published work.
 * passes expect_lint_free

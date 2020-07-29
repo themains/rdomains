@@ -1,13 +1,13 @@
-#' Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone. 
+#' Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone.
 #'
 #' Uses a validated ML model that uses keywords in the domain name
 #' and suffix to predict probability that the domain hosts adult content. For
 #' more information see \url{https://github.com/themains/keyword_porn}
-#' 
+#'
 #' @param domains required; string; vector of domain names
-#' 
+#'
 #' @return data.frame with original list and content category of the domains
-#' 
+#'
 #' @export
 #' @examples \dontrun{
 #' adult_ml1_cat("http://www.google.com")
@@ -56,7 +56,7 @@ adult_ml1_cat <- function(domains = NULL) {
   }
 
   # Predict
-  res_df$p_adult  <- predict.cv.glmnet(glm_shalla, features,
+  res_df$p_adult  <- glmnet:::predict.cv.glmnet(glm_shalla, features,
                                          s = "lambda.min",
                                          type = "response")[, 1]
 

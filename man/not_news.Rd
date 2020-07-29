@@ -21,10 +21,11 @@ by Bakshy, Messing, and Adamic. Science. 2015.
 Amendment: sport rather than sports
 
 URL containing any of the following words is classified as soft news:
-"sport|entertainment|arts|fashion|style|lifestyle|leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget"
+"sport|entertainment|arts|fashion|style|lifestyle|leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget" 
 
 URL containing any of following words is classified as hard news:
 "politi|usnews|world|national|state|elect|vote|govern|campaign|war|polic|econ|unemploy|racis|energy|abortion|educa|healthcare|immigration"
+
 
 Note that it is based on patterns existing in a small set of domains. See paper for details.
 }
