@@ -12,7 +12,7 @@ get_alexa_data(outdir = ".", overwrite = FALSE)
 \item{overwrite}{Optional; default is FALSE. If TRUE, the file is overwritten.}
 }
 \description{
-Get Top 1M most visited domains list from Alexa. These data can be used to weight the 
+Get Top 1M most visited domains list from Alexa. These data can be used to weight the
 classification error.
 }
 \examples{
@@ -21,5 +21,5 @@ get_alexa_data()
 }
 }
 \references{
-\url{https://support.alexa.com/hc/en-us/articles/200461990-Can-I-get-a-list-of-top-sites-from-an-API-}
+\url{https://support.alexa.com/hc/en-us/sections/200063274-Top-Sites}
 }

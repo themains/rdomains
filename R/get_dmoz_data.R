@@ -2,14 +2,14 @@
 #'
 #' Downloads, unzips and saves archived version of the DMOZ data. For more details, check:
 #' \url{https://github.com/themains/rdomains/tree/master/data-raw/dmoz/}
-#'  
+#'
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
 #' @param overwrite Optional; default is FALSE. If TRUE, the file is overwritten.
-#' 
+#'
 #' @export
-#' 
-#' @references \url{https://dmoztools.net}
-#' 
+#'
+#' @references \url{http://dmoztools.net}
+#'
 #' @examples \dontrun{
 #' get_dmoz_data()
 #' }

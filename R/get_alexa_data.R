@@ -1,14 +1,14 @@
 #' Get Alexa Traffic Data
-#' 
-#' Get Top 1M most visited domains list from Alexa. These data can be used to weight the 
+#'
+#' Get Top 1M most visited domains list from Alexa. These data can be used to weight the
 #' classification error.
 #'
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
 #' @param overwrite Optional; default is FALSE. If TRUE, the file is overwritten.
-#' 
-#'  
+#'
+#'
 #' @export
-#' @references \url{https://support.alexa.com/hc/en-us/articles/200461990-Can-I-get-a-list-of-top-sites-from-an-API-}
+#' @references \url{https://support.alexa.com/hc/en-us/sections/200063274-Top-Sites}
 #' @examples \dontrun{
 #' get_alexa_data()
 #' }

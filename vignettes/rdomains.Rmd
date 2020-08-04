@@ -20,7 +20,7 @@ The latest development version of the package will always be on GitHub. To insta
 install_github("soodoku/domain_classifier/rdomains")
 ```
 
-To install the package from CRAN, type in: 
+To install the package from CRAN, type in:
 
 ```{r, eval=FALSE, cran_install}
 install.packages("rdomains")
@@ -40,7 +40,7 @@ To get category of the content from [shallalist](http://www.shallalist.de), firs
 get_shalla_data()
 ```
 
-And then, get the category using: 
+And then, get the category using:
 
 ```{r, eval=FALSE, shalla}
 shalla_cat("http://www.google.com")
@@ -53,21 +53,21 @@ shalla_cat("http://www.google.com")
 
 #### DMOZ
 
-To get category of the content from [DMOZ](dmoz.org), first download the archived parsed CSV file using:
+To get category of the content from DMOZ, first download the archived parsed CSV file using:
 
 ```{r, eval=FALSE, down_dmoz}
 get_dmoz_data()
 ```
 
-And then, get the category using: 
+And then, get the category using:
 
 ```{r, eval=FALSE, dmoz}
 dmoz_cat("http://www.google.com")
 ```
 
-#### ML 
+#### ML
 
-Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone: 
+Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone:
 
 ```{r, eval=FALSE, ml}
 adult_ml1_cat("http://www.google.com")
@@ -80,7 +80,7 @@ adult_ml1_cat("http://www.google.com")
 
 #### Virustotal
 
-Start by getting the API key from [virustotal](https://www.virustotal.com/). 
+Start by getting the API key from [virustotal](https://www.virustotal.com/).
 
 Get virustotal category by running:
 
@@ -110,7 +110,7 @@ trusted_cat("http://www.google.com")
 To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from [https://aws.amazon.com/](https://aws.amazon.com/). Next, set the environment variables:
 
 ```{r, eval=FALSE, set_alexa_cred}
-Sys.setenv("AWS_ACCESS_KEY_ID", "key_id") 
+Sys.setenv("AWS_ACCESS_KEY_ID", "key_id")
 Sys.getenv("AWS_SECRET_ACCESS_KEY", "secret_key")
 ```
 
