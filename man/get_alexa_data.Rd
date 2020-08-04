@@ -21,5 +21,5 @@ get_alexa_data()
 }
 }
 \references{
-\donttest{\url{https://support.alexa.com/hc/en-us/sections/200063274-Top-Sites}}
+\url{https://aws.amazon.com/marketplace/pp/B07QK2XWNV}
 }

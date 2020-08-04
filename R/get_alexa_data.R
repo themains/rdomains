@@ -8,7 +8,7 @@
 #'
 #'
 #' @export
-#' @references \donttest{\url{https://support.alexa.com/hc/en-us/sections/200063274-Top-Sites}}
+#' @references \url{https://aws.amazon.com/marketplace/pp/B07QK2XWNV}
 #' @examples \dontrun{
 #' get_alexa_data()
 #' }
