@@ -12,3 +12,5 @@
 ^revdep$
 .lintr
 ^CRAN-RELEASE$
+^doc$
+^Meta$

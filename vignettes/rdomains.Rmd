@@ -17,7 +17,7 @@ The latest development version of the package will always be on GitHub. To insta
 
 ```{r, eval=FALSE, install}
 #library(devtools)
-install_github("soodoku/domain_classifier/rdomains")
+install_github("themains/rdomains")
 ```
 
 To install the package from CRAN, type in:
