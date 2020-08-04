@@ -1,19 +1,19 @@
 #' Get Category from Alexa
 #'
-#' 
-#' Get the Access Key ID and Secret Access Key by logging into \url{https://console.aws.amazon.com/}, 
-#' clicking on the username followed by security credentials. Either pass the access key and secret or 
-#' set two environmental variables \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY}. 
-#' These environment variables persist within a R session. 
-#'  
+#'
+#' Get the Access Key ID and Secret Access Key by logging into \url{https://console.aws.amazon.com/},
+#' clicking on the username followed by security credentials. Either pass the access key and secret or
+#' set two environmental variables \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY}.
+#' These environment variables persist within a R session.
+#'
 #' @param domain domain name
 #' @param key  Alexa Access Key ID
 #' @param secret Alexa Secret Access Key
-#' 
-#' @return data.frame with 2 columns Title and AbsolutePath 
-#'  
+#'
+#' @return data.frame with 2 columns Title and AbsolutePath
+#'
 #' @export
-#' @references \url{https://docs.aws.amazon.com/AlexaWebInfoService/latest}
+#' @references \url{https://docs.aws.amazon.com/AlexaWebInfoService/latest/}
 #' @examples \dontrun{
 #' alexa_cat(domain = "http://www.google.com")
 #' }

@@ -13,15 +13,15 @@ not_news(url_list = NULL)
 data.frame with 3 columns: url, not_news, news
 }
 \description{
-Based on a slightly amended version of the regular expression used to classify news, and non-news in: 
-``Exposure to ideologically diverse news and opinion on Facebook'' 
+Based on a slightly amended version of the regular expression used to classify news, and non-news in:
+``Exposure to ideologically diverse news and opinion on Facebook''
 by Bakshy, Messing, and Adamic. Science. 2015.
 }
 \details{
 Amendment: sport rather than sports
 
 URL containing any of the following words is classified as soft news:
-"sport|entertainment|arts|fashion|style|lifestyle|leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget" 
+"sport|entertainment|arts|fashion|style|lifestyle|leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget"
 
 URL containing any of following words is classified as hard news:
 "politi|usnews|world|national|state|elect|vote|govern|campaign|war|polic|econ|unemploy|racis|energy|abortion|educa|healthcare|immigration"
@@ -36,5 +36,5 @@ not_news(c("http://www.bbc.com/sport", "http://www.washingtontimes.com/news/poli
 }
 }
 \references{
-\url{http://science.sciencemag.org/content/348/6239/1130}
+\url{https://science.sciencemag.org/content/348/6239/1130}
 }

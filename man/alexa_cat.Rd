@@ -17,9 +17,9 @@ alexa_cat(domain = NULL, key = NULL, secret = NULL)
 data.frame with 2 columns Title and AbsolutePath
 }
 \description{
-Get the Access Key ID and Secret Access Key by logging into \url{https://console.aws.amazon.com/}, 
-clicking on the username followed by security credentials. Either pass the access key and secret or 
-set two environmental variables \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY}. 
+Get the Access Key ID and Secret Access Key by logging into \url{https://console.aws.amazon.com/},
+clicking on the username followed by security credentials. Either pass the access key and secret or
+set two environmental variables \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY}.
 These environment variables persist within a R session.
 }
 \examples{
@@ -28,5 +28,5 @@ alexa_cat(domain = "http://www.google.com")
 }
 }
 \references{
-\url{https://docs.aws.amazon.com/AlexaWebInfoService/latest}
+\url{https://docs.aws.amazon.com/AlexaWebInfoService/latest/}
 }
