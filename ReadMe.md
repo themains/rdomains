@@ -23,7 +23,7 @@ devtools::install_github("themains/rdomains", build_vignettes = TRUE)
 
 ### Usage
 
-To learn how to use rdomains, read this [vignette](doc/rdomains.md). Or launch the vignette within R:
+To learn how to use rdomains, read this [vignette](../doc/rdomains.md). Or launch the vignette within R:
 
 ```r
 vignette("rdomains", package = "rdomains")
