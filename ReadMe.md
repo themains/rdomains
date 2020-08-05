@@ -4,7 +4,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/3vjmwn7jyf1s17e4?svg=true)](https://ci.appveyor.com/project/soodoku/rdomains)
 [![codecov](https://codecov.io/github/themains/rdomains/branch/master/graph/badge.svg)](https://codecov.io/github/themains/rdomains/)
 
-The package provides a few ways to classify domains based on their content. You can either get the categorizations from [shallalist](http://www.shallalist.de/), [trusted (McAfee)](https://trustedsource.org/), [DMOZ](https://dmoztools.net) (the service has ended), [Alexa API](https://docs.aws.amazon.com/AlexaWebInfoService/latest/), which uses the [DMOZ Data](https://dmoztools.net), or [virustotal API](http://virustotal.com), or use validated machine learning models based off the shallalist data.
+The package provides a few ways to classify domains based on their content. You can either get the categorizations from [shallalist](http://www.shallalist.de/), [trusted (McAfee)](https://trustedsource.org/), DMOZ (the service has ended; available at [curlie](https://curlie.org/)), [Alexa API](https://docs.aws.amazon.com/AlexaWebInfoService/latest/), which uses the [DMOZ Data](https://dmoztools.net), or [virustotal API](http://virustotal.com), or use validated machine learning models based off the shallalist data.
 
 ### Installation
 
