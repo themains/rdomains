@@ -8,7 +8,7 @@
 #' API, shalla, brightcloud, aws, and validated ML model based off
 #' shallalist data to predict content of a domain.
 #'
-#' To learn how to use rdomains, see this vignette: \url{vignettes/rdomains.html}.
+#' To learn how to use rdomains, see this vignette: \url{../doc/rdomains.html}.
 #'
 #' @importFrom urltools suffix_extract
 #' @importFrom Matrix Matrix spMatrix sparseVector
