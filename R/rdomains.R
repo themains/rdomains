@@ -15,6 +15,8 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom stats setNames
 #' @importFrom methods as
+#' @importFrom stats predict
+#' @importFrom glmnet predict.glmnet
 #' @importFrom utils read.table URLencode untar unzip read.csv write.csv
 #' @importFrom curl curl_download
 #' @importFrom httr content GET oauth_app oauth_signature add_headers
