@@ -21,7 +21,7 @@
 #' @return data.frame with 3 columns: url, not_news, news
 #'
 #' @export
-#' @references \url{https://science.sciencemag.org/content/348/6239/1130}
+#' @references \url{https://www.science.org/doi/10.1126/science.aaa1160}
 #'
 #' @examples \dontrun{
 #' not_news("http://www.bbc.com/sport")

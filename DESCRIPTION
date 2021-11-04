@@ -1,6 +1,6 @@
 Package: rdomains
 Title: Get the Category of Content Hosted by a Domain
-Version: 0.1.9
+Version: 0.2.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
 Description: Get the category of content hosted by a domain. Use Shallalist <http://shalla.de/>,
     Virustotal (which provides access to lots of services) <https://www.virustotal.com/>,
@@ -8,7 +8,7 @@ Description: Get the category of content hosted by a domain. Use Shallalist <htt
     <https://github.com/Hipo/university-domains-list> or validated machine learning
     classifiers based on Shallalist data to learn about the kind of content hosted by a domain.
 Depends:
-    R (>= 3.4.0)
+    R (>= 4.0.0)
 Imports:
     Matrix,
     urltools,
@@ -33,4 +33,4 @@ VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

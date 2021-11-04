@@ -36,5 +36,5 @@ not_news(c("http://www.bbc.com/sport", "http://www.washingtontimes.com/news/poli
 }
 }
 \references{
-\url{https://science.sciencemag.org/content/348/6239/1130}
+\url{https://www.science.org/doi/10.1126/science.aaa1160}
 }

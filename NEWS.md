@@ -1,3 +1,7 @@
+# rdomains 0.2.0
+
+* URL fixes. in resubmission now because site from which data was downloaded went down which broke some tests
+
 # rdomains 0.1.9
 
 * R package supporting headless browsing has been abandoned. So removing trusted_cat. Sigh.
