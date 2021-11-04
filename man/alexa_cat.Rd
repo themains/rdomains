@@ -17,7 +17,7 @@ alexa_cat(domain = NULL, key = NULL, secret = NULL)
 data.frame with 2 columns Title and AbsolutePath
 }
 \description{
-Get the Access Key ID and Secret Access Key by logging into \url{https://console.aws.amazon.com/},
+To learn how to get the Access Key ID and Secret Access Key, see \url{https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html},
 clicking on the username followed by security credentials. Either pass the access key and secret or
 set two environmental variables \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY}.
 These environment variables persist within a R session.
