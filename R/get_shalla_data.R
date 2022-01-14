@@ -26,7 +26,7 @@ get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
   }
 
   tmp <- tempfile()
-  curl_download("http://www.shallalist.de/Downloads/shallalist.tar.gz", tmp)
+  curl_download("https://github.com/themains/rdomains/blob/master/data-raw/shallalist/accomplist/shallalist.gz?raw=true", tmp)
   untar(tmp, exdir = getwd())
   list_of_files <- untar(tmp, list = TRUE)
   unlink(tmp)

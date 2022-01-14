@@ -21,7 +21,6 @@ Imports:
     curl,
     virustotal,
     aws.alexa,
-    rlang,
     jsonlite,
     devtools
 Suggests:
