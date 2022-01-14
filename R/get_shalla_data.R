@@ -1,5 +1,7 @@
 #' Get Shalla Data
 #'
+#' Shalla has discontinued. We downloaded the last copy (1/14/22).
+#' For more information see data-raw folder on github
 #' Downloads, unzips and saves the latest version of shallalist data. By default, saves shalla data  
 #' as \code{shalla_domain_category.csv}.
 #'  
