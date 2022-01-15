@@ -14,3 +14,4 @@
 ^CRAN-RELEASE$
 ^doc$
 ^Meta$
+^pkgdown$

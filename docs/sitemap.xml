@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://themains.github.io/rdomains/404.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/articles/rdomains.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/authors.html</loc>
+  </url>
+  <url>
     <loc>http://themains.github.io/rdomains/index.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/ISSUE_TEMPLATE.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/news/index.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/ReadMe.html</loc>
   </url>
   <url>
     <loc>http://themains.github.io/rdomains/reference/adult_ml1_cat.html</loc>
@@ -28,6 +52,12 @@
     <loc>http://themains.github.io/rdomains/reference/glm_shalla.html</loc>
   </url>
   <url>
+    <loc>http://themains.github.io/rdomains/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>http://themains.github.io/rdomains/reference/install_data_package.html</loc>
+  </url>
+  <url>
     <loc>http://themains.github.io/rdomains/reference/not_news.html</loc>
   </url>
   <url>
@@ -37,12 +67,12 @@
     <loc>http://themains.github.io/rdomains/reference/shalla_cat.html</loc>
   </url>
   <url>
+    <loc>http://themains.github.io/rdomains/reference/trusted_cat.html</loc>
+  </url>
+  <url>
     <loc>http://themains.github.io/rdomains/reference/uni_cat.html</loc>
   </url>
   <url>
     <loc>http://themains.github.io/rdomains/reference/virustotal_cat.html</loc>
-  </url>
-  <url>
-    <loc>http://themains.github.io/rdomains/articles/rdomains.html</loc>
   </url>
 </urlset>

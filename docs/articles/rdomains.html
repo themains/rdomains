@@ -21,6 +21,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,18 +35,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rdomains</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/rdomains.html">Get started</a>
 </li>
@@ -75,9 +71,9 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using rdomains</h1>
-                        <h4 class="author">Gaurav Sood</h4>
+                        <h4 data-toc-skip class="author">Gaurav Sood</h4>
             
-            <h4 class="date">2020-08-05</h4>
+            <h4 data-toc-skip class="date">2022-01-14</h4>
       
       
       <div class="hidden name"><code>rdomains.Rmd</code></div>
@@ -86,73 +82,85 @@
 
     
     
-<div id="rdomains-get-the-category-of-content-hosted-by-a-domain" class="section level3">
-<h3 class="hasAnchor">
-<a href="#rdomains-get-the-category-of-content-hosted-by-a-domain" class="anchor"></a>rdomains: Get the category of content hosted by a domain</h3>
-<div id="install-and-load-the-package" class="section level4">
-<h4 class="hasAnchor">
-<a href="#install-and-load-the-package" class="anchor"></a>Install and Load the package</h4>
+<div class="section level3">
+<h3 id="rdomains-get-the-category-of-content-hosted-by-a-domain">rdomains: Get the category of content hosted by a domain<a class="anchor" aria-label="anchor" href="#rdomains-get-the-category-of-content-hosted-by-a-domain"></a>
+</h3>
+<div class="section level4">
+<h4 id="install-and-load-the-package">Install and Load the package<a class="anchor" aria-label="anchor" href="#install-and-load-the-package"></a>
+</h4>
 <p>The latest development version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co">#library(devtools)</span>
-<span class="fu">install_github</span>(<span class="st">"themains/rdomains"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#library(devtools)</span>
+<span class="fu">install_github</span><span class="op">(</span><span class="st">"themains/rdomains"</span><span class="op">)</span></code></pre></div>
 <p>To install the package from CRAN, type in:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"rdomains"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rdomains"</span><span class="op">)</span></code></pre></div>
 <p>Next, load the package:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rdomains</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">rdomains</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="shalla" class="section level4">
-<h4 class="hasAnchor">
-<a href="#shalla" class="anchor"></a>Shalla</h4>
-<p>To get category of the content from <a href="http://www.shallalist.de">shallalist</a>, first download the latest file using:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rdomains/man/get_shalla_data.html">get_shalla_data</a></span>()</pre></body></html></div>
+<div class="section level4">
+<h4 id="shalla">Shalla<a class="anchor" aria-label="anchor" href="#shalla"></a>
+</h4>
+<p>To get category of the content from <a href="http://www.shallalist.de" class="external-link">shallalist</a>, first download the latest file using:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_shalla_data.html">get_shalla_data</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>And then, get the category using:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rdomains/man/shalla_cat.html">shalla_cat</a></span>(<span class="st">"http://www.google.com"</span>)</pre></body></html></div>
-<pre><code>##   domain_name shalla_category
-## 1  google.com   searchengines</code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/shalla_cat.html">shalla_cat</a></span><span class="op">(</span><span class="st">"http://www.google.com"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##   domain_name shalla_category</span>
+<span class="co">## 1  google.com   searchengines</span></code></pre>
 </div>
-<div id="dmoz" class="section level4">
-<h4 class="hasAnchor">
-<a href="#dmoz" class="anchor"></a>DMOZ</h4>
+<div class="section level4">
+<h4 id="dmoz">DMOZ<a class="anchor" aria-label="anchor" href="#dmoz"></a>
+</h4>
 <p>To get category of the content from DMOZ, first download the archived parsed CSV file using:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rdomains/man/get_dmoz_data.html">get_dmoz_data</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_dmoz_data.html">get_dmoz_data</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>And then, get the category using:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rdomains/man/dmoz_cat.html">dmoz_cat</a></span>(<span class="st">"http://www.google.com"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/dmoz_cat.html">dmoz_cat</a></span><span class="op">(</span><span class="st">"http://www.google.com"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="ml" class="section level4">
-<h4 class="hasAnchor">
-<a href="#ml" class="anchor"></a>ML</h4>
+<div class="section level4">
+<h4 id="ml">ML<a class="anchor" aria-label="anchor" href="#ml"></a>
+</h4>
 <p>Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rdomains/man/adult_ml1_cat.html">adult_ml1_cat</a></span>(<span class="st">"http://www.google.com"</span>)</pre></body></html></div>
-<pre><code>##   domain_name  category
-## 1  google.com 0.3133728</code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/adult_ml1_cat.html">adult_ml1_cat</a></span><span class="op">(</span><span class="st">"http://www.google.com"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##   domain_name  category</span>
+<span class="co">## 1  google.com 0.3133728</span></code></pre>
 </div>
-<div id="virustotal" class="section level4">
-<h4 class="hasAnchor">
-<a href="#virustotal" class="anchor"></a>Virustotal</h4>
-<p>Start by getting the API key from <a href="https://www.virustotal.com/">virustotal</a>.</p>
+<div class="section level4">
+<h4 id="virustotal">Virustotal<a class="anchor" aria-label="anchor" href="#virustotal"></a>
+</h4>
+<p>Start by getting the API key from <a href="https://www.virustotal.com/" class="external-link">virustotal</a>.</p>
 <p>Get virustotal category by running:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rdomains/man/virustotal_cat.html">virustotal_cat</a></span>(<span class="st">"http://www.google.com"</span>)</pre></body></html></div>
-<pre><code>##                 domain   bitdefender dr_web  alexa        google       websense             trendmicro
-## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals</code></pre>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/virustotal_cat.html">virustotal_cat</a></span><span class="op">(</span><span class="st">"http://www.google.com"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##                 domain   bitdefender dr_web  alexa        google       websense             trendmicro</span>
+<span class="co">## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals</span></code></pre>
 </div>
-<div id="trusted-mcafee" class="section level4">
-<h4 class="hasAnchor">
-<a href="#trusted-mcafee" class="anchor"></a>Trusted (McAfee)</h4>
+<div class="section level4">
+<h4 id="trusted-mcafee">Trusted (McAfee)<a class="anchor" aria-label="anchor" href="#trusted-mcafee"></a>
+</h4>
 <p>Get the content category of a domain according to McAfee (Trusted):</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu">trusted_cat</span>(<span class="st">"http://www.google.com"</span>)</pre></body></html></div>
-<pre><code>##                    url          status   categorization   reputation
-## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk</code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">trusted_cat</span><span class="op">(</span><span class="st">"http://www.google.com"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##                    url          status   categorization   reputation</span>
+<span class="co">## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk</span></code></pre>
 </div>
-<div id="alexa-category" class="section level4">
-<h4 class="hasAnchor">
-<a href="#alexa-category" class="anchor"></a>Alexa Category</h4>
-<p>To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from <a href="https://aws.amazon.com/" class="uri">https://aws.amazon.com/</a>. Next, set the environment variables:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="st">"AWS_ACCESS_KEY_ID"</span>, <span class="st">"key_id"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"AWS_SECRET_ACCESS_KEY"</span>, <span class="st">"secret_key"</span>)</pre></body></html></div>
+<div class="section level4">
+<h4 id="alexa-category">Alexa Category<a class="anchor" aria-label="anchor" href="#alexa-category"></a>
+</h4>
+<p>To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from <a href="https://aws.amazon.com/" class="external-link uri">https://aws.amazon.com/</a>. Next, set the environment variables:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"AWS_ACCESS_KEY_ID"</span>, <span class="st">"key_id"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AWS_SECRET_ACCESS_KEY"</span>, <span class="st">"secret_key"</span><span class="op">)</span></code></pre></div>
 <p>Then run,</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rdomains/man/alexa_cat.html">alexa_cat</a></span>(<span class="kw">domain</span><span class="kw">=</span><span class="st">"http://www.google.com"</span>)[<span class="fl">1</span>,]</pre></body></html></div>
-<pre><code>##                   Title                                           AbsolutePath
-## 1 Search Engines/Google Top/Computers/Internet/Searching/Search_Engines/Google</code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/alexa_cat.html">alexa_cat</a></span><span class="op">(</span>domain<span class="op">=</span><span class="st">"http://www.google.com"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></code></pre></div>
+<pre><code><span class="co">##                   Title                                           AbsolutePath</span>
+<span class="co">## 1 Search Engines/Google Top/Computers/Internet/Searching/Search_Engines/Google</span></code></pre>
 </div>
 </div>
   </div>
@@ -166,11 +174,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://github.com/soodoku">Gaurav Sood</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://github.com/soodoku" class="external-link">Gaurav Sood</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
