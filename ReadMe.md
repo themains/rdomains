@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/github/themains/rdomains/branch/master/graph/badge.svg)](https://codecov.io/github/themains/rdomains/)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
 
-The package provides a few ways to classify domains based on their content. You can either get the categorizations from [shallalist](http://www.shallalist.de/), [trusted (McAfee)](https://trustedsource.org/), DMOZ (the service has ended; available at [curlie](https://curlie.org/)), [Alexa API](https://docs.aws.amazon.com/AlexaWebInfoService/latest/), which uses the DMOZ Data (now hosted at [https://curlie.org](https://curlie.org)), or [virustotal API](http://virustotal.com), or use validated machine learning models based off the shallalist data.
+The package provides a few ways to classify domains based on their content. You can either get the categorizations from [shallalist](http://www.shallalist.de/) (which has stopped its service --- the latest you will get is from 1/14/22), [trusted (McAfee)](https://trustedsource.org/), DMOZ (the service has ended; available at [curlie](https://curlie.org/)), [Alexa API](https://docs.aws.amazon.com/AlexaWebInfoService/latest/), which uses the DMOZ Data (now hosted at [https://curlie.org](https://curlie.org)), or [virustotal API](http://virustotal.com), or use validated machine learning models based off the shallalist data.
 
 ### Installation
 

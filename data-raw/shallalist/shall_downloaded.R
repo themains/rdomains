@@ -27,5 +27,5 @@ violence = data.frame(domains = read_lines("violence"), category = "violence")
 shalla = rbind(ads, gambling, finance, porn, spyware, tracker, violence)
 
 gz1 <- gzfile("shallalist.gz", "w")
-write.csv(shalla, gz1, row.names = F)
+write.csv(shalla, file = gz1, row.names = F)
 close(gz1)

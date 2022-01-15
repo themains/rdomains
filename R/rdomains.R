@@ -25,6 +25,7 @@
 #' @importFrom virustotal set_key domain_report
 #' @importFrom aws.alexa set_secret_key url_info
 #' @importFrom devtools install_github
+#' @importFrom R.utils gunzip
 #'
 #' @docType package
 #' @author Gaurav Sood

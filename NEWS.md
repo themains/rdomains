@@ -1,3 +1,7 @@
+# rdomains 0.2.1
+
+* shallalist stopped its service so downloaded latest shalla db and changed the URL from which we fetch the shallalist file
+
 # rdomains 0.2.0
 
 * URL fixes. in resubmission now because site from which data was downloaded went down which broke some tests
