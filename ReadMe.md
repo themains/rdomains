@@ -1,7 +1,6 @@
 ## rdomains: Classify Domains Based on Their Content
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rdomains)](https://cran.r-project.org/package=rdomains) 
-[![Build Status](https://travis-ci.org/themains/rdomains.svg?branch=master)](https://travis-ci.org/themains/rdomains)
 [![Build status](https://ci.appveyor.com/api/projects/status/3vjmwn7jyf1s17e4?svg=true)](https://ci.appveyor.com/project/soodoku/rdomains)
 [![codecov](https://codecov.io/github/themains/rdomains/branch/master/graph/badge.svg)](https://codecov.io/github/themains/rdomains/)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
