@@ -11,7 +11,7 @@
 #' @param domain domain name
 #' @param apikey virustotal API key
 #' 
-#' @return data.frame with 7 columns: domain, bitdefender, dr_web, alexa, google, websense, trendmicro
+#' @return data.frame with 86 columns: domain, bitdefender, dr_web, alexa, google, websense, trendmicro
 #'  
 #' @export
 #' @references \url{https://developers.virustotal.com/v2.0/reference}
@@ -29,33 +29,21 @@ virustotal_cat <- function(domain = NULL, apikey = NULL) {
   }
 
   # Get domain report
-  res <-  domain_report(domain)
+  res <-  tryCatch(
+    get_domain_info(domain),
+    error = function(e) {
+      message("An error occurred: ", conditionMessage(e))
+      data.frame()
+  })
 
-  # Companies from which virustotal returns domain categories
-  cat_names <- c("BitDefender category" = "bitdefender",
-                 "Dr.Web category" = "dr_web",
-                 "Alexa category" = "alexa",
-                 "categories" = "google",
-                 "Websense ThreatSeeker category" = "websense",
-                 "TrendMicro category" = "trendmicro")
-
-  # If domain not found, return a data.frame with domain name + NAs
-  if (res$verbose_msg == "Domain not found") {
-      d_res      <- read.table(text = "", col.names = cat_names)
-      d_res[1, ] <- NA
+  if (nrow(res) != 0){
+    # If results are returned
+    d_res <- as.data.frame(
+      lapply(res$data$attributes$last_analysis_results, function(x) x$category))
+    
+    return(data.frame(domain, res))
   } else {
-
-  # If results are returned
-  d_res <- as.data.frame(
-    do.call(cbind, sapply(res[which(names(res) %in% names(cat_names))],
-    "[", 1)))
-
-  names(d_res) <- cat_names[match(names(d_res), names(cat_names))]
-  d_res[, cat_names[!(cat_names %in% names(d_res))]] <- NA
-
-  # Reorder so that we always get same order of columns
-  d_res <- d_res[, names(d_res)[order(cat_names)]]
+    return(data.frame(domain))
   }
 
-  data.frame(domain, d_res)
 }
