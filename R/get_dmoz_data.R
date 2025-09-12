@@ -1,6 +1,7 @@
 #' Get DMOZ Data
 #'
-#' Downloads, unzips and saves archived version of the DMOZ data. For more details, check:
+#' Downloads archived DMOZ (Open Directory Project) data. DMOZ was discontinued in March 2017.
+#' This function downloads our preserved copy of the final DMOZ dataset. For more details, check:
 #' \url{https://github.com/themains/rdomains/tree/master/data-raw/dmoz/}
 #'
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
@@ -8,7 +9,7 @@
 #'
 #' @export
 #'
-#' @references \url{https://curlie.org/}
+#' @references \url{https://archive.org/details/dmoz-rdf-20150327}
 #'
 #' @examples \dontrun{
 #' get_dmoz_data()

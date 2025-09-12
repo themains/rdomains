@@ -12,9 +12,10 @@ get_shalla_data(outdir = "./", overwrite = FALSE)
 \item{overwrite}{Optional; default is FALSE. If TRUE, the file is overwritten.}
 }
 \description{
-Shalla has discontinued. We downloaded the last copy (1/14/22).
-For more information see data-raw folder on github
-Downloads, unzips and saves the latest version of shallalist data. By default, saves shalla data  
+Shallalist service was discontinued in January 2022. This function downloads 
+the last archived copy (from 1/14/22) that we have preserved on GitHub.
+The original service at shallalist.de is no longer available.
+Downloads, unzips and saves the final version of shallalist data. By default, saves shalla data  
 as \code{shalla_domain_category.csv}.
 }
 \examples{
@@ -23,5 +24,5 @@ get_shalla_data()
 }
 }
 \references{
-\url{https://shallalist.de/}
+\url{https://web.archive.org/web/20210502020725/http://www.shallalist.de/}
 }

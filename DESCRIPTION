@@ -4,7 +4,7 @@ Version: 0.3.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
 Description: Get the category of content hosted by a domain. Use Shallalist (service discontinued),
     'VirusTotal' (which provides access to lots of services) <https://www.virustotal.com/>,
-    'Alexa' <https://aws.amazon.com/awis/>, 'DMOZ' <https://curlie.org/>, University Domain list
+    'Alexa' <https://aws.amazon.com/awis/>, 'DMOZ' <https://archive.org/details/dmoz-rdf-20150327>, University Domain list
     <https://github.com/Hipo/university-domains-list>, 'OpenAI' 'GPT' models, 'Anthropic' 'Claude' models,
     or validated machine learning classifiers based on 'Shallalist' data to learn about the kind 
     of content hosted by a domain.
