@@ -10,3 +10,6 @@ docs
 .DS_Store
 /rdomains.Rcheck
 *.gz
+*.gz
+*.gz
+rdomains_0.3.0.tar.gz
