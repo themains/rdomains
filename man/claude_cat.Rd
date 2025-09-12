@@ -1,0 +1,37 @@
+\name{claude_cat}
+\alias{claude_cat}
+\title{Get Category from Anthropic Claude}
+\usage{
+claude_cat(
+  domains = NULL,
+  api_key = NULL,
+  categories = NULL,
+  model = "claude-3-haiku-20240307",
+  rate_limit = 0.5
+)
+}
+\arguments{
+\item{domains}{vector of domain names}
+
+\item{api_key}{Anthropic API key. If not provided, looks for ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable}
+
+\item{categories}{vector of categories to classify into. If NULL, uses default web categories}
+
+\item{model}{Claude model to use (default: "claude-3-haiku-20240307" for cost efficiency)}
+
+\item{rate_limit}{delay in seconds between API calls (default: 0.5)}
+}
+\value{
+data.frame with original list and content category of the domain
+}
+\description{
+Fetches category of content hosted by a domain using Anthropic's Claude API.
+The function uses Claude models to classify domains into specified categories.
+}
+\examples{
+\dontrun{
+claude_cat("google.com")
+claude_cat(c("google.com", "facebook.com"))
+claude_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
+}
+}

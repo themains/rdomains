@@ -1,3 +1,14 @@
+# rdomains 0.3.0
+
+* **NEW**: Added LLM-based domain classification with `openai_cat()` and `claude_cat()` functions
+* Support for OpenAI GPT models and Anthropic Claude models for domain categorization
+* Flexible custom category schemas - users can specify their own categories or use defaults
+* Consistent API design matching existing `*_cat()` functions for seamless integration
+* Built-in rate limiting and error handling for API calls
+* **REMOVED**: BrightCloud support due to service unavailability
+* Updated documentation URLs from HTTP to HTTPS where applicable
+* Fixed Shallalist references to reflect service discontinuation
+
 # rdomains 0.2.1
 
 * shallalist stopped its service so downloaded latest shalla db and changed the URL from which we fetch the shallalist file

@@ -4,7 +4,7 @@
 #' Websense, and Trendmicro. Not all services will have categories for all the domains. When the categories are
 #' not returned for a particular domain, we return a NA.
 #' 
-#' Get the API Access Key from \url{http://www.virustotal.com/}. Either pass the API Key to the function 
+#' Get the API Access Key from \url{https://www.virustotal.com/}. Either pass the API Key to the function 
 #' or set the environmental variable: \code{VirustotalToken}. Environment variables persist within 
 #' a R session. 
 #' 

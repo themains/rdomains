@@ -34,7 +34,7 @@ library(rdomains)
 
 #### Shalla
 
-To get category of the content from [shallalist](http://www.shallalist.de), first download the latest file using:
+To get category of the content from Shallalist (service discontinued - using archived data), first download the archived data using:
 
 ```{r, eval=FALSE, down_shalla}
 get_shalla_data()
@@ -80,7 +80,7 @@ adult_ml1_cat("http://www.google.com")
 
 #### Virustotal
 
-Start by getting the API key from [virustotal](https://www.virustotal.com/).
+Start by getting the API key from [VirusTotal](https://www.virustotal.com/).
 
 Get virustotal category by running:
 
@@ -92,17 +92,45 @@ virustotal_cat("http://www.google.com")
 ## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals
 ```
 
-#### Trusted (McAfee)
+#### OpenAI GPT Models
 
-Get the content category of a domain according to McAfee (Trusted):
+Get domain categorization using OpenAI's GPT models. You'll need an OpenAI API key:
 
-```{r, eval=FALSE, trusted}
-trusted_cat("http://www.google.com")
+```{r, eval=FALSE, openai}
+# Set your API key
+Sys.setenv("OPENAI_API_KEY", "your-api-key-here")
+
+# Classify domains
+openai_cat("google.com")
 ```
 
 ```
-##                    url          status   categorization   reputation
-## 2 http://www.google.com Categorized URL - Search Engines Minimal Risk
+##   domain_name openai_category
+## 1  google.com      technology
+```
+
+You can also specify custom categories:
+
+```{r, eval=FALSE, openai_custom}
+openai_cat(c("amazon.com", "github.com"), 
+           categories = c("ecommerce", "technology", "social", "other"))
+```
+
+#### Anthropic Claude
+
+Get domain categorization using Anthropic's Claude models. You'll need an Anthropic API key:
+
+```{r, eval=FALSE, claude}
+# Set your API key  
+Sys.setenv("ANTHROPIC_API_KEY", "your-api-key-here")
+
+# Classify domains
+claude_cat("facebook.com")
+```
+
+```
+##   domain_name claude_category
+## 1 facebook.com          social
 ```
 
 #### Alexa Category

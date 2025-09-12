@@ -20,7 +20,7 @@ Websense, and Trendmicro. Not all services will have categories for all the doma
 not returned for a particular domain, we return a NA.
 }
 \details{
-Get the API Access Key from \url{http://www.virustotal.com/}. Either pass the API Key to the function 
+Get the API Access Key from \url{https://www.virustotal.com/}. Either pass the API Key to the function 
 or set the environmental variable: \code{VirustotalToken}. Environment variables persist within 
 a R session.
 }
