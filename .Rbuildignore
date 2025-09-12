@@ -19,6 +19,4 @@
 .claude/
 CLAUDE.md
 ReadMe.md
-.travis.yml
-appveyor.yml
 .github/
