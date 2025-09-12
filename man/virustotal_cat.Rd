@@ -12,7 +12,7 @@ virustotal_cat(domain = NULL, apikey = NULL)
 \item{apikey}{virustotal API key}
 }
 \value{
-data.frame with 7 columns: domain, bitdefender, dr_web, alexa, google, websense, trendmicro
+data.frame with 86 columns: domain, bitdefender, dr_web, alexa, google, websense, trendmicro
 }
 \description{
 Returns category of content from 6 major services including: BitDefender, Dr. Web, Alexa (DMOZ), Google, 
@@ -30,5 +30,5 @@ virustotal_cat("http://www.google.com")
 }
 }
 \references{
-\url{https://developers.virustotal.com/v2.0/reference}
+\url{https://docs.virustotal.com/reference/domain}
 }

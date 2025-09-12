@@ -16,3 +16,6 @@
 ^Meta$
 ^pkgdown$
 ^CRAN-SUBMISSION$
+.claude/
+CLAUDE.md
+ReadMe.md

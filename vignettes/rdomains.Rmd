@@ -142,13 +142,4 @@ Sys.setenv("AWS_ACCESS_KEY_ID", "key_id")
 Sys.getenv("AWS_SECRET_ACCESS_KEY", "secret_key")
 ```
 
-Then run,
-
-```{r, eval=FALSE, alexa}
-alexa_cat(domain="http://www.google.com")[1,]
-```
-
-```
-##                   Title                                           AbsolutePath
-## 1 Search Engines/Google Top/Computers/Internet/Searching/Search_Engines/Google
-```
+Note: The Alexa categorization service has been discontinued by Amazon.

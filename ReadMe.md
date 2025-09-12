@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/github/themains/rdomains/branch/master/graph/badge.svg)](https://codecov.io/github/themains/rdomains/)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
 
-The package provides several ways to classify domains based on their content. You can get categorizations from Shallalist (service discontinued - using archived data), DMOZ (service ended; available at [curlie](https://curlie.org/)), [Alexa API](https://docs.aws.amazon.com/AlexaWebInfoService/latest/), [VirusTotal API](https://www.virustotal.com), **OpenAI GPT models**, **Anthropic Claude models**, or use validated machine learning models based off the shallalist data.
+The package provides several ways to classify domains based on their content. You can get categorizations from Shallalist (service discontinued - using archived data), DMOZ (service ended; available at [curlie](https://curlie.org/)), Alexa API (discontinued), [VirusTotal API](https://www.virustotal.com), **OpenAI GPT models**, **Anthropic Claude models**, or use validated machine learning models based off the shallalist data.
 
 ### Installation
 

@@ -30,7 +30,7 @@ virustotal_cat <- function(domain = NULL, apikey = NULL) {
 
   # Get domain report
   res <-  tryCatch(
-    get_domain_info(domain),
+    domain_report(domain),
     error = function(e) {
       message("An error occurred: ", conditionMessage(e))
       data.frame()
