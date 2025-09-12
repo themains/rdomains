@@ -9,3 +9,4 @@ Meta
 docs
 .DS_Store
 /rdomains.Rcheck
+*.gz

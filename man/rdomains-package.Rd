@@ -2,15 +2,16 @@
 % Please edit documentation in R/rdomains.R
 \docType{package}
 \name{rdomains-package}
-\alias{rdomains-package}
 \alias{rdomains}
+\alias{rdomains-package}
 \title{rdomains: Classify Domains by their Content}
 \description{
 Want to know what kind of content is carried on a domain?
 Get the results quickly using rdomains. The package provides access to virustotal
 API, shalla, aws, OpenAI GPT models, Anthropic Claude models, 
 and validated ML model based off shallalist data to predict content of a domain.
-
+}
+\details{
 To learn how to use rdomains, see this vignette: \url{../doc/rdomains.html}.
 }
 \author{
