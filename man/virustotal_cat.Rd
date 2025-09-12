@@ -30,5 +30,5 @@ virustotal_cat("http://www.google.com")
 }
 }
 \references{
-\url{https://developers.virustotal.com/v2.0/reference}
+\url{https://docs.virustotal.com/v2.0/reference}
 }

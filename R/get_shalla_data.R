@@ -10,7 +10,7 @@
 #' 
 #' @export
 #' 
-#' @references \url{http://www.shallalist.de/}
+#' @references \url{https://shallalist.de/}
 #' 
 #' @examples \dontrun{
 #' get_shalla_data()

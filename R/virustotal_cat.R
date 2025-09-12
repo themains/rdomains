@@ -14,7 +14,7 @@
 #' @return data.frame with 86 columns: domain, bitdefender, dr_web, alexa, google, websense, trendmicro
 #'  
 #' @export
-#' @references \url{https://developers.virustotal.com/v2.0/reference}
+#' @references \url{https://docs.virustotal.com/v2.0/reference}
 #' 
 #' @examples \dontrun{
 #' virustotal_cat("http://www.google.com")

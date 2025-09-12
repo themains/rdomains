@@ -8,7 +8,7 @@
 #'
 #' @export
 #'
-#' @references \url{https://dmoztools.net}
+#' @references \url{https://curlie.org/}
 #'
 #' @examples \dontrun{
 #' get_dmoz_data()
