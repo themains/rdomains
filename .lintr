@@ -1,6 +1,0 @@
-linters: with_defaults(
-    trailing_whitespace_linter = NULL, # 56
-    line_length_linter = NULL, # 33
-    seq_linter = NULL, # 1
-    dummy_linter = NULL
-  )

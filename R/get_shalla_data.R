@@ -18,17 +18,63 @@
 
 get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
 
-  # Check if file already there
-  output_file <- paste0(outdir, "shalla_domain_category.csv")
-  if (overwrite == FALSE & file.exists(output_file)) {
-    stop("There is already a file with that name in the location.
-          Pick another name or location.")
+  # Normalize and create output directory path
+  outdir <- normalizePath(outdir, mustWork = FALSE)
+  if (!dir.exists(outdir)) {
+    tryCatch({
+      dir.create(outdir, recursive = TRUE)
+    }, error = function(e) {
+      stop("Cannot create output directory: ", outdir, "\n", 
+           "Error: ", e$message, "\n",
+           "Please check directory permissions.")
+    })
+  }
+  
+  # Use proper file path construction
+  output_file <- file.path(outdir, "shalla_domain_category.csv")
+  
+  # Check if file already exists
+  if (!overwrite && file.exists(output_file)) {
+    stop("File already exists: ", output_file, "\n",
+         "Set overwrite=TRUE to replace it or choose a different location.")
   }
 
-  tmp <- tempfile()
-  curl_download("https://raw.githubusercontent.com/themains/rdomains/master/data-raw/shallalist/accomplist/shallalist.gz", tmp)
-  gunzip(tmp, destname = output_file, overwrite = overwrite)
-  unlink(tmp, force = TRUE)
-
-  cat("Shallalist Data saved to the following destination:", outdir, "\n")
+  # Create temporary file in a writable location
+  tmp_dir <- tempdir()
+  tmp <- tempfile(tmpdir = tmp_dir, fileext = ".gz")
+  
+  tryCatch({
+    # Download file
+    cat("Downloading Shallalist data...\n")
+    curl::curl_download(
+      "https://raw.githubusercontent.com/themains/rdomains/master/data-raw/shallalist/accomplist/shallalist.gz", 
+      tmp
+    )
+    
+    # Extract to destination with proper error handling
+    R.utils::gunzip(tmp, destname = output_file, overwrite = overwrite)
+    
+    # Verify the file was created successfully
+    if (!file.exists(output_file)) {
+      stop("Failed to create output file. Please check write permissions for: ", outdir)
+    }
+    
+    cat("Shallalist data saved to:", output_file, "\n")
+    
+  }, error = function(e) {
+    # Clean up temp file on error
+    if (file.exists(tmp)) unlink(tmp, force = TRUE)
+    
+    if (grepl("permission", e$message, ignore.case = TRUE)) {
+      stop("Permission denied. Please ensure you have write access to: ", outdir, "\n",
+           "On Windows, try running R as administrator or choose a different output directory.")
+    } else {
+      stop("Error downloading or extracting Shallalist data: ", e$message)
+    }
+  })
+  
+  # Clean up temp file
+  if (file.exists(tmp)) unlink(tmp, force = TRUE)
+  
+  invisible(output_file)
 }

@@ -13,3 +13,4 @@ docs
 *.gz
 *.gz
 rdomains_0.3.0.tar.gz
+*.csv
