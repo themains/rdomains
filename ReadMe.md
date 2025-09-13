@@ -1,8 +1,7 @@
 ## rdomains: Classify Domains Based on Their Content
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rdomains)](https://cran.r-project.org/package=rdomains) 
-[![Build status](https://ci.appveyor.com/api/projects/status/3vjmwn7jyf1s17e4?svg=true)](https://ci.appveyor.com/project/soodoku/rdomains)
-[![codecov](https://codecov.io/github/themains/rdomains/branch/master/graph/badge.svg)](https://codecov.io/github/themains/rdomains/)
+[![R-CMD-check](https://github.com/themains/rdomains/workflows/R-CMD-check/badge.svg)](https://github.com/themains/rdomains/actions/workflows/r.yml)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/rdomains)
 
 The package provides several ways to classify domains based on their content. You can get categorizations from Shallalist (service discontinued - using archived data), DMOZ (service ended; available at [curlie](https://curlie.org/)), Alexa API (discontinued), [VirusTotal API](https://www.virustotal.com), **OpenAI GPT models**, **Anthropic Claude models**, or use validated machine learning models based off the shallalist data.
