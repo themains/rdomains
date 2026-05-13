@@ -84,5 +84,5 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
     unlink(hosts_file)
   }
 
-  as.data.frame(results)
+  results
 }

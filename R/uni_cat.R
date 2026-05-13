@@ -27,6 +27,5 @@ uni_cat <- function(domains = NULL) {
   ) |>
     bind_cols(
       uni_list[match(c_domains, uni_list$domains), ]
-    ) |>
-    as.data.frame(row.names = NULL)
+    )
 }

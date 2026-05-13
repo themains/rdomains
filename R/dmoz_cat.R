@@ -37,6 +37,5 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
       dmoz$category[match(c_domains_http, dmoz$hostname)],
       dmoz$category[match(c_domains, dmoz$hostname)]
     )
-  ) |>
-    as.data.frame()
+  )
 }

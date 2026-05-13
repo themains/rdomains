@@ -87,7 +87,7 @@ claude_cat <- function(domains = NULL, api_key = NULL, categories = NULL,
 
   api_key <- get_api_key(api_key, c("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"), "Anthropic")
 
-  results <- map_df(
+  map_df(
     seq_along(c_domains),
     function(i) {
       result <- classify_domain_claude(c_domains[i], categories, model, api_key)
@@ -95,6 +95,4 @@ claude_cat <- function(domains = NULL, api_key = NULL, categories = NULL,
       result
     }
   )
-
-  as.data.frame(results)
 }

@@ -45,6 +45,5 @@ not_news <- function(url_list = NULL) {
     url_list = url_list,
     not_news = str_detect(url_list, stringr::regex(soft_news_pattern, ignore_case = TRUE)),
     news = str_detect(url_list, stringr::regex(hard_news_pattern, ignore_case = TRUE))
-  ) |>
-    as.data.frame()
+  )
 }

@@ -86,7 +86,7 @@ openai_cat <- function(domains = NULL, api_key = NULL, categories = NULL,
 
   api_key <- get_api_key(api_key, "OPENAI_API_KEY", "OpenAI")
 
-  results <- map_df(
+  map_df(
     seq_along(c_domains),
     function(i) {
       result <- classify_domain_openai(c_domains[i], categories, model, api_key)
@@ -94,6 +94,4 @@ openai_cat <- function(domains = NULL, api_key = NULL, categories = NULL,
       result
     }
   )
-
-  as.data.frame(results)
 }

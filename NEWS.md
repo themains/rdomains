@@ -32,15 +32,15 @@
   - `build_categorization_prompt()` - LLM prompt construction
   - `apply_rate_limit()` - rate limiting logic
 - Refactored to use purrr instead of for-loops where appropriate
-- Modern tibble usage internally (returned as data.frame for backward compatibility)
+- All functions now return tibbles for modern data handling
 - Added checkmate for robust input validation
 - Added readr for faster CSV reading
 - Extracted domain cleaning logic to single function
 - Improved string operations with stringr
 - Removed redundant `::` notation for imported functions (cleaner code, consistent with @importFrom)
 
-## Backward Compatibility
-All existing functions maintain their original return structures and behaviors, with the following exceptions:
+## Breaking Changes
+- All categorization functions now return tibbles instead of data.frames
 - `get_alexa_data()` has been removed (service discontinued)
 - Input validation is now stricter (NULL and empty strings are properly rejected)
 - `virustotal_cat()` parameter renamed from `domain` to `domains` for consistency

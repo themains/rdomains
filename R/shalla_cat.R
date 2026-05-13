@@ -30,6 +30,5 @@ shalla_cat <- function(domains = NULL, use_file = NULL) {
   tibble(
     domain_name = c_domains,
     shalla_category = shalla$category[match(c_domains, shalla$domains)]
-  ) |>
-    as.data.frame()
+  )
 }

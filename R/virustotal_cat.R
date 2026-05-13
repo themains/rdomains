@@ -61,5 +61,5 @@ virustotal_cat <- function(domains = NULL, apikey = NULL) {
     }
   })
 
-  as.data.frame(results)
+  results
 }

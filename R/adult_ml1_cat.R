@@ -45,6 +45,5 @@ adult_ml1_cat <- function(domains = NULL) {
   tibble(
     domain_name = c_domains,
     p_adult = p_adult
-  ) |>
-    as.data.frame()
+  )
 }
