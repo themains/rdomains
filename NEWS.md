@@ -37,6 +37,7 @@
 - Added readr for faster CSV reading
 - Extracted domain cleaning logic to single function
 - Improved string operations with stringr
+- Removed redundant `::` notation for imported functions (cleaner code, consistent with @importFrom)
 
 ## Backward Compatibility
 All existing functions maintain their original return structures and behaviors, with the following exceptions:
