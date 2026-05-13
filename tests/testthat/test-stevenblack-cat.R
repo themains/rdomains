@@ -54,13 +54,13 @@ test_that("stevenblack_cat handles errors appropriately", {
   # Test with non-existent file
   expect_error(
     stevenblack_cat("test.com", use_file = "nonexistent.txt"),
-    "File not found"
+    "File does not exist"
   )
-  
+
   # Test with no domain
   expect_error(
     stevenblack_cat(NULL),
-    "Please provide at least one domain"
+    "must not be NULL"
   )
 })
 

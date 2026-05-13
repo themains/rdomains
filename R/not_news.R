@@ -15,7 +15,6 @@
 #'
 #' Note that it is based on patterns existing in a small set of domains. See paper for details.
 #'
-#'
 #' @param url_list vector of URLs
 #'
 #' @return data.frame with 3 columns: url, not_news, news
@@ -30,15 +29,22 @@
 
 not_news <- function(url_list = NULL) {
 
-  if (identical(url_list, NULL)) stop("Please provide a valid URL.")
+  validate_domains(url_list, "url_list")
 
-   not_news <- grepl("sport|entertainment|arts|fashion|style|lifestyle|
-       leisure|celeb|movie|music|gossip|food|travel|horoscope|weather|gadget",
-       url_list, ignore.case = TRUE)
+  soft_news_pattern <- paste0(
+    "sport|entertainment|arts|fashion|style|lifestyle|leisure|celeb|",
+    "movie|music|gossip|food|travel|horoscope|weather|gadget"
+  )
 
-   news     <- grepl("politi|usnews|world|national|state|elect|vote|govern|
-      campaign|war|polic|econ|unemploy|racis|energy|abortion|educa|healthcare|
-      immigration", url_list, ignore.case = TRUE)
+  hard_news_pattern <- paste0(
+    "politi|usnews|world|national|state|elect|vote|govern|campaign|war|",
+    "polic|econ|unemploy|racis|energy|abortion|educa|healthcare|immigration"
+  )
 
-   data.frame(url_list, not_news, news)
+  tibble(
+    url_list = url_list,
+    not_news = str_detect(url_list, stringr::regex(soft_news_pattern, ignore_case = TRUE)),
+    news = str_detect(url_list, stringr::regex(hard_news_pattern, ignore_case = TRUE))
+  ) |>
+    as.data.frame()
 }

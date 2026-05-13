@@ -1,14 +1,14 @@
 context("Get Claude Cat")
 
 test_that("claude cat validates input", {
-  expect_error(claude_cat(), "Please provide domain names to classify.")
-  
+  expect_error(claude_cat(), "must not be NULL")
+
   # Temporarily unset API keys to test error handling
   old_key1 <- Sys.getenv("ANTHROPIC_API_KEY")
   old_key2 <- Sys.getenv("CLAUDE_API_KEY")
   Sys.unsetenv("ANTHROPIC_API_KEY")
   Sys.unsetenv("CLAUDE_API_KEY")
-  expect_error(claude_cat("google.com"), "Please provide Anthropic API key")
+  expect_error(claude_cat("google.com"), "API key not found")
   # Restore the keys
   if (old_key1 != "") Sys.setenv(ANTHROPIC_API_KEY = old_key1)
   if (old_key2 != "") Sys.setenv(CLAUDE_API_KEY = old_key2)

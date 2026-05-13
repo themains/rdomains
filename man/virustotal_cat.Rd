@@ -2,33 +2,34 @@
 % Please edit documentation in R/virustotal_cat.R
 \name{virustotal_cat}
 \alias{virustotal_cat}
-\title{Get Category from Virustotal}
+\title{Get Category from VirusTotal}
 \usage{
-virustotal_cat(domain = NULL, apikey = NULL)
+virustotal_cat(domains = NULL, apikey = NULL)
 }
 \arguments{
-\item{domain}{domain name}
+\item{domains}{domain names as character vector}
 
 \item{apikey}{virustotal API key}
 }
 \value{
-data.frame with 86 columns: domain, bitdefender, dr_web, alexa, google, websense, trendmicro
+data.frame with domain and VirusTotal analysis results
 }
 \description{
-Returns category of content from 6 major services including: BitDefender, Dr. Web, Alexa (DMOZ), Google, 
-Websense, and Trendmicro. Not all services will have categories for all the domains. When the categories are
-not returned for a particular domain, we return a NA.
+Returns category of content from multiple security vendors using the VirusTotal API v3.
+The function retrieves domain analysis results including categories from various security
+services. Not all services will have categories for all domains.
 }
 \details{
-Get the API Access Key from \url{https://www.virustotal.com/}. Either pass the API Key to the function 
-or set the environmental variable: \code{VirustotalToken}. Environment variables persist within 
+Get the API Access Key from \url{https://www.virustotal.com/}. Either pass the API Key to the function
+or set the environmental variable: \code{VirustotalToken}. Environment variables persist within
 a R session.
 }
 \examples{
 \dontrun{
 virustotal_cat("http://www.google.com")
+virustotal_cat(c("google.com", "facebook.com"))
 }
 }
 \references{
-\url{https://docs.virustotal.com/v2.0/reference}
+\url{https://docs.virustotal.com/reference/domains}
 }

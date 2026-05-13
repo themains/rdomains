@@ -78,18 +78,14 @@ adult_ml1_cat("http://www.google.com")
 ## 1  google.com 0.3133728
 ```
 
-#### Virustotal
+#### VirusTotal
 
 Start by getting the API key from [VirusTotal](https://www.virustotal.com/).
 
-Get virustotal category by running:
+The package uses the VirusTotal API v3 for comprehensive domain analysis:
 
 ```{r, eval=FALSE, virustotal}
 virustotal_cat("http://www.google.com")
-```
-```
-##                 domain   bitdefender dr_web  alexa        google       websense             trendmicro
-## 1 http://www.google.com searchengines  chats google searchengines advertisements search engines portals
 ```
 
 #### OpenAI GPT Models
@@ -133,13 +129,3 @@ claude_cat("facebook.com")
 ## 1 facebook.com          social
 ```
 
-#### Alexa Category
-
-To get the category of content from Amazon (Alexa) (which provides it via DMOZ), start by getting credentials from [https://aws.amazon.com/](https://aws.amazon.com/). Next, set the environment variables:
-
-```{r, eval=FALSE, set_alexa_cred}
-Sys.setenv("AWS_ACCESS_KEY_ID", "key_id")
-Sys.getenv("AWS_SECRET_ACCESS_KEY", "secret_key")
-```
-
-Note: The Alexa categorization service has been discontinued by Amazon.

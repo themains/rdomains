@@ -1,12 +1,12 @@
 context("Get OpenAI Cat")
 
 test_that("openai cat validates input", {
-  expect_error(openai_cat(), "Please provide domain names to classify.")
-  
+  expect_error(openai_cat(), "must not be NULL")
+
   # Temporarily unset API key to test error handling
   old_key <- Sys.getenv("OPENAI_API_KEY")
   Sys.unsetenv("OPENAI_API_KEY")
-  expect_error(openai_cat("google.com"), "Please provide OpenAI API key")
+  expect_error(openai_cat("google.com"), "API key not found")
   # Restore the key
   if (old_key != "") Sys.setenv(OPENAI_API_KEY = old_key)
 })

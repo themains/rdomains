@@ -1,15 +1,15 @@
 Package: rdomains
 Title: Get the Category of Content Hosted by a Domain
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
 Description: Get the category of content hosted by a domain. Use Shallalist (service discontinued),
     'VirusTotal' (which provides access to lots of services) <https://www.virustotal.com/>,
-    'Alexa' <https://aws.amazon.com/awis/>, 'DMOZ' <https://archive.org/details/dmoz-rdf-20150327>, University Domain list
+    'DMOZ' <https://archive.org/details/dmoz-rdf-20150327>, University Domain list
     <https://github.com/Hipo/university-domains-list>, 'OpenAI' 'GPT' models, 'Anthropic' 'Claude' models,
-    or validated machine learning classifiers based on 'Shallalist' data to learn about the kind 
+    or validated machine learning classifiers based on 'Shallalist' data to learn about the kind
     of content hosted by a domain.
 Depends:
-    R (>= 4.0.0)
+    R (>= 4.1.0)
 Imports:
     Matrix,
     urltools,
@@ -21,10 +21,17 @@ Imports:
     xml2,
     curl,
     virustotal,
-    aws.alexa,
     jsonlite,
-    devtools,
-    R.utils
+    R.utils,
+    dplyr (>= 1.1.0),
+    purrr (>= 1.0.0),
+    tibble (>= 3.2.0),
+    stringr (>= 1.5.0),
+    rlang (>= 1.1.0),
+    cli (>= 3.6.0),
+    checkmate (>= 2.3.0),
+    glue (>= 1.6.0),
+    readr (>= 2.1.0)
 Suggests:
     testthat,
     rmarkdown,
@@ -33,4 +40,4 @@ VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

@@ -15,50 +15,36 @@
 
 adult_ml1_cat <- function(domains = NULL) {
 
-  if (!is.character(domains)) {
-    stop("Please provide a valid vector of domain names.")
-  }
+  validate_domains(domains)
+  c_domains <- clean_domains(domains)
 
   coefs <- dimnames(glm_shalla$glmnet.fit$beta)[[1]]
 
-  # Nuke leading and trailing spaces
-  c_domains  <- gsub("^ *| *$", "", domains)
+  features <- spMatrix(length(c_domains), length(coefs))
 
-  # nuke leading http://
-  c_domains  <- gsub("^http://", "", c_domains)
-
-  # nuke leading www.
-  c_domains  <- gsub("^www.", "", c_domains)
-
-  # Initialize results
-  res_df <- data.frame(domain_name = c_domains, p_adult = NA)
-
-  # Initialize feature df
-  features  <- spMatrix(nrow(res_df), length(coefs))
-
-  # length
   for (j in 1:60) {
-    tfs           <- grepl(coefs[j], c_domains)
-    features[, j]  <- as(tfs, "sparseVector")
+    tfs <- grepl(coefs[j], c_domains)
+    features[, j] <- as(tfs, "sparseVector")
   }
 
-  # num
   tfs <- grepl("^[0-9]*.[0-9]*.[0-9]*.[0-9]", c_domains)
   features[, 61] <- as(tfs, "sparseVector")
 
-  # suffix
-  split_url  <- suffix_extract(c_domains)
-  suffixes   <- split_url$suffix[match(res_df$domain_name, split_url$host)]
+  split_url <- suffix_extract(c_domains)
+  suffixes <- split_url$suffix[match(c_domains, split_url$host)]
 
   for (t in 62:length(coefs)) {
-    tfs          <- grepl(coefs[t], suffixes)
+    tfs <- grepl(coefs[t], suffixes)
     features[, t] <- as(tfs, "sparseVector")
   }
 
-  # Predict
-  res_df$p_adult  <- predict(glm_shalla, features,
-                                         s = "lambda.min",
-                                         type = "response")[, 1]
+  p_adult <- predict(glm_shalla, features,
+                     s = "lambda.min",
+                     type = "response")[, 1]
 
-  res_df
+  tibble(
+    domain_name = c_domains,
+    p_adult = p_adult
+  ) |>
+    as.data.frame()
 }

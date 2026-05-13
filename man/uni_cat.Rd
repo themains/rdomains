@@ -13,7 +13,7 @@ uni_cat(domains = NULL)
 data.frame with original list and all the other columns from the university json
 }
 \description{
-Fetches university domain json from: 
+Fetches university domain json from:
 \url{https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json}
 }
 \examples{
