@@ -11,10 +11,9 @@ authors:
   Gaurav Sood:
     href: https://github.com/soodoku
 
-reference:
-  - title: Get Content Category
-    contents:
-      - ends_with("_cat")
-  - title: Not News
-    contents:
-    - not_news
+# No `reference:` section on purpose. The hand-written index had fallen behind
+# the package's exports, so the site failed to build at all. An index you must
+# remember to update every time you add a function is the same drift problem
+# this fleet standard exists to remove, one scale down. Without the section
+# pkgdown lists every exported topic and cannot fall behind. Curated groupings
+# are welcome back if they are kept complete.
