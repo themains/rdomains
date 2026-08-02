@@ -26,17 +26,22 @@ NULL
 #'
 #' @param domain Domain to look up.
 #' @param timeout Seconds.
+#' @param target Optional `YYYYMMDD` date. When given, the capture closest to it is
+#'   returned rather than the most recent one.
 #'
 #' @return A list with `url` and `timestamp`, or `NULL` when there is no capture.
 #' @keywords internal
 #' @noRd
-archive_snapshot <- function(domain, timeout = 30) {
+archive_snapshot <- function(domain, timeout = 30, target = NULL) {
   tryCatch({
     resp <- request("https://web.archive.org/cdx/search/cdx") |>
       req_url_query(
         url = domain, output = "json", filter = "statuscode:200",
-        # -1 asks for the last row, which is the most recent capture.
-        limit = -1L, fl = "timestamp,original"
+        fl = "timestamp,original",
+        # Without a target, -1 asks for the last row: the most recent capture. With one,
+        # take the first capture at or after the date -- CDX has no "closest" operator,
+        # and `from=` plus limit 1 is the cheap equivalent.
+        !!!(if (is.null(target)) list(limit = -1L) else list(from = target, limit = 1L))
       ) |>
       req_user_agent(rdomains_user_agent()) |>
       req_timeout(timeout) |>
@@ -72,17 +77,18 @@ archive_snapshot <- function(domain, timeout = 30) {
 
 #' Fetch a blocked page from the archive
 #'
-#' @param domain Domain that was blocked.
+#' @param domain Domain to fetch.
 #' @param timeout Seconds.
 #' @param max_bytes Byte cap.
 #' @param user_agent Identifying user-agent.
+#' @param target Optional `YYYYMMDD` date to fetch as of.
 #'
 #' @return A list with `html`, `timestamp` and `url`, or `NULL`.
 #' @keywords internal
 #' @noRd
 archive_fetch <- function(domain, timeout = 45, max_bytes = 10 * 1024^2,
-                          user_agent = rdomains_user_agent()) {
-  snapshot <- archive_snapshot(domain, timeout = timeout)
+                          user_agent = rdomains_user_agent(), target = NULL) {
+  snapshot <- archive_snapshot(domain, timeout = timeout, target = target)
   if (is.null(snapshot)) {
     return(NULL)
   }

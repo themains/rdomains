@@ -171,6 +171,11 @@ classify_condition <- function(cnd) {
 #' @param allow_hosts Hosts exempt from the private-address checks, by exact name. Only
 #'   the hosts named are exempt, so a redirect elsewhere is still refused. Intended for
 #'   testing against a local server.
+#' @param archive_date Fetch each domain as it was on this date (`"YYYYMMDD"`) from the
+#'   Internet Archive instead of fetching it live. This is how you ask what a domain
+#'   *used to be* -- and, set against a live run, how you measure whether a label has gone
+#'   stale. Rows carry `source = "archive"` and the realised `snapshot_timestamp`, which
+#'   is the capture actually found and not necessarily the date you asked for.
 #' @param archive_fallback When a host serves an anti-bot interstitial, try the
 #'   Internet Archive's most recent capture. Rows recovered this way carry
 #'   `source = "archive"` and a `snapshot_timestamp`, so the vintage is never
@@ -204,6 +209,7 @@ collect_content <- function(domains = NULL,
                             cache_max_size = 1024^3,
                             allow_hosts = character(),
                             archive_fallback = TRUE,
+                            archive_date = NULL,
                             user_agent = rdomains_user_agent()) {
   cache_dir <- cache_dir %||% default_cache_dir()
   validate_domains(domains)
@@ -217,7 +223,7 @@ collect_content <- function(domains = NULL,
       max_redirects = max_redirects, cache_dir = cache_dir,
       cache_ttl = cache_ttl, cache_max_size = cache_max_size,
       allow_hosts = allow_hosts, archive_fallback = archive_fallback,
-      user_agent = user_agent
+      archive_date = archive_date, user_agent = user_agent
     )
   })
   dplyr::bind_rows(rows)
@@ -293,7 +299,8 @@ fetch_row <- function(domain, input, started,
 #' @noRd
 fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
                       max_crawl_delay, max_redirects, cache_dir, cache_ttl,
-                      cache_max_size, allow_hosts, archive_fallback, user_agent) {
+                      cache_max_size, allow_hosts, archive_fallback, archive_date,
+                      user_agent) {
   started <- Sys.time()
   url <- request_url(input, domain)
 
@@ -301,6 +308,26 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     fetch_row(domain, input, started, status = "failed", stage = stage,
               error_code = code, http_status = http_status,
               robots_allowed = robots_allowed)
+  }
+
+  if (!is.null(archive_date)) {
+    recovered <- archive_fetch(domain, timeout = timeout, max_bytes = max_bytes,
+                               user_agent = user_agent, target = archive_date)
+    if (is.null(recovered)) {
+      return(blank("no_archive_snapshot", "fetch"))
+    }
+    a_parsed <- html_text_content(recovered$html)
+    a_signals <- page_signals(recovered$html, text = a_parsed$text, domain = domain)
+    return(fetch_row(
+      domain, input, started,
+      status = if (a_signals$thin) "failed" else "ok",
+      stage = "process",
+      error_code = if (a_signals$thin) "thin_content" else NA_character_,
+      final_url = recovered$url,
+      content_bytes = nchar(recovered$html, type = "bytes"),
+      parsed = a_parsed, signals = a_signals,
+      source = "archive", snapshot_timestamp = recovered$timestamp
+    ))
   }
 
   # A cache hit replays what was stored, including the time the page was actually

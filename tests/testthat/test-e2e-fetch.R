@@ -233,3 +233,32 @@ test_that("a dead domain is not resurrected from the archive", {
   expect_equal(res$error_code, "dns_error")
   expect_equal(res$source, "live")
 })
+
+test_that("archive_date fetches a domain as it was, not as it is", {
+  # The instrument for measuring whether a label has gone stale: classify a domain as of
+  # a past date and set it against a live run.
+  skip_on_cran()
+  skip_if_offline()
+
+  res <- collect_content("cnn.com", archive_date = "20200101",
+                         cache_dir = withr::local_tempdir())
+  skip_if(!identical(res$source, "archive"),
+          "archive.org CDX did not answer (it rate-limits)")
+
+  expect_equal(res$status, "ok")
+  # The realised capture, not the date asked for -- they are rarely identical.
+  expect_match(res$snapshot_timestamp, "^2020")
+  expect_gt(res$n_tokens, 30)
+})
+
+test_that("a date with no capture is reported, not silently fetched live", {
+  skip_on_cran()
+  skip_if_offline()
+
+  res <- collect_content("no-such-domain-xyzzy-99999.invalid", archive_date = "20200101",
+                         cache_dir = withr::local_tempdir())
+  expect_equal(res$status, "failed")
+  expect_equal(res$error_code, "no_archive_snapshot")
+  # Critically: it did not quietly fall back to a live fetch of a different thing.
+  expect_equal(res$source, "archive")
+})

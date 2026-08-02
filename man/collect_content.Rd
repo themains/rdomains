@@ -17,6 +17,7 @@ collect_content(
   cache_max_size = 1024^3,
   allow_hosts = character(),
   archive_fallback = TRUE,
+  archive_date = NULL,
   user_agent = rdomains_user_agent()
 )
 }
@@ -58,6 +59,12 @@ testing against a local server.}
 Internet Archive's most recent capture. Rows recovered this way carry
 `source = "archive"` and a `snapshot_timestamp`, so the vintage is never
 hidden. Dead domains are deliberately *not* recovered this way.}
+
+\item{archive_date}{Fetch each domain as it was on this date (`"YYYYMMDD"`) from the
+Internet Archive instead of fetching it live. This is how you ask what a domain
+*used to be* -- and, set against a live run, how you measure whether a label has gone
+stale. Rows carry `source = "archive"` and the realised `snapshot_timestamp`, which
+is the capture actually found and not necessarily the date you asked for.}
 
 \item{user_agent}{Override the identifying user-agent.}
 }

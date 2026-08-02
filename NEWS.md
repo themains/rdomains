@@ -7,6 +7,11 @@
   (`cache_max_size`), and a corrupt entry is a miss rather than an error.
   Nothing persists past the session unless you pass `rdomains_cache_dir()`.
 - New `rdomains_cache_dir()` and `cache_clear()`.
+- `collect_content()` and `pie_cat()` take an `archive_date`, fetching each domain as it
+  was on that date rather than as it is now. Set against a live run, that is how you
+  measure whether a label has gone stale -- cnn.com classifies as `news` from a 2020
+  capture and `news` today, at 0.966 and 0.709 confidence. Rows carry the *realised*
+  `snapshot_timestamp`, which is the capture found and rarely the date asked for.
 - `collect_content()` recovers pages from the Internet Archive when a host serves an
   anti-bot interstitial -- detection plus a fallback rather than an evasion arms race.
   Recovered rows carry `source = "archive"` and a `snapshot_timestamp`, so the vintage is
