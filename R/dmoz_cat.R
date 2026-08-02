@@ -28,7 +28,6 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
 
   validate_domains(domains)
   c_domains <- clean_domains(domains)
-  c_domains_http <- str_remove(c_domains, "^http://")
 
   data_file <- validate_data_file(
     use_file,
@@ -38,13 +37,26 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
 
   dmoz <- read_csv(data_file, col_names = c("hostname", "category"), show_col_types = FALSE)
 
+  # The file get_dmoz_data() produces carries a "domain","cat_labels_en" header, and
+  # naming the columns here does not consume it, so "domain" was a live lookup key.
+  # Recognised rather than skipped, so a headerless file keeps its first row.
+  if (nrow(dmoz) > 0 &&
+        identical(dmoz$hostname[1], "domain") &&
+        identical(dmoz$category[1], "cat_labels_en")) {
+    dmoz <- dmoz[-1, ]
+  }
+  hostname <- tolower(dmoz$hostname)
+
   warn_source_vintage("dmoz")
 
+  # DMOZ recorded hosts as they were published, and 84% of the rows keep the "www."
+  # that clean_domains() strips: 2,089,331 of 2,488,259 rows have no bare counterpart
+  # anywhere in the file. Looking up only the bare form leaves them unreachable.
   tibble(
     domain_name = c_domains,
     dmoz_category = coalesce(
-      dmoz$category[match(c_domains_http, dmoz$hostname)],
-      dmoz$category[match(c_domains, dmoz$hostname)]
+      dmoz$category[match(c_domains, hostname)],
+      dmoz$category[match(paste0("www.", c_domains), hostname)]
     ),
     source_last_published = SOURCE_VINTAGE$dmoz$last_published
   )

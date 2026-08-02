@@ -76,15 +76,12 @@ parse_robots <- function(txt, agent = "rdomains") {
     }
   }
 
-  # Most specific matching group wins; otherwise the wildcard group.
+  # RFC 9309 section 2.2.1: match the whole product token, case-insensitively, and fall
+  # back to the wildcard group. A substring test instead applies another crawler's rules
+  # to us -- "main" is a substring of "rdomains" -- and, because it takes the first hit in
+  # file order rather than the most specific one, it shadows the group naming us outright.
   agent <- tolower(agent)
-  pick <- NULL
-  for (name in names(groups)) {
-    if (name != "*" && grepl(name, agent, fixed = TRUE)) {
-      pick <- name
-      break
-    }
-  }
+  pick <- if (agent %in% setdiff(names(groups), "*")) agent else NULL
   if (is.null(pick)) pick <- if ("*" %in% names(groups)) "*" else NULL
   if (is.null(pick)) {
     return(list(rules = empty_rules(), crawl_delay = NA_real_))

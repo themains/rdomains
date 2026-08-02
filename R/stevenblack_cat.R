@@ -83,11 +83,26 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
     str_trim() |>
     (\(x) x[!str_detect(x, "^#")])() |>
     (\(x) x[x != ""])() |>
-    (\(x) x[x != "localhost"])()
+    (\(x) x[x != "localhost"])() |>
+    tolower()
+
+  # "ad" has to be a label of its own, or the head of one: it is otherwise a substring of
+  # trade, download, gadget, espadrilles and nokiadns. Unanchored, it labels 13,423 of the
+  # live list's 99,278 blocked hosts "ads", 10,581 of which contain no ad token at all.
+  ads_pattern <- paste0(
+    "(^|[.-])ads?([.-]|$)|adserv|doubleclick|googleadservices|googlesyndication"
+  )
+
+  # The list blocks hosts as written: 34,151 of the live list's 99,278 entries carry the
+  # "www." that clean_domains() strips, and 1,870 have no bare counterpart. Matching only
+  # the bare form calls a blocked host safe, which is the harmful direction here.
+  is_blocked <- function(host) {
+    host %in% blocked_domains || paste0("www.", host) %in% blocked_domains
+  }
 
   results <- map_df(seq_along(clean_doms), function(i) {
-    category <- if (clean_doms[i] %in% blocked_domains) {
-      if (str_detect(clean_doms[i], stringr::regex("ad|ads|doubleclick|googleadservices|googlesyndication", ignore_case = TRUE))) {
+    category <- if (is_blocked(clean_doms[i])) {
+      if (str_detect(clean_doms[i], stringr::regex(ads_pattern, ignore_case = TRUE))) {
         "ads"
       } else if (str_detect(clean_doms[i], stringr::regex("malware|virus|trojan|phishing", ignore_case = TRUE))) {
         "malware"

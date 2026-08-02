@@ -177,3 +177,28 @@ test_that("too_many_redirects is in the taxonomy and not retryable", {
   expect_true("too_many_redirects" %in% fetch_error_codes()$code)
   expect_false(is_retryable("too_many_redirects"))
 })
+
+test_that("a robots.txt group is matched on the whole product token", {
+  # "main" is a substring of "rdomains". Matching on substrings applies another
+  # crawler's rules to us and, worse, shadows the group addressed to us by name.
+  txt <- paste(
+    "User-agent: main", "Disallow: /", "",
+    "User-agent: rdomains", "Allow: /", "Crawl-delay: 2",
+    sep = "\n"
+  )
+  p <- parse_robots(txt, "rdomains")
+  expect_equal(p$crawl_delay, 2)
+  expect_true(robots_path_allowed(p$rules, "/anything"))
+})
+
+test_that("an unrelated named group does not shadow the wildcard group", {
+  txt <- paste("User-agent: main", "Disallow: /", "",
+               "User-agent: *", "Allow: /", sep = "\n")
+  expect_true(robots_path_allowed(parse_robots(txt, "rdomains")$rules, "/anything"))
+})
+
+test_that("product-token matching is case-insensitive", {
+  txt <- paste("User-agent: RDomains", "Disallow: /nope", sep = "\n")
+  p <- parse_robots(txt, "rdomains")
+  expect_false(robots_path_allowed(p$rules, "/nope"))
+})

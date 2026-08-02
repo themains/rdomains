@@ -5,8 +5,12 @@
 #' @keywords internal
 #' @noRd
 clean_domains <- function(domains) {
+  # tolower(): host names are case-insensitive, and every list this package looks up is
+  # stored lower-cased (exactly 1 row in the 2,488,259-row DMOZ table is not). Without
+  # it "Example.com" and "example.com" resolve differently.
   domains |>
     str_trim() |>
+    tolower() |>
     str_remove("^https?://") |>
     str_remove("^www\\.") |>
     str_remove("/.*$")

@@ -118,3 +118,27 @@ test_that("page_signals returns one row with the documented columns", {
   expect_true(all(c("page_state", "blocked", "block_vendor", "parked",
                     "unavailable", "thin", "n_tokens") %in% names(s)))
 })
+
+# "dan.com" is a substring of "jordan.com", "sedo.com" of "cassedo.com". The registrar
+# list is checked before the length guard, so an unanchored match relabels an arbitrarily
+# long real page as a placeholder.
+test_that("a real page that merely names a registrar is not parked", {
+  html <- paste0(
+    "<html><title>Air Jordan</title><body>",
+    paste(rep("michael jordan sneaker history and release notes", 80),
+          collapse = " "),
+    " visit jordan.com for the official store</body></html>"
+  )
+  s <- page_signals(html)
+  expect_false(s$parked)
+  expect_equal(s$page_state, "content")
+})
+
+test_that("an actual registrar landing page is still parked", {
+  s <- page_signals("<html><body>This domain is listed for sale at dan.com</body></html>")
+  expect_true(s$parked)
+  expect_equal(s$page_state, "parked")
+
+  s2 <- page_signals("<html><body>Offered by www.hugedomains.com</body></html>")
+  expect_true(s2$parked)
+})

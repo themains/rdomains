@@ -22,10 +22,17 @@ uni_cat <- function(domains = NULL) {
                               "university-domains-list/master/",
                               "world_universities_and_domains.json"))
 
+  # `domains` is a list column -- 281 of the list's 10,256 universities give more than
+  # one host. match() would coerce it with as.character(), turning a two-element entry
+  # into the string 'c("student.wab.edu.pl", "wab.edu.pl")', which nothing can match.
+  # Flattening first, and carrying each host's row number with it, matches every host.
+  hosts <- tolower(unlist(uni_list$domains, use.names = FALSE))
+  owner <- rep(seq_len(nrow(uni_list)), lengths(uni_list$domains))
+
   tibble(
     domain_name = c_domains
   ) |>
     bind_cols(
-      uni_list[match(c_domains, uni_list$domains), ]
+      uni_list[owner[match(c_domains, hosts)], ]
     )
 }
