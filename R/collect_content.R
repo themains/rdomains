@@ -66,15 +66,31 @@ is_global_ip <- function(ip) {
       a >= 224)
 }
 
+#' Build the URL to request for one input
+#'
+#' A bare domain becomes `https://<domain>`. An input that already carries a scheme is
+#' honoured as given, keeping its port and path -- otherwise an http-only host is
+#' unreachable, and the package cannot be exercised against a local test server.
+#'
+#' @param input the caller's original string
+#' @param domain the cleaned domain
+#' @return a URL
+#' @keywords internal
+#' @noRd
+request_url <- function(input, domain) {
+  if (grepl("^https?://", input)) sub("/+$", "", input) else paste0("https://", domain)
+}
+
 #' Reject a URL we should not fetch
 #'
 #' @param url the URL
 #' @param resolver function(host) -> character vector of IPs; injectable so tests never
 #'   touch DNS
+#' @param allow_hosts hosts exempt from the address checks, by exact name
 #' @return NULL when acceptable, otherwise an error code
 #' @keywords internal
 #' @noRd
-check_url <- function(url, resolver = nslookup) {
+check_url <- function(url, resolver = nslookup, allow_hosts = character()) {
   parsed <- tryCatch(url_parse(url), error = function(e) NULL)
   if (is.null(parsed) || is.null(parsed$hostname) || !nzchar(parsed$hostname)) {
     return("invalid_domain")
@@ -83,6 +99,12 @@ check_url <- function(url, resolver = nslookup) {
     return("invalid_domain")
   }
   host <- tolower(parsed$hostname)
+  # An explicitly exempted host skips the address checks. Only the named hosts are
+  # exempt, so a redirect elsewhere -- including to another private address -- is still
+  # refused.
+  if (host %in% tolower(allow_hosts)) {
+    return(NULL)
+  }
   # A domain classifier has nothing to say about a bare IP, and .onion is unreachable.
   if (grepl("^\\d+\\.\\d+\\.\\d+\\.\\d+$", host) ||
       grepl("\\.(onion|local|internal|localhost)$", host) ||
@@ -113,6 +135,12 @@ check_url <- function(url, resolver = nslookup) {
 classify_condition <- function(cnd) {
   classes <- class(cnd)
   msg <- tolower(conditionMessage(cnd))
+  # curl aborts an oversized transfer rather than returning a body, so the size limit
+  # surfaces as a request failure. Left unmapped it becomes connection_error -- which is
+  # retryable, so a caller would retry a too-large page forever.
+  if (grepl("maximum file size exceeded|filesize exceeded", msg)) {
+    return("content_too_large")
+  }
   if (any(grepl("timeout", classes)) || grepl("timed? ?out", msg)) return("timeout")
   if (any(grepl("httr2_failure", classes))) {
     if (grepl("could not resolve|name or service|nodename", msg)) return("dns_error")
@@ -149,6 +177,9 @@ classify_condition <- function(cnd) {
 #'   into a cache that does.
 #' @param cache_ttl Seconds a cached page stays fresh.
 #' @param cache_max_size Prune the cache above this many bytes, oldest first.
+#' @param allow_hosts Hosts exempt from the private-address checks, by exact name. Only
+#'   the hosts named are exempt, so a redirect elsewhere is still refused. Intended for
+#'   testing against a local server.
 #' @param user_agent Override the identifying user-agent.
 #'
 #' @return A tibble with one row per input: `domain_name`, `status`, `stage`, `error_code`,
@@ -176,6 +207,7 @@ collect_content <- function(domains = NULL,
                             cache_dir = NULL,
                             cache_ttl = 7 * 86400,
                             cache_max_size = 1024^3,
+                            allow_hosts = character(),
                             user_agent = rdomains_user_agent()) {
   cache_dir <- cache_dir %||% default_cache_dir()
   validate_domains(domains)
@@ -188,7 +220,7 @@ collect_content <- function(domains = NULL,
       obey_robots = obey_robots, max_crawl_delay = max_crawl_delay,
       max_redirects = max_redirects, cache_dir = cache_dir,
       cache_ttl = cache_ttl, cache_max_size = cache_max_size,
-      user_agent = user_agent
+      allow_hosts = allow_hosts, user_agent = user_agent
     )
   })
   dplyr::bind_rows(rows)
@@ -259,9 +291,9 @@ fetch_row <- function(domain, input, started,
 #' @noRd
 fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
                       max_crawl_delay, max_redirects, cache_dir, cache_ttl,
-                      cache_max_size, user_agent) {
+                      cache_max_size, allow_hosts, user_agent) {
   started <- Sys.time()
-  url <- paste0("https://", domain)
+  url <- request_url(input, domain)
 
   blank <- function(code, stage, http_status = NA_integer_, robots_allowed = NA) {
     fetch_row(domain, input, started, status = "failed", stage = stage,
@@ -294,14 +326,16 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     return(row)
   }
 
-  bad <- check_url(url)
+  bad <- check_url(url, allow_hosts = allow_hosts)
   if (!is.null(bad)) {
     return(blank(bad, if (bad == "dns_error") "fetch" else "validate"))
   }
 
   crawl_delay <- delay
   if (obey_robots) {
-    origin <- paste0("https://", domain)
+    parsed_origin <- url_parse(url)
+    origin <- paste0(parsed_origin$scheme, "://", parsed_origin$hostname,
+                     if (!is.null(parsed_origin$port)) paste0(":", parsed_origin$port) else "")
     rules <- robots_for_origin(origin, agent = "rdomains", timeout = timeout)
     if (!robots_path_allowed(rules$rules, "/")) {
       return(blank("robots_blocked", "validate", robots_allowed = FALSE))
@@ -351,7 +385,7 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     }
     current <- url_absolute(location, current)
     chain <- c(chain, current)
-    bad_hop <- check_url(current)
+    bad_hop <- check_url(current, allow_hosts = allow_hosts)
     if (!is.null(bad_hop)) {
       return(blank(bad_hop, "validate", http_status = code, robots_allowed = TRUE))
     }

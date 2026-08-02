@@ -15,6 +15,7 @@ collect_content(
   cache_dir = NULL,
   cache_ttl = 7 * 86400,
   cache_max_size = 1024^3,
+  allow_hosts = character(),
   user_agent = rdomains_user_agent()
 )
 }
@@ -44,6 +45,10 @@ into a cache that does.}
 \item{cache_ttl}{Seconds a cached page stays fresh.}
 
 \item{cache_max_size}{Prune the cache above this many bytes, oldest first.}
+
+\item{allow_hosts}{Hosts exempt from the private-address checks, by exact name. Only
+the hosts named are exempt, so a redirect elsewhere is still refused. Intended for
+testing against a local server.}
 
 \item{user_agent}{Override the identifying user-agent.}
 }

@@ -32,7 +32,7 @@ SOURCE_VINTAGE <- list(
       "considerably older. A domain that has changed hands since will carry the",
       "previous registrant's category."
     ),
-    successor = "UT-Capitole blacklists (https://dsi.ut-capitole.fr/blacklists/)"
+    successor = "UT-Capitole blacklists -- see get_ut1_data() and ut1_cat()"
   ),
   dmoz = list(
     source = "DMOZ / Open Directory Project",
@@ -43,6 +43,16 @@ SOURCE_VINTAGE <- list(
       "archived snapshot this package ships is from 2015."
     ),
     successor = "Curlie (https://curlie.org)"
+  ),
+  ut1 = list(
+    source = "UT-Capitole blacklists",
+    last_published = NA_character_,
+    status = "maintained",
+    note = paste(
+      "The maintained successor to Shallalist, updated continuously. The returned",
+      "date is that of the copy you downloaded."
+    ),
+    successor = NA_character_
   ),
   stevenblack = list(
     source = "Steven Black unified hosts",

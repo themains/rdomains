@@ -7,6 +7,20 @@
   (`cache_max_size`), and a corrupt entry is a miss rather than an error.
   Nothing persists past the session unless you pass `rdomains_cache_dir()`.
 - New `rdomains_cache_dir()` and `cache_clear()`.
+- New `ut1_cat()` and `get_ut1_data()`: the UT-Capitole blacklists, the **maintained
+  successor to Shallalist**. Where `shalla_cat()` answers from a list that stopped in
+  January 2022, this one is updated continuously. Categories are UT1's own and are
+  reported verbatim, with `ut1_usage` saying whether UT1 maintains the list for blocking
+  or for allowing -- both describe content.
+- `collect_content()` honours an explicit `http://` or `https://` in the input, keeping
+  its port and path. Forcing `https://` meant http-only hosts were unreachable.
+- An oversized response is now reported as `content_too_large` rather than
+  `connection_error`. curl aborts the transfer, so the limit surfaced as a request
+  failure -- and `connection_error` is retryable, so callers would have retried a
+  too-large page forever.
+- End-to-end tests run against a real local HTTP server (`webfakes`), covering redirects
+  to private addresses, robots.txt refusal, oversized bodies, bot walls, and whether the
+  cache actually prevents a second request.
 
 # rdomains 0.5.0
 
