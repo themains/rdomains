@@ -18,9 +18,9 @@
 #' @importFrom httr content GET oauth_app oauth_signature add_headers POST status_code
 #' @importFrom httr2 request req_user_agent req_timeout req_throttle req_retry
 #'   req_error req_options req_perform resp_status resp_content_type resp_body_string
-#'   resp_url url_parse
+#'   resp_url url_parse resp_header
 #' @importFrom xml2 read_xml as_list read_html xml_find_all xml_find_first xml_remove
-#'   xml_text xml_attr
+#'   xml_text xml_attr url_absolute
 #' @importFrom XML readHTMLTable
 #' @importFrom virustotal set_key domain_report
 #' @importFrom R.utils gunzip

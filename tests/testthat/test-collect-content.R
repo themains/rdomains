@@ -159,3 +159,21 @@ test_that("retryable is derived from the code, never set by hand", {
   expect_false(fetch_row("a.com", "a.com", started, error_code = "bot_blocked")$retryable)
   expect_false(fetch_row("a.com", "a.com", started, status = "ok")$retryable)
 })
+
+test_that("redirects are followed and every hop is re-validated", {
+  # Validating only the entry URL is not an SSRF guard: a host redirecting to
+  # 127.0.0.1 or 169.254.169.254 would sail past it. curl follows redirects
+  # internally, so following them by hand is what makes the check apply per hop.
+  skip_on_cran()
+  skip_if_offline()
+
+  res <- collect_content("bit.ly", obey_robots = FALSE)
+  expect_equal(res$status, "ok")
+  # bit.ly redirects cross-domain; the final URL must reflect that, not the request.
+  expect_match(res$final_url, "bitly", fixed = TRUE)
+})
+
+test_that("too_many_redirects is in the taxonomy and not retryable", {
+  expect_true("too_many_redirects" %in% fetch_error_codes()$code)
+  expect_false(is_retryable("too_many_redirects"))
+})

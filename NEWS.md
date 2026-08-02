@@ -1,4 +1,4 @@
-# rdomains 0.5.0 (development)
+# rdomains 0.5.0
 
 ## A label has a date, and now the package says so
 
@@ -19,6 +19,32 @@ The sibling project `piedomains` measured what this confusion costs: its worst c
 disagreed with its own page content 71% of the time, and the cause was not bad annotation
 but roughly a decade between the label and the page. Only 60% of the domains it trained
 on still resolve.
+
+## Fetch page content, not just look domains up
+
+New `collect_content()` fetches homepage HTML and text, so a domain can be
+classified on what it says **today** rather than on what a list said years ago.
+It returns one row per requested domain, never dropped, each carrying `status`,
+`stage`, `error_code` and `retryable` -- so a transient failure is
+distinguishable from a permanent one and only the right rows get retried.
+`fetch_error_codes()` documents the closed set of reasons; `fetch_report()`
+summarises a run.
+
+Supporting functions, all usable on their own if you already hold HTML:
+
+- `page_signals()` reports whether a page is an anti-bot interstitial, a
+  domain-parking placeholder, a server's "nothing here" page, or too thin to
+  classify. Vendor presence alone is not a block: reddit, walmart and quora all
+  serve real pages while embedding reCAPTCHA.
+- `html_text_content()` extracts text, title, description and language.
+
+The crawler identifies itself as `rdomains/<version>` with a contact URL, obeys
+`robots.txt` including `Crawl-delay`, spaces requests to the same host, caps the
+response body, follows redirects by hand so every hop is re-validated, and
+refuses hosts resolving to private or link-local addresses.
+
+Static HTML only -- no headless browser, so a JavaScript-rendered page comes back
+thin and says so.
 
 ## Bug fixes
 

@@ -11,6 +11,7 @@ collect_content(
   max_bytes = 2 * 1024^2,
   obey_robots = TRUE,
   max_crawl_delay = 30,
+  max_redirects = 5,
   user_agent = rdomains_user_agent()
 )
 }
@@ -29,6 +30,9 @@ discouraged and is your responsibility, not the package's.}
 
 \item{max_crawl_delay}{Skip a host that asks for a longer delay than this rather than
 sleeping on it.}
+
+\item{max_redirects}{Maximum redirect hops to follow. Every hop is re-validated, so a
+redirect cannot be used to reach an address the first check refused.}
 
 \item{user_agent}{Override the identifying user-agent.}
 }

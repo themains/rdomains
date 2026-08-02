@@ -142,6 +142,8 @@ classify_condition <- function(cnd) {
 #'   discouraged and is your responsibility, not the package's.
 #' @param max_crawl_delay Skip a host that asks for a longer delay than this rather than
 #'   sleeping on it.
+#' @param max_redirects Maximum redirect hops to follow. Every hop is re-validated, so a
+#'   redirect cannot be used to reach an address the first check refused.
 #' @param user_agent Override the identifying user-agent.
 #'
 #' @return A tibble with one row per input: `domain_name`, `status`, `stage`, `error_code`,
@@ -165,6 +167,7 @@ collect_content <- function(domains = NULL,
                             max_bytes = 2 * 1024^2,
                             obey_robots = TRUE,
                             max_crawl_delay = 30,
+                            max_redirects = 5,
                             user_agent = rdomains_user_agent()) {
   validate_domains(domains)
   clean <- clean_domains(domains)
@@ -174,7 +177,7 @@ collect_content <- function(domains = NULL,
       clean[i], domains[i],
       delay = delay, timeout = timeout, max_bytes = max_bytes,
       obey_robots = obey_robots, max_crawl_delay = max_crawl_delay,
-      user_agent = user_agent
+      max_redirects = max_redirects, user_agent = user_agent
     )
   })
   dplyr::bind_rows(rows)
@@ -239,7 +242,7 @@ fetch_row <- function(domain, input, started,
 #' @keywords internal
 #' @noRd
 fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
-                      max_crawl_delay, user_agent) {
+                      max_crawl_delay, max_redirects, user_agent) {
   started <- Sys.time()
   url <- paste0("https://", domain)
 
@@ -269,21 +272,47 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     }
   }
 
-  resp <- tryCatch({
-    request(url) |>
-      req_user_agent(user_agent) |>
-      req_timeout(timeout) |>
-      req_throttle(capacity = 1L, fill_time_s = crawl_delay) |>
-      req_retry(max_tries = 2, max_seconds = 30) |>
-      # Without this a 403 interstitial throws and page_signals() never sees the body --
-      # which is exactly the case we most need to classify.
-      req_error(is_error = function(resp) FALSE) |>
-      req_options(maxfilesize_large = max_bytes) |>
-      req_perform()
-  }, error = function(e) e)
+  # Redirects are followed by hand rather than by curl, so every hop goes back through
+  # check_url(). Letting curl follow them would validate only the domain the caller asked
+  # for: a host redirecting to 127.0.0.1 or 169.254.169.254 would then be fetched, which
+  # makes the address guard decorative. Validating the entry URL alone is not an SSRF
+  # guard.
+  chain <- character()
+  current <- url
+  resp <- NULL
+  for (hop in seq_len(max_redirects + 1L)) {
+    resp <- tryCatch({
+      request(current) |>
+        req_user_agent(user_agent) |>
+        req_timeout(timeout) |>
+        req_throttle(capacity = 1L, fill_time_s = crawl_delay) |>
+        req_retry(max_tries = 2, max_seconds = 30) |>
+        # Without this a 403 interstitial throws and page_signals() never sees the body --
+        # which is exactly the case we most need to classify.
+        req_error(is_error = function(resp) FALSE) |>
+        req_options(maxfilesize_large = max_bytes, followlocation = FALSE) |>
+        req_perform()
+    }, error = function(e) e)
 
-  if (inherits(resp, "condition")) {
-    return(blank(classify_condition(resp), "fetch", robots_allowed = TRUE))
+    if (inherits(resp, "condition")) {
+      return(blank(classify_condition(resp), "fetch", robots_allowed = TRUE))
+    }
+
+    code <- resp_status(resp)
+    location <- tryCatch(resp_header(resp, "location"), error = function(e) NULL)
+    if (!(code >= 300 && code < 400) || is.null(location) || !nzchar(location)) {
+      break
+    }
+    if (hop > max_redirects) {
+      return(blank("too_many_redirects", "fetch", http_status = code,
+                   robots_allowed = TRUE))
+    }
+    current <- url_absolute(location, current)
+    chain <- c(chain, current)
+    bad_hop <- check_url(current)
+    if (!is.null(bad_hop)) {
+      return(blank(bad_hop, "validate", http_status = code, robots_allowed = TRUE))
+    }
   }
 
   # Named `http_code`, not `status`. tibble() evaluates its arguments sequentially and
