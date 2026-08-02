@@ -1,3 +1,13 @@
+# rdomains 0.5.0.9000 (development)
+
+- `collect_content()` now caches fetched pages. A cache hit **replays the stored
+  provenance** -- the time the page was really fetched, the URL it really resolved
+  to -- rather than synthesising a fresh timestamp, so a cached row still says when
+  it is from. Entries expire (`cache_ttl`), the cache is pruned to a size budget
+  (`cache_max_size`), and a corrupt entry is a miss rather than an error.
+  Nothing persists past the session unless you pass `rdomains_cache_dir()`.
+- New `rdomains_cache_dir()` and `cache_clear()`.
+
 # rdomains 0.5.0
 
 ## A label has a date, and now the package says so

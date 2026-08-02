@@ -12,6 +12,9 @@ collect_content(
   obey_robots = TRUE,
   max_crawl_delay = 30,
   max_redirects = 5,
+  cache_dir = NULL,
+  cache_ttl = 7 * 86400,
+  cache_max_size = 1024^3,
   user_agent = rdomains_user_agent()
 )
 }
@@ -33,6 +36,14 @@ sleeping on it.}
 
 \item{max_redirects}{Maximum redirect hops to follow. Every hop is re-validated, so a
 redirect cannot be used to reach an address the first check refused.}
+
+\item{cache_dir}{Where to cache fetched pages. Defaults to a directory under
+[tempdir()], so nothing persists past the session; pass [rdomains_cache_dir()] to opt
+into a cache that does.}
+
+\item{cache_ttl}{Seconds a cached page stays fresh.}
+
+\item{cache_max_size}{Prune the cache above this many bytes, oldest first.}
 
 \item{user_agent}{Override the identifying user-agent.}
 }

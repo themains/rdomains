@@ -144,6 +144,11 @@ classify_condition <- function(cnd) {
 #'   sleeping on it.
 #' @param max_redirects Maximum redirect hops to follow. Every hop is re-validated, so a
 #'   redirect cannot be used to reach an address the first check refused.
+#' @param cache_dir Where to cache fetched pages. Defaults to a directory under
+#'   [tempdir()], so nothing persists past the session; pass [rdomains_cache_dir()] to opt
+#'   into a cache that does.
+#' @param cache_ttl Seconds a cached page stays fresh.
+#' @param cache_max_size Prune the cache above this many bytes, oldest first.
 #' @param user_agent Override the identifying user-agent.
 #'
 #' @return A tibble with one row per input: `domain_name`, `status`, `stage`, `error_code`,
@@ -168,7 +173,11 @@ collect_content <- function(domains = NULL,
                             obey_robots = TRUE,
                             max_crawl_delay = 30,
                             max_redirects = 5,
+                            cache_dir = NULL,
+                            cache_ttl = 7 * 86400,
+                            cache_max_size = 1024^3,
                             user_agent = rdomains_user_agent()) {
+  cache_dir <- cache_dir %||% default_cache_dir()
   validate_domains(domains)
   clean <- clean_domains(domains)
 
@@ -177,7 +186,9 @@ collect_content <- function(domains = NULL,
       clean[i], domains[i],
       delay = delay, timeout = timeout, max_bytes = max_bytes,
       obey_robots = obey_robots, max_crawl_delay = max_crawl_delay,
-      max_redirects = max_redirects, user_agent = user_agent
+      max_redirects = max_redirects, cache_dir = cache_dir,
+      cache_ttl = cache_ttl, cache_max_size = cache_max_size,
+      user_agent = user_agent
     )
   })
   dplyr::bind_rows(rows)
@@ -202,6 +213,7 @@ collect_content <- function(domains = NULL,
 #' @param parsed result of [html_text_content()], or NULL
 #' @param signals result of [page_signals()], or NULL
 #' @param robots_allowed whether robots.txt permitted the fetch
+#' @param from_cache whether the row was replayed from cache rather than fetched
 #'
 #' @return a one-row tibble
 #' @keywords internal
@@ -210,7 +222,7 @@ fetch_row <- function(domain, input, started,
                       status = "failed", stage = "fetch", error_code = NA_character_,
                       http_status = NA_integer_, final_url = NA_character_,
                       content_bytes = NA_integer_, parsed = NULL, signals = NULL,
-                      robots_allowed = NA) {
+                      robots_allowed = NA, from_cache = FALSE) {
   tibble(
     domain_name = as.character(domain),
     input = as.character(input),
@@ -220,7 +232,10 @@ fetch_row <- function(domain, input, started,
     retryable = isTRUE(is_retryable(error_code)),
     http_status = as.integer(http_status),
     final_url = as.character(final_url),
-    fetched_at = started,
+    # Always UTC: a fresh row carries the session's timezone and a replayed one
+    # carries UTC, so without this the same column prints differently
+    # depending on cache state.
+    fetched_at = as.POSIXct(started, tz = "UTC"),
     content_bytes = as.integer(content_bytes),
     title = as.character(parsed$title %||% NA_character_),
     description = as.character(parsed$description %||% NA_character_),
@@ -230,6 +245,7 @@ fetch_row <- function(domain, input, started,
     page_state = as.character(signals$page_state %||% NA_character_),
     block_vendor = as.character(signals$block_vendor %||% NA_character_),
     robots_allowed = as.logical(robots_allowed),
+    from_cache = as.logical(from_cache),
     source_last_published = format(started, "%Y-%m")
   )
 }
@@ -242,7 +258,8 @@ fetch_row <- function(domain, input, started,
 #' @keywords internal
 #' @noRd
 fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
-                      max_crawl_delay, max_redirects, user_agent) {
+                      max_crawl_delay, max_redirects, cache_dir, cache_ttl,
+                      cache_max_size, user_agent) {
   started <- Sys.time()
   url <- paste0("https://", domain)
 
@@ -250,6 +267,31 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     fetch_row(domain, input, started, status = "failed", stage = stage,
               error_code = code, http_status = http_status,
               robots_allowed = robots_allowed)
+  }
+
+  # A cache hit replays what was stored, including the time the page was actually
+  # fetched. piedomains' collector synthesises a fresh timestamp and fetch_success = TRUE
+  # on a hit -- it reports a fetch that never happened, at a time it did not happen, so a
+  # cached row is indistinguishable from a live one on re-read. The whole point of this
+  # package's provenance work is that a row says when it is from.
+  hit <- cache_get(cache_dir, url, cache_ttl)
+  if (!is.null(hit)) {
+    parsed <- html_text_content(hit$html)
+    signals <- page_signals(hit$html, text = parsed$text, domain = domain,
+                            status = hit$meta$http_status)
+    row <- fetch_row(
+      domain, input, hit$fetched_at,
+      status = hit$meta$status %||% "ok",
+      stage = hit$meta$stage %||% "process",
+      error_code = hit$meta$error_code %||% NA_character_,
+      http_status = hit$meta$http_status,
+      final_url = hit$meta$final_url,
+      content_bytes = hit$meta$content_bytes,
+      parsed = parsed, signals = signals,
+      robots_allowed = hit$meta$robots_allowed %||% NA,
+      from_cache = TRUE
+    )
+    return(row)
   }
 
   bad <- check_url(url)
@@ -349,13 +391,34 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     code <- "thin_content"; state_status <- "failed"
   }
 
+  final <- tryCatch(resp_url(resp), error = function(e) url)
+
+  # Failures are not cached: they are the rows worth retrying, and caching them would
+  # defeat the retry.
+  if (identical(state_status, "ok")) {
+    tryCatch(
+      cache_put(
+        cache_dir, url, body,
+        meta = list(
+          requested_url = url, final_url = final, http_status = http_code,
+          content_bytes = bytes, status = state_status, stage = "process",
+          error_code = code, robots_allowed = TRUE,
+          fetched_at = format(started, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+        ),
+        max_size = cache_max_size
+      ),
+      # A cache that cannot be written must not fail the fetch.
+      error = function(e) NULL
+    )
+  }
+
   fetch_row(
     domain, input, started,
     status = state_status,
     stage = if (identical(state_status, "ok")) "process" else stage,
     error_code = code,
     http_status = http_code,
-    final_url = tryCatch(resp_url(resp), error = function(e) url),
+    final_url = final,
     content_bytes = bytes,
     parsed = parsed,
     signals = signals,

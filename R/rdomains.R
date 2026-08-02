@@ -28,7 +28,7 @@
 #' @importFrom purrr map_chr map_df
 #' @importFrom tibble tibble as_tibble tribble
 #' @importFrom stringr str_trim str_remove str_detect str_match str_replace_all regex
-#' @importFrom rlang abort warn inform .data
+#' @importFrom rlang abort warn inform .data hash
 #' @importFrom cli cli_abort cli_warn cli_inform
 #' @importFrom checkmate assert_character assert_file_exists assert_logical
 #' @importFrom glue glue
