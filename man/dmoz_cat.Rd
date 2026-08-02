@@ -12,7 +12,8 @@ dmoz_cat(domains = NULL, use_file = NULL)
 \item{use_file}{path to the dmoz file, which can be downloaded using \code{\link{get_dmoz_data}}}
 }
 \value{
-data.frame with original list and content category of the domain
+data.frame with the original list, the content category of the domain, and the
+  vintage of the list that supplied it
 }
 \description{
 Fetches category (or categories) of content hosted by a domain according to DMOZ.
@@ -20,9 +21,18 @@ The function checks if path to the DMOZ file is provided by the user.
 If not, it looks for \code{dmoz_domain_cateory.csv} in the working directory. It also returns
 results for prominent subdomains.
 }
+\details{
+DMOZ closed in March 2017 and the snapshot shipped here is from 2015, so these labels
+describe the domain as it was a decade ago. The returned \code{source_last_published}
+column carries that vintage, and a warning is issued once per session. See
+\code{\link{source_vintage}}.
+}
 \examples{
 \dontrun{
 dmoz_cat(domains = "http://www.google.com")
 dmoz_cat(domains = c("http://www.google.com", "http://plus.google.com"))
 }
+}
+\seealso{
+\code{\link{source_vintage}} for the provenance of every category source
 }

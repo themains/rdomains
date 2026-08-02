@@ -1,3 +1,38 @@
+# rdomains 0.5.0 (development)
+
+## A label has a date, and now the package says so
+
+Two of the four lookup sources are no longer published: DMOZ closed in March 2017 and
+Shallalist stopped in 2022. Their labels were correct when assigned, but domains expire
+and change hands, so a lookup today can return the previous registrant's category. Until
+now that answer was presented identically to one from a list updated last week.
+
+- New `source_vintage()` reports every category source, when it was last published,
+  whether it is still maintained, and its successor where one exists.
+- `shalla_cat()`, `dmoz_cat()` and `stevenblack_cat()` now return a
+  `source_last_published` column. For the two dead lists this is a constant; for Steven
+  Black's actively-maintained hosts file it is the fetched file's own date.
+- Looking up against a discontinued source warns **once per session** — not once per
+  call, which is a warning people learn to filter out.
+
+The sibling project `piedomains` measured what this confusion costs: its worst class
+disagreed with its own page content 71% of the time, and the cause was not bad annotation
+but roughly a decade between the label and the page. Only 60% of the domains it trained
+on still resolve.
+
+## Bug fixes
+
+- `get_dmoz_data()` built its output path with `paste0()`, so the documented default
+  `outdir = "."` produced a hidden `.dmoz_domain_category.csv` that `dmoz_cat()` would
+  then fail to find. It now uses `file.path()`, matching its two siblings.
+- `stevenblack_cat(use_file = NULL)` re-downloaded roughly 4 MB on **every call**. The
+  file is now cached for the session.
+
+## Testing
+
+- The Shallalist and DMOZ tests download real files; they now carry `skip_on_cran()` and
+  `skip_if_offline()` guards, as CRAN policy requires.
+
 # rdomains 0.4.0
 
 ## Breaking Changes

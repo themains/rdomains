@@ -29,6 +29,31 @@ To learn how to use rdomains, launch the vignette within R:
 vignette("rdomains", package = "rdomains")
 ```
 
+### A label has a date
+
+Most categories here come from static lists, and those lists have very different vintages
+— two are no longer published at all:
+
+```r
+source_vintage()
+#> key          source                         last_published  status
+#> shalla       Shallalist                     2022-01         discontinued
+#> dmoz         DMOZ / Open Directory Project  2017-03         discontinued
+#> stevenblack  Steven Black unified hosts     NA              maintained
+#> uni          Hipo university-domains-list   NA              maintained
+```
+
+This matters more than it sounds. Domains expire and get re-registered, so a category
+assigned years ago may describe a site that no longer exists. `shalla_cat()` and
+`dmoz_cat()` therefore return a `source_last_published` column alongside the category and
+warn once per session. Treat an old label as evidence about a domain's past, not its
+present.
+
+The sibling project [piedomains](https://github.com/themains/piedomains) measured the
+cost: its worst class disagreed with its own page content 71% of the time, and the cause
+was not bad annotation but roughly a decade between the label and the page. Only 60% of
+the domains it trained on still resolve.
+
 ### License
 
 Scripts are released under the [MIT License](https://opensource.org/licenses/MIT).

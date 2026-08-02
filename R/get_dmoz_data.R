@@ -17,8 +17,11 @@
 
 get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
 
-  # Check if file exists
-  dmoz_file <- paste0(outdir, "dmoz_domain_category.csv")
+  # file.path, not paste0: with the documented default of outdir = "." the old form
+  # produced ".dmoz_domain_category.csv" -- a hidden file that the matching dmoz_cat()
+  # lookup would then fail to find. get_shalla_data() and get_stevenblack_data() were
+  # already correct.
+  dmoz_file <- file.path(outdir, "dmoz_domain_category.csv")
 
   if (file.exists(dmoz_file) & overwrite == FALSE) {
     stop(paste0("There already exists a file with the same name.\n

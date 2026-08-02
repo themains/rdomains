@@ -1,6 +1,9 @@
 context("Get shalla Cat")
 
 test_that("shallalist cat", {
+  # Downloads a real file: CRAN forbids that, and it fails offline.
+  skip_on_cran()
+  skip_if_offline()
 
   # Use temporary directory to avoid conflicts
   temp_dir <- tempdir()
@@ -8,9 +11,14 @@ test_that("shallalist cat", {
 
   # Test with the downloaded data
   data_file <- file.path(temp_dir, "shalla_domain_category.csv")
-  report <- shalla_cat("http://www.google.com", use_file = data_file)
+  reset_vintage_warnings()
+  expect_warning(
+    report <- shalla_cat("http://www.google.com", use_file = data_file),
+    "no longer published"
+  )
 
   expect_that(report, is_a("data.frame"))
+  expect_equal(report$source_last_published, "2022-01")
 
   # Clean up
   if (file.exists(data_file)) {

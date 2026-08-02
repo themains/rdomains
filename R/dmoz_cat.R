@@ -5,12 +5,19 @@
 #' If not, it looks for \code{dmoz_domain_cateory.csv} in the working directory. It also returns
 #' results for prominent subdomains.
 #'
+#' DMOZ closed in March 2017 and the snapshot shipped here is from 2015, so these labels
+#' describe the domain as it was a decade ago. The returned \code{source_last_published}
+#' column carries that vintage, and a warning is issued once per session. See
+#' \code{\link{source_vintage}}.
+#'
 #' @param domains vector of domain names
 #' @param use_file path to the dmoz file, which can be downloaded using \code{\link{get_dmoz_data}}
 #'
-#' @return data.frame with original list and content category of the domain
+#' @return data.frame with the original list, the content category of the domain, and the
+#'   vintage of the list that supplied it
 #'
 #' @export
+#' @seealso \code{\link{source_vintage}} for the provenance of every category source
 #' @importFrom dplyr coalesce
 #' @examples \dontrun{
 #' dmoz_cat(domains = "http://www.google.com")
@@ -31,11 +38,14 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
 
   dmoz <- read_csv(data_file, col_names = c("hostname", "category"), show_col_types = FALSE)
 
+  warn_source_vintage("dmoz")
+
   tibble(
     domain_name = c_domains,
     dmoz_category = coalesce(
       dmoz$category[match(c_domains_http, dmoz$hostname)],
       dmoz$category[match(c_domains, dmoz$hostname)]
-    )
+    ),
+    source_last_published = SOURCE_VINTAGE$dmoz$last_published
   )
 }

@@ -12,15 +12,25 @@ shalla_cat(domains = NULL, use_file = NULL)
 \item{use_file}{path to the latest shallalist file downloaded using \code{\link{get_shalla_data}}}
 }
 \value{
-data.frame with original list and content category of the domain
+data.frame with the original list, the content category of the domain, and the
+  vintage of the list that supplied it
 }
 \description{
 Fetches category of content hosted by a domain according to Shalla.
 The function checks if path to the shalla file is provided by the user.
 If not, it looks for \code{shalla_domain_category.csv} in the working directory.
 }
+\details{
+Shallalist stopped publishing in 2022, so these labels describe the domain as it was
+then or earlier, not as it is now. The returned \code{source_last_published} column
+carries that vintage, and a warning is issued once per session. See
+\code{\link{source_vintage}}.
+}
 \examples{
 \dontrun{
 shalla_cat(domains = "http://www.google.com")
 }
+}
+\seealso{
+\code{\link{source_vintage}} for the provenance of every category source
 }

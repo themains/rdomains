@@ -20,10 +20,12 @@ test_that("stevenblack_cat returns expected data structure", {
   # Clean up
   unlink(temp_hosts)
   
-  # Check structure
+  # Check structure. The third column is the vintage of the list that produced the
+  # category -- see source_vintage(). For this list it is the file's own date, because
+  # Steven Black's hosts file is actively maintained.
   expect_is(result, "data.frame")
-  expect_equal(ncol(result), 2)
-  expect_equal(names(result), c("domain", "stevenblack"))
+  expect_equal(ncol(result), 3)
+  expect_equal(names(result), c("domain", "stevenblack", "source_last_published"))
   expect_equal(nrow(result), 2)
   
   # Check classifications

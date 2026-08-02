@@ -7,12 +7,19 @@
 #' Steven Black's host list is a consolidated list from multiple sources including
 #' adaway.org, mvps.org, malwaredomainlist.com, and someonewhocares.org.
 #'
+#' Unlike the Shallalist and DMOZ lookups, this list is actively maintained, so the
+#' returned \code{source_last_published} is the fetched file's own modification date
+#' rather than a constant. See \code{\link{source_vintage}}.
+#'
 #' @param domain domain names as character vector
 #' @param use_file path to a local Steven Black hosts file. If NULL, downloads from GitHub
+#'   once per session and reuses it
 #'
-#' @return data.frame with original domain name and category
+#' @return data.frame with the original domain name, the category, and the date of the
+#'   list that supplied it
 #'
 #' @export
+#' @seealso \code{\link{source_vintage}} for the provenance of every category source
 #' @references \url{https://github.com/StevenBlack/hosts}
 #'
 #' @examples \dontrun{
@@ -25,24 +32,39 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
   validate_domains(domain, "domain")
   clean_doms <- clean_domains(domain)
 
+  downloaded <- FALSE
   if (is.null(use_file)) {
-    hosts_file <- tempfile()
-    tryCatch({
-      cli_inform("Downloading Steven Black's hosts file...")
-      curl::curl_download(
-        "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-        hosts_file
-      )
-    }, error = function(e) {
-      cli_abort(c(
-        "Failed to download hosts file",
-        "x" = e$message
-      ))
-    })
+    # Cached for the session. This used to re-download ~4 MB on *every* call, so
+    # classifying domains one at a time cost a fresh download each time.
+    cached <- .rdomains_env$stevenblack_file
+    if (!is.null(cached) && file.exists(cached)) {
+      hosts_file <- cached
+    } else {
+      hosts_file <- tempfile(fileext = ".hosts")
+      tryCatch({
+        cli_inform("Downloading Steven Black's hosts file...")
+        curl::curl_download(
+          "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+          hosts_file
+        )
+      }, error = function(e) {
+        cli_abort(c(
+          "Failed to download hosts file",
+          "x" = e$message
+        ))
+      })
+      .rdomains_env$stevenblack_file <- hosts_file
+      downloaded <- TRUE
+    }
   } else {
     assert_file_exists(use_file)
     hosts_file <- use_file
   }
+
+  file_date <- tryCatch(
+    format(as.Date(file.info(hosts_file)$mtime), "%Y-%m-%d"),
+    error = function(e) NA_character_
+  )
 
   hosts_lines <- tryCatch({
     readLines(hosts_file, warn = FALSE)
@@ -77,12 +99,16 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
     } else {
       "safe"
     }
-    tibble(domain = domain[i], stevenblack = category)
+    tibble(
+      domain = domain[i],
+      stevenblack = category,
+      source_last_published = file_date
+    )
   })
 
-  if (is.null(use_file)) {
-    unlink(hosts_file)
-  }
+  # The cached file is deliberately not unlinked -- it is the session cache. R removes the
+  # tempdir on exit.
+  invisible(downloaded)
 
   results
 }
