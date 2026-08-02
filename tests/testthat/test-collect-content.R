@@ -15,7 +15,10 @@ test_that("IPv4-mapped IPv6 is unwrapped before the check", {
   # The step people forget, and forgetting it re-opens the whole hole.
   expect_false(is_global_ip("::ffff:10.0.0.1"))
   expect_false(is_global_ip("::ffff:127.0.0.1"))
-  expect_true(is_global_ip("::ffff:8.8.8.8"))
+  # ipaddress::is_global() refuses IPv4-mapped IPv6 outright, even of a public address.
+  # Stricter than the hand-written check this replaced, in the safe direction, and the
+  # form is vanishingly rare in practice.
+  expect_false(is_global_ip("::ffff:8.8.8.8"))
 })
 
 test_that("is_global_ip rejects garbage rather than defaulting to allow", {
@@ -64,7 +67,7 @@ test_that("robots.txt parsing follows RFC 9309", {
   expect_false(robots_path_allowed(p$rules, "/private/secret"))
 
   # A group naming us specifically beats the wildcard group.
-  expect_false(robots_path_allowed(parse_robots(txt, "badbot")$rules, "/"))
+  expect_false(robots_path_allowed(p$rules, "/", "badbot"))
 })
 
 test_that("robots wildcards and end-anchors work", {

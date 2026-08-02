@@ -26,8 +26,14 @@ rdomains_user_agent <- function() {
 
 #' Addresses that must never be fetched
 #'
-#' Rejecting these stops a domain lookup from being turned into a probe of the caller's own
-#' network. `169.254.169.254` in particular is the cloud metadata endpoint.
+#' `ipaddress::is_global()` already knows every range that matters -- RFC1918, loopback,
+#' link-local (including the cloud metadata endpoint), CGNAT, benchmarking, TEST-NET,
+#' IPv6 ULA and link-local. This function previously spelled all of that out by hand,
+#' written on the mistaken belief that R had no equivalent of Python's stdlib
+#' `ipaddress`. It does, and the package gets one case the hand-written version did not
+#' even try: `is_global` is stricter about IPv4-mapped IPv6, refusing `::ffff:8.8.8.8`
+#' where the hand-written check allowed it. That is the safe direction and the case is
+#' vanishingly rare in practice.
 #'
 #' @param ip character IP address
 #' @return TRUE when the address is globally routable
@@ -37,33 +43,15 @@ is_global_ip <- function(ip) {
   if (is.na(ip) || !nzchar(ip)) {
     return(FALSE)
   }
-  # IPv4-mapped IPv6 (::ffff:10.0.0.1) must be unwrapped before checking -- this is the
-  # step people forget, and it re-opens the whole hole.
-  mapped <- str_match(tolower(ip), "^::ffff:(\\d+\\.\\d+\\.\\d+\\.\\d+)$")
-  if (!is.na(mapped[1, 2])) ip <- mapped[1, 2]
-
-  if (grepl(":", ip, fixed = TRUE)) {
-    lowered <- tolower(ip)
-    if (lowered %in% c("::", "::1")) return(FALSE)
-    # fc00::/7 unique-local, fe80::/10 link-local
-    if (grepl("^f[cd]", lowered)) return(FALSE)
-    if (grepl("^fe[89ab]", lowered)) return(FALSE)
-    return(TRUE)
-  }
-
-  octets <- suppressWarnings(as.integer(strsplit(ip, ".", fixed = TRUE)[[1]]))
-  if (length(octets) != 4 || any(is.na(octets))) {
+  parsed <- suppressWarnings(ipaddress::ip_address(ip))
+  if (is.na(parsed)) {
     return(FALSE)
   }
-  a <- octets[1]; b <- octets[2]
-  !(a == 0 || a == 10 || a == 127 ||
-      (a == 100 && b >= 64 && b <= 127) ||
-      (a == 169 && b == 254) ||
-      (a == 172 && b >= 16 && b <= 31) ||
-      (a == 192 && b == 168) ||
-      (a == 192 && b == 0) ||
-      (a == 198 && (b == 18 || b == 19)) ||
-      a >= 224)
+  isTRUE(
+    ipaddress::is_global(parsed) &&
+      !ipaddress::is_multicast(parsed) &&
+      !ipaddress::is_reserved(parsed)
+  )
 }
 
 #' Build the URL to request for one input
