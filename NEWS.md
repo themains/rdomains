@@ -7,6 +7,16 @@
   (`cache_max_size`), and a corrupt entry is a miss rather than an error.
   Nothing persists past the session unless you pass `rdomains_cache_dir()`.
 - New `rdomains_cache_dir()` and `cache_clear()`.
+- New `pie_cat()`: fetches a domain's homepage and classifies its **current** content
+  with the piedomains model, rather than looking the domain up in a list written years
+  ago. It reaches the model through the Python package via `reticulate`, so the four
+  fragile pieces of the model input -- the domain prefix, temperature scaling, label
+  projection and the text cleaner -- stay on the Python side rather than becoming a
+  second place they can drift. `parked` and `unavailable` pages are labelled from the
+  page itself and cost no model call.
+- `collect_content()`'s `max_bytes` default is now 10 MB, matching piedomains. At 2 MB
+  it rejected cnn.com -- roughly 6 MB of homepage -- as `content_too_large` while the
+  server returned 200.
 - New `ut1_cat()` and `get_ut1_data()`: the UT-Capitole blacklists, the **maintained
   successor to Shallalist**. Where `shalla_cat()` answers from a list that stopped in
   January 2022, this one is updated continuously. Categories are UT1's own and are

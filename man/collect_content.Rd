@@ -8,7 +8,7 @@ collect_content(
   domains = NULL,
   delay = 1,
   timeout = 10,
-  max_bytes = 2 * 1024^2,
+  max_bytes = 10 * 1024^2,
   obey_robots = TRUE,
   max_crawl_delay = 30,
   max_redirects = 5,
@@ -27,7 +27,10 @@ this upward.}
 
 \item{timeout}{Per-request timeout, seconds.}
 
-\item{max_bytes}{Cap on the response body actually read.}
+\item{max_bytes}{Cap on the response body actually read. The default matches
+piedomains' 10 MB. A smaller cap looks prudent and is not: cnn.com's homepage
+alone is roughly 6 MB, so a 2 MB limit rejects major news sites as
+`content_too_large` while they return HTTP 200.}
 
 \item{obey_robots}{Whether to fetch and honour robots.txt. Turning this off is
 discouraged and is your responsibility, not the package's.}

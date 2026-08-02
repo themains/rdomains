@@ -153,7 +153,10 @@ classify_condition <- function(cnd) {
 #' @param delay Minimum seconds between requests to the same host. `Crawl-delay` overrides
 #'   this upward.
 #' @param timeout Per-request timeout, seconds.
-#' @param max_bytes Cap on the response body actually read.
+#' @param max_bytes Cap on the response body actually read. The default matches
+#'   piedomains' 10 MB. A smaller cap looks prudent and is not: cnn.com's homepage
+#'   alone is roughly 6 MB, so a 2 MB limit rejects major news sites as
+#'   `content_too_large` while they return HTTP 200.
 #' @param obey_robots Whether to fetch and honour robots.txt. Turning this off is
 #'   discouraged and is your responsibility, not the package's.
 #' @param max_crawl_delay Skip a host that asks for a longer delay than this rather than
@@ -188,7 +191,7 @@ classify_condition <- function(cnd) {
 collect_content <- function(domains = NULL,
                             delay = 1,
                             timeout = 10,
-                            max_bytes = 2 * 1024^2,
+                            max_bytes = 10 * 1024^2,
                             obey_robots = TRUE,
                             max_crawl_delay = 30,
                             max_redirects = 5,

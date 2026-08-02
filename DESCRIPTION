@@ -40,7 +40,8 @@ Suggests:
     rmarkdown,
     knitr (>= 1.11),
     withr,
-    webfakes
+    webfakes,
+    reticulate
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
