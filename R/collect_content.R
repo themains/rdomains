@@ -171,6 +171,10 @@ classify_condition <- function(cnd) {
 #' @param allow_hosts Hosts exempt from the private-address checks, by exact name. Only
 #'   the hosts named are exempt, so a redirect elsewhere is still refused. Intended for
 #'   testing against a local server.
+#' @param archive_fallback When a host serves an anti-bot interstitial, try the
+#'   Internet Archive's most recent capture. Rows recovered this way carry
+#'   `source = "archive"` and a `snapshot_timestamp`, so the vintage is never
+#'   hidden. Dead domains are deliberately *not* recovered this way.
 #' @param user_agent Override the identifying user-agent.
 #'
 #' @return A tibble with one row per input: `domain_name`, `status`, `stage`, `error_code`,
@@ -199,6 +203,7 @@ collect_content <- function(domains = NULL,
                             cache_ttl = 7 * 86400,
                             cache_max_size = 1024^3,
                             allow_hosts = character(),
+                            archive_fallback = TRUE,
                             user_agent = rdomains_user_agent()) {
   cache_dir <- cache_dir %||% default_cache_dir()
   validate_domains(domains)
@@ -211,7 +216,8 @@ collect_content <- function(domains = NULL,
       obey_robots = obey_robots, max_crawl_delay = max_crawl_delay,
       max_redirects = max_redirects, cache_dir = cache_dir,
       cache_ttl = cache_ttl, cache_max_size = cache_max_size,
-      allow_hosts = allow_hosts, user_agent = user_agent
+      allow_hosts = allow_hosts, archive_fallback = archive_fallback,
+      user_agent = user_agent
     )
   })
   dplyr::bind_rows(rows)
@@ -237,6 +243,8 @@ collect_content <- function(domains = NULL,
 #' @param signals result of [page_signals()], or NULL
 #' @param robots_allowed whether robots.txt permitted the fetch
 #' @param from_cache whether the row was replayed from cache rather than fetched
+#' @param source "live" or "archive"
+#' @param snapshot_timestamp Wayback capture timestamp, when source is archive
 #'
 #' @return a one-row tibble
 #' @keywords internal
@@ -245,7 +253,8 @@ fetch_row <- function(domain, input, started,
                       status = "failed", stage = "fetch", error_code = NA_character_,
                       http_status = NA_integer_, final_url = NA_character_,
                       content_bytes = NA_integer_, parsed = NULL, signals = NULL,
-                      robots_allowed = NA, from_cache = FALSE) {
+                      robots_allowed = NA, from_cache = FALSE,
+                      source = "live", snapshot_timestamp = NA_character_) {
   tibble(
     domain_name = as.character(domain),
     input = as.character(input),
@@ -269,6 +278,8 @@ fetch_row <- function(domain, input, started,
     block_vendor = as.character(signals$block_vendor %||% NA_character_),
     robots_allowed = as.logical(robots_allowed),
     from_cache = as.logical(from_cache),
+    source = as.character(source),
+    snapshot_timestamp = as.character(snapshot_timestamp),
     source_last_published = format(started, "%Y-%m")
   )
 }
@@ -282,7 +293,7 @@ fetch_row <- function(domain, input, started,
 #' @noRd
 fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
                       max_crawl_delay, max_redirects, cache_dir, cache_ttl,
-                      cache_max_size, allow_hosts, user_agent) {
+                      cache_max_size, allow_hosts, archive_fallback, user_agent) {
   started <- Sys.time()
   url <- request_url(input, domain)
 
@@ -435,6 +446,28 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
       # A cache that cannot be written must not fail the fetch.
       error = function(e) NULL
     )
+  }
+
+  # A block means the site is alive and would not serve *us*. Asking an archive that was
+  # allowed in is the honest response. A dead domain is deliberately not recovered this
+  # way -- see R/archive.R.
+  if (archive_fallback && identical(code, "bot_blocked")) {
+    recovered <- archive_fetch(domain, timeout = timeout, max_bytes = max_bytes,
+                               user_agent = user_agent)
+    if (!is.null(recovered)) {
+      a_parsed <- html_text_content(recovered$html)
+      a_signals <- page_signals(recovered$html, text = a_parsed$text, domain = domain)
+      if (!a_signals$blocked && nzchar(a_parsed$text) && !a_signals$thin) {
+        return(fetch_row(
+          domain, input, started,
+          status = "ok", stage = "process", error_code = NA_character_,
+          http_status = http_code, final_url = recovered$url,
+          content_bytes = nchar(recovered$html, type = "bytes"),
+          parsed = a_parsed, signals = a_signals, robots_allowed = TRUE,
+          source = "archive", snapshot_timestamp = recovered$timestamp
+        ))
+      }
+    }
   }
 
   fetch_row(

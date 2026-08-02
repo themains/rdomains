@@ -201,3 +201,35 @@ test_that("an http:// input is honoured rather than forced to https", {
   expect_match(srv$url("/page"), "^http://")
   expect_equal(fetch(srv, "/page")$status, "ok")
 })
+
+test_that("a blocked page is recovered from the archive, with its vintage visible", {
+  # The honest response to a bot wall: ask an archive that was allowed in, and say so.
+  # allrecipes.com serves a 403 interstitial to us and has recent captures.
+  skip_on_cran()
+  skip_if_offline()
+
+  res <- collect_content("allrecipes.com", obey_robots = FALSE,
+                         cache_dir = withr::local_tempdir())
+  skip_if(is.na(res$source) || res$source != "archive",
+          "no recent archive capture available right now")
+
+  expect_equal(res$status, "ok")
+  expect_equal(res$source, "archive")
+  # The vintage is never hidden: a recovered row says when the capture is from.
+  expect_true(nzchar(res$snapshot_timestamp))
+  expect_gt(res$n_tokens, 30)
+})
+
+test_that("a dead domain is not resurrected from the archive", {
+  # Deliberate: recovering a domain that no longer resolves would answer "what was this"
+  # while looking like "what is this" -- the exact staleness source_vintage() exists to
+  # surface. Blocks are recoverable; dead domains are not.
+  skip_on_cran()
+  skip_if_offline()
+
+  res <- collect_content("no-such-domain-xyzzy-99999.invalid", obey_robots = FALSE,
+                         cache_dir = withr::local_tempdir())
+  expect_equal(res$status, "failed")
+  expect_equal(res$error_code, "dns_error")
+  expect_equal(res$source, "live")
+})

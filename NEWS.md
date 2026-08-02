@@ -7,6 +7,12 @@
   (`cache_max_size`), and a corrupt entry is a miss rather than an error.
   Nothing persists past the session unless you pass `rdomains_cache_dir()`.
 - New `rdomains_cache_dir()` and `cache_clear()`.
+- `collect_content()` recovers pages from the Internet Archive when a host serves an
+  anti-bot interstitial -- detection plus a fallback rather than an evasion arms race.
+  Recovered rows carry `source = "archive"` and a `snapshot_timestamp`, so the vintage is
+  never hidden. A domain that no longer resolves is deliberately **not** recovered this
+  way: answering "what was this" while looking like "what is this" is the staleness this
+  package exists to surface.
 - New `pie_cat()`: fetches a domain's homepage and classifies its **current** content
   with the piedomains model, rather than looking the domain up in a list written years
   ago. It reaches the model through the Python package via `reticulate`, so the four
