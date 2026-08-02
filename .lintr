@@ -1,0 +1,6 @@
+linters: linters_with_defaults(
+    line_length_linter(100),
+    object_name_linter = NULL,
+    cyclocomp_linter = NULL
+  )
+exclusions: list("tests/testthat.R", "data-raw", "revdep", "docs")

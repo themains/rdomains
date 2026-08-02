@@ -1,5 +1,3 @@
-context("Get shalla Cat")
-
 test_that("shallalist cat", {
   # Downloads a real file: CRAN forbids that, and it fails offline.
   skip_on_cran()
@@ -17,7 +15,7 @@ test_that("shallalist cat", {
     "no longer published"
   )
 
-  expect_that(report, is_a("data.frame"))
+  expect_s3_class(report, "data.frame")
   expect_equal(report$source_last_published, "2022-01")
 
   # Clean up

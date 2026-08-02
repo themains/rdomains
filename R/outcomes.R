@@ -29,7 +29,7 @@ RD_STAGES <- c("validate", "fetch", "process", "infer")
 #'
 #' @keywords internal
 #' @noRd
-RD_ERROR_CODES <- tibble::tribble(
+RD_ERROR_CODES <- tribble(
   ~code,                   ~stage,     ~retryable, ~description,
   "invalid_domain",        "validate", FALSE, "Not a fetchable http(s) host.",
   "robots_blocked",        "validate", FALSE, "Disallowed by the host's robots.txt.",
@@ -84,7 +84,7 @@ fetch_error_codes <- function() {
 #'
 #' @export
 #' @examples
-#' rows <- tibble::tibble(
+#' rows <- data.frame(
 #'   domain_name = c("a.com", "b.com", "c.com"),
 #'   status = c("ok", "failed", "failed"),
 #'   stage = c("infer", "fetch", "process"),

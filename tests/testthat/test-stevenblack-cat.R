@@ -1,5 +1,3 @@
-context("Steven Black Host List Classification")
-
 test_that("stevenblack_cat returns expected data structure", {
   # Test with minimal mock data
   mock_hosts <- c(
@@ -23,7 +21,7 @@ test_that("stevenblack_cat returns expected data structure", {
   # Check structure. The third column is the vintage of the list that produced the
   # category -- see source_vintage(). For this list it is the file's own date, because
   # Steven Black's hosts file is actively maintained.
-  expect_is(result, "data.frame")
+  expect_s3_class(result, "data.frame")
   expect_equal(ncol(result), 3)
   expect_equal(names(result), c("domain", "stevenblack", "source_last_published"))
   expect_equal(nrow(result), 2)

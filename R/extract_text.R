@@ -48,7 +48,7 @@ html_text_content <- function(html) {
   }
 
   doc <- tryCatch(
-    xml2::read_html(html),
+    read_html(html),
     error = function(e) NULL
   )
   if (is.null(doc)) {
@@ -57,20 +57,27 @@ html_text_content <- function(html) {
 
   # Remove what is not page text. Comments too: they carry build metadata and
   # occasionally whole alternate versions of the page.
-  drop <- xml2::xml_find_all(
+  drop <- xml_find_all(
     doc, "//script | //style | //noscript | //template | //svg | //comment()"
   )
   if (length(drop)) {
-    xml2::xml_remove(drop)
+    xml_remove(drop)
   }
 
   title <- first_text(doc, "//title")
   description <- first_attr(doc, "//meta[translate(@name,'DESCRIPTION','description')='description']", "content")
   lang <- first_attr(doc, "/html", "lang")
 
-  body <- xml2::xml_find_first(doc, "//body")
+  body <- xml_find_first(doc, "//body")
   node <- if (inherits(body, "xml_missing")) doc else body
-  raw_text <- xml2::xml_text(node)
+
+  # Collect text nodes individually and join with a space. Calling xml_text() on the body
+  # concatenates across element boundaries, so "<h1>Example Domain</h1><p>This domain..."
+  # came out as "example domainthis domain" -- two words fused into a token that appears
+  # in no vocabulary. Python's extractor separates blocks, so this is also what parity
+  # with the model's training input requires.
+  pieces <- xml_text(xml_find_all(node, ".//text()"))
+  raw_text <- paste(pieces[nzchar(str_trim(pieces))], collapse = " ")
 
   list(
     text = clean_page_text(raw_text),
@@ -90,18 +97,18 @@ clean_page_text <- function(text) {
   if (!length(text) || all(is.na(text))) {
     return("")
   }
-  tolower(str_trim(stringr::str_replace_all(paste(text, collapse = " "), "\\s+", " ")))
+  tolower(str_trim(str_replace_all(paste(text, collapse = " "), "\\s+", " ")))
 }
 
 #' First matching node's text, or NA
 #' @keywords internal
 #' @noRd
 first_text <- function(doc, xpath) {
-  node <- xml2::xml_find_first(doc, xpath)
+  node <- xml_find_first(doc, xpath)
   if (inherits(node, "xml_missing")) {
     return(NA_character_)
   }
-  value <- str_trim(xml2::xml_text(node))
+  value <- str_trim(xml_text(node))
   if (nzchar(value)) value else NA_character_
 }
 
@@ -109,10 +116,10 @@ first_text <- function(doc, xpath) {
 #' @keywords internal
 #' @noRd
 first_attr <- function(doc, xpath, attr) {
-  node <- xml2::xml_find_first(doc, xpath)
+  node <- xml_find_first(doc, xpath)
   if (inherits(node, "xml_missing")) {
     return(NA_character_)
   }
-  value <- xml2::xml_attr(node, attr)
+  value <- xml_attr(node, attr)
   if (!is.na(value) && nzchar(str_trim(value))) str_trim(value) else NA_character_
 }

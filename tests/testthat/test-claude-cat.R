@@ -1,5 +1,3 @@
-context("Get Claude Cat")
-
 test_that("claude cat validates input", {
   expect_error(claude_cat(), "must not be NULL")
 
@@ -19,7 +17,7 @@ test_that("claude cat returns correct structure", {
           "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set")
   
   result <- claude_cat("google.com")
-  expect_is(result, "data.frame")
+  expect_s3_class(result, "data.frame")
   expect_named(result, c("domain_name", "claude_category"))
   expect_equal(nrow(result), 1)
   expect_equal(result$domain_name[1], "google.com")
@@ -31,7 +29,7 @@ test_that("claude cat handles multiple domains", {
   
   domains <- c("google.com", "facebook.com")
   result <- claude_cat(domains)
-  expect_is(result, "data.frame")
+  expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 2)
   expect_equal(result$domain_name, domains)
 })
@@ -50,7 +48,7 @@ test_that("claude cat accepts custom categories", {
   
   custom_cats <- c("search", "social", "other")
   result <- claude_cat("facebook.com", categories = custom_cats)
-  expect_is(result, "data.frame")
+  expect_s3_class(result, "data.frame")
   # Category should be one of the custom categories or NA
   expect_true(is.na(result$claude_category[1]) || result$claude_category[1] %in% custom_cats)
 })

@@ -35,7 +35,7 @@ RD_ROBOTS_MAX_BYTES <- 512000L
 parse_robots <- function(txt, agent = "rdomains") {
   lines <- strsplit(txt, "\r?\n")[[1]]
   # Strip comments and a UTF-8 BOM.
-  lines <- sub("﻿", "", lines, useBytes = TRUE)
+  lines <- sub("\uFEFF", "", lines, useBytes = TRUE)
   lines <- sub("#.*$", "", lines)
   lines <- str_trim(lines)
   lines <- lines[nzchar(lines)]
@@ -181,18 +181,18 @@ robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
   }
 
   result <- tryCatch({
-    resp <- httr2::request(paste0(scheme_host, "/robots.txt")) |>
-      httr2::req_user_agent(agent) |>
-      httr2::req_timeout(timeout) |>
-      httr2::req_error(is_error = function(resp) FALSE) |>
-      httr2::req_perform()
-    status <- httr2::resp_status(resp)
+    resp <- request(paste0(scheme_host, "/robots.txt")) |>
+      req_user_agent(agent) |>
+      req_timeout(timeout) |>
+      req_error(is_error = function(resp) FALSE) |>
+      req_perform()
+    status <- resp_status(resp)
     if (status >= 500) {
       list(rules = deny_all(), crawl_delay = NA_real_, status = status)
     } else if (status >= 400) {
       list(rules = empty_rules(), crawl_delay = NA_real_, status = status)
     } else {
-      body <- httr2::resp_body_string(resp)
+      body <- resp_body_string(resp)
       if (nchar(body, type = "bytes") > RD_ROBOTS_MAX_BYTES) {
         list(rules = deny_all(), crawl_delay = NA_real_, status = status)
       } else {

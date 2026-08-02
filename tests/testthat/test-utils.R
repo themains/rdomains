@@ -1,5 +1,3 @@
-context("Test utility helper functions")
-
 test_that("clean_domains removes common prefixes and paths", {
   expect_equal(rdomains:::clean_domains("  google.com  "), "google.com")
   expect_equal(rdomains:::clean_domains("http://www.google.com"), "google.com")

@@ -19,7 +19,7 @@ snapshot goes stale the moment you filter the rows; recomputing means
 `fetch_report(subset(x, retryable))` is always correct.
 }
 \examples{
-rows <- tibble::tibble(
+rows <- data.frame(
   domain_name = c("a.com", "b.com", "c.com"),
   status = c("ok", "failed", "failed"),
   stage = c("infer", "fetch", "process"),

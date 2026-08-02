@@ -138,7 +138,7 @@ RD_UNAVAILABLE_MAX_WORDS <- 60L
 #' @keywords internal
 #' @noRd
 html_title <- function(html) {
-  m <- stringr::str_match(html, stringr::regex("<title[^>]*>(.*?)</title>",
+  m <- str_match(html, regex("<title[^>]*>(.*?)</title>",
                                                ignore_case = TRUE, dotall = TRUE))
   if (is.na(m[1, 2])) "" else tolower(str_trim(m[1, 2]))
 }
