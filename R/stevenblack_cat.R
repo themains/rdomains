@@ -89,9 +89,8 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
   # "ad" has to be a label of its own, or the head of one: it is otherwise a substring of
   # trade, download, gadget, espadrilles and nokiadns. Unanchored, it labels 13,423 of the
   # live list's 99,278 blocked hosts "ads", 10,581 of which contain no ad token at all.
-  ads_pattern <- paste0(
+  ads_pattern <-
     "(^|[.-])ads?([.-]|$)|adserv|doubleclick|googleadservices|googlesyndication"
-  )
 
   # The list blocks hosts as written: 34,151 of the live list's 99,278 entries carry the
   # "www." that clean_domains() strips, and 1,870 have no bare counterpart. Matching only

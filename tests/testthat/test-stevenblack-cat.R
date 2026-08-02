@@ -148,11 +148,11 @@ test_that("blocklist lookup is case-insensitive, as DNS is", {
 # blocklist.
 test_that("a host blocked only in its www. form is not reported safe", {
   temp_hosts <- tempfile(fileext = ".txt")
-  writeLines(c("0.0.0.0 www.ads2live.com", "0.0.0.0 bare-example.net"), temp_hosts)
+  writeLines(c("0.0.0.0 www.ads.example.com", "0.0.0.0 bare-example.net"), temp_hosts)
   on.exit(unlink(temp_hosts), add = TRUE)
 
   res <- stevenblack_cat(
-    c("www.ads2live.com", "ads2live.com", "bare-example.net", "not-listed.org"),
+    c("www.ads.example.com", "ads.example.com", "bare-example.net", "not-listed.org"),
     use_file = temp_hosts
   )
   expect_equal(res$stevenblack, c("ads", "ads", "blocked", "safe"))
