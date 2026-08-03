@@ -3,9 +3,6 @@ url: http://themains.github.io/rdomains
 template:
   params:
     bootswatch: cosmo
-    docsearch:
-      api_key: 1c4068cac9a28dd1a323400f274d7169
-      index_name: rdomains
 
 authors:
   Gaurav Sood:
