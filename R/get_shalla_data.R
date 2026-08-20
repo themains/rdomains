@@ -54,10 +54,9 @@ get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
       # Download file
       cat("Downloading Shallalist data...\n")
       curl::curl_download(
-        paste0(
-          "https://raw.githubusercontent.com/themains/rdomains/master/",
-          "data-raw/shallalist/accomplist/shallalist.gz"
-        ),
+        # Kept on one line: splitting a URL across string literals leaves the
+        # link checker matching only the first fragment, which always 404s.
+        "https://raw.githubusercontent.com/themains/rdomains/master/data-raw/shallalist/accomplist/shallalist.gz", # nolint: line_length_linter.
         tmp
       )
 

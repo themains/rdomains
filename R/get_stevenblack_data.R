@@ -23,14 +23,8 @@ get_stevenblack_data <- function(outdir = "./", variant = "base", overwrite = FA
     base = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
     porn = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/porn/hosts",
     social = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/social/hosts",
-    gambling = paste0(
-      "https://raw.githubusercontent.com/StevenBlack/hosts/master/",
-      "alternates/gambling/hosts"
-    ),
-    all = paste0(
-      "https://raw.githubusercontent.com/StevenBlack/hosts/master/",
-      "alternates/porn-social-gambling/hosts"
-    )
+    gambling = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts", # nolint: line_length_linter.
+    all = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/porn-social-gambling/hosts" # nolint: line_length_linter.
   )
 
   if (!variant %in% names(variants)) {
