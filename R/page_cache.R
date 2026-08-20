@@ -105,11 +105,14 @@ cache_get <- function(dir, url, ttl) {
   if (is.na(fetched) || difftime(Sys.time(), fetched, units = "secs") > ttl) {
     return(NULL)
   }
-  html <- tryCatch({
-    con <- gzfile(paths$html, "rt")
-    on.exit(close(con), add = TRUE)
-    paste(readLines(con, warn = FALSE), collapse = "\n")
-  }, error = function(e) NULL)
+  html <- tryCatch(
+    {
+      con <- gzfile(paths$html, "rt")
+      on.exit(close(con), add = TRUE)
+      paste(readLines(con, warn = FALSE), collapse = "\n")
+    },
+    error = function(e) NULL
+  )
   if (is.null(html)) {
     return(NULL)
   }

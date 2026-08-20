@@ -20,8 +20,10 @@ NULL
 #' @keywords internal
 #' @noRd
 rdomains_user_agent <- function() {
-  sprintf("rdomains/%s (R package; +https://github.com/themains/rdomains)",
-          utils::packageVersion("rdomains"))
+  sprintf(
+    "rdomains/%s (R package; +https://github.com/themains/rdomains)",
+    utils::packageVersion("rdomains")
+  )
 }
 
 #' Addresses that must never be fetched
@@ -95,8 +97,8 @@ check_url <- function(url, resolver = nslookup, allow_hosts = character()) {
   }
   # A domain classifier has nothing to say about a bare IP, and .onion is unreachable.
   if (grepl("^\\d+\\.\\d+\\.\\d+\\.\\d+$", host) ||
-      grepl("\\.(onion|local|internal|localhost)$", host) ||
-      !grepl(".", host, fixed = TRUE)) {
+        grepl("\\.(onion|local|internal|localhost)$", host) ||
+        !grepl(".", host, fixed = TRUE)) {
     return("invalid_domain")
   }
 
@@ -292,7 +294,7 @@ fetch_row <- function(domain, input, started,
 
 #' @keywords internal
 #' @noRd
-`%||%` <- function(x, y) if (is.null(x)) y else x
+`%||%` <- function(x, y) if (is.null(x)) y else x # nolint: object_name_linter.
 
 #' Fetch a single domain, returning one fully-populated row whatever happens
 #' @keywords internal
@@ -306,14 +308,18 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
 
   blank <- function(code, stage, http_status = NA_integer_, robots_allowed = NA,
                     source = "live") {
-    fetch_row(domain, input, started, status = "failed", stage = stage,
-              error_code = code, http_status = http_status,
-              robots_allowed = robots_allowed, source = source)
+    fetch_row(domain, input, started,
+      status = "failed", stage = stage,
+      error_code = code, http_status = http_status,
+      robots_allowed = robots_allowed, source = source
+    )
   }
 
   if (!is.null(archive_date)) {
-    recovered <- archive_fetch(domain, timeout = timeout, max_bytes = max_bytes,
-                               user_agent = user_agent, target = archive_date)
+    recovered <- archive_fetch(domain,
+      timeout = timeout, max_bytes = max_bytes,
+      user_agent = user_agent, target = archive_date
+    )
     if (is.null(recovered)) {
       return(blank("no_archive_snapshot", "fetch", source = "archive"))
     }
@@ -339,8 +345,10 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   hit <- cache_get(cache_dir, url, cache_ttl)
   if (!is.null(hit)) {
     parsed <- html_text_content(hit$html)
-    signals <- page_signals(hit$html, text = parsed$text, domain = domain,
-                            status = hit$meta$http_status)
+    signals <- page_signals(hit$html,
+      text = parsed$text, domain = domain,
+      status = hit$meta$http_status
+    )
     row <- fetch_row(
       domain, input, hit$fetched_at,
       status = hit$meta$status %||% "ok",
@@ -364,8 +372,10 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   crawl_delay <- delay
   if (obey_robots) {
     parsed_origin <- url_parse(url)
-    origin <- paste0(parsed_origin$scheme, "://", parsed_origin$hostname,
-                     if (!is.null(parsed_origin$port)) paste0(":", parsed_origin$port) else "")
+    origin <- paste0(
+      parsed_origin$scheme, "://", parsed_origin$hostname,
+      if (!is.null(parsed_origin$port)) paste0(":", parsed_origin$port) else ""
+    )
     rules <- robots_for_origin(origin, agent = "rdomains", timeout = timeout)
     if (!robots_path_allowed(rules$rules, "/")) {
       return(blank("robots_blocked", "validate", robots_allowed = FALSE))
@@ -387,18 +397,21 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   current <- url
   resp <- NULL
   for (hop in seq_len(max_redirects + 1L)) {
-    resp <- tryCatch({
-      request(current) |>
-        req_user_agent(user_agent) |>
-        req_timeout(timeout) |>
-        req_throttle(capacity = 1L, fill_time_s = crawl_delay) |>
-        req_retry(max_tries = 2, max_seconds = 30) |>
-        # Without this a 403 interstitial throws and page_signals() never sees the body --
-        # which is exactly the case we most need to classify.
-        req_error(is_error = function(resp) FALSE) |>
-        req_options(maxfilesize_large = max_bytes, followlocation = FALSE) |>
-        req_perform()
-    }, error = function(e) e)
+    resp <- tryCatch(
+      {
+        request(current) |>
+          req_user_agent(user_agent) |>
+          req_timeout(timeout) |>
+          req_throttle(capacity = 1L, fill_time_s = crawl_delay) |>
+          req_retry(max_tries = 2, max_seconds = 30) |>
+          # Without this a 403 interstitial throws and page_signals() never sees the body --
+          # which is exactly the case we most need to classify.
+          req_error(is_error = function(resp) FALSE) |>
+          req_options(maxfilesize_large = max_bytes, followlocation = FALSE) |>
+          req_perform()
+      },
+      error = function(e) e
+    )
 
     if (inherits(resp, "condition")) {
       return(blank(classify_condition(resp), "fetch", robots_allowed = TRUE))
@@ -410,8 +423,10 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
       break
     }
     if (hop > max_redirects) {
-      return(blank("too_many_redirects", "fetch", http_status = code,
-                   robots_allowed = TRUE))
+      return(blank("too_many_redirects", "fetch",
+        http_status = code,
+        robots_allowed = TRUE
+      ))
     }
     current <- url_absolute(location, current)
     chain <- c(chain, current)
@@ -431,12 +446,16 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   bytes <- nchar(body, type = "bytes")
 
   if (bytes > max_bytes) {
-    return(blank("content_too_large", "fetch", http_status = http_code,
-                 robots_allowed = TRUE))
+    return(blank("content_too_large", "fetch",
+      http_status = http_code,
+      robots_allowed = TRUE
+    ))
   }
   if (!is.na(ctype) && !grepl("html|xml", ctype, fixed = FALSE)) {
-    return(blank("content_type_rejected", "fetch", http_status = http_code,
-                 robots_allowed = TRUE))
+    return(blank("content_type_rejected", "fetch",
+      http_status = http_code,
+      robots_allowed = TRUE
+    ))
   }
 
   parsed <- html_text_content(body)
@@ -446,13 +465,19 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   state_status <- "ok"
   stage <- "process"
   if (signals$blocked) {
-    code <- "bot_blocked"; state_status <- "failed"; stage <- "fetch"
+    code <- "bot_blocked"
+    state_status <- "failed"
+    stage <- "fetch"
   } else if (http_code >= 400) {
-    code <- "http_error"; state_status <- "failed"; stage <- "fetch"
+    code <- "http_error"
+    state_status <- "failed"
+    stage <- "fetch"
   } else if (!nzchar(parsed$text)) {
-    code <- "empty_text"; state_status <- "failed"
+    code <- "empty_text"
+    state_status <- "failed"
   } else if (signals$thin && signals$page_state == "thin") {
-    code <- "thin_content"; state_status <- "failed"
+    code <- "thin_content"
+    state_status <- "failed"
   }
 
   final <- tryCatch(resp_url(resp), error = function(e) url)
@@ -480,8 +505,10 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   # allowed in is the honest response. A dead domain is deliberately not recovered this
   # way -- see R/archive.R.
   if (archive_fallback && identical(code, "bot_blocked")) {
-    recovered <- archive_fetch(domain, timeout = timeout, max_bytes = max_bytes,
-                               user_agent = user_agent)
+    recovered <- archive_fetch(domain,
+      timeout = timeout, max_bytes = max_bytes,
+      user_agent = user_agent
+    )
     if (!is.null(recovered)) {
       a_parsed <- html_text_content(recovered$html)
       a_signals <- page_signals(recovered$html, text = a_parsed$text, domain = domain)

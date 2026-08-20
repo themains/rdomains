@@ -57,7 +57,8 @@ test_that("shalla_cat warns that Shallalist is no longer published", {
   reset_vintage_warnings()
   tmp <- withr::local_tempfile(fileext = ".csv")
   utils::write.csv(
-    data.frame(domains = "example.com", category = "shopping"), tmp, row.names = FALSE
+    data.frame(domains = "example.com", category = "shopping"), tmp,
+    row.names = FALSE
   )
   expect_warning(shalla_cat("example.com", use_file = tmp), "no longer published")
 })
@@ -76,7 +77,8 @@ test_that("an unmatched domain still carries the source vintage", {
   reset_vintage_warnings()
   tmp <- withr::local_tempfile(fileext = ".csv")
   utils::write.csv(
-    data.frame(domains = "example.com", category = "shopping"), tmp, row.names = FALSE
+    data.frame(domains = "example.com", category = "shopping"), tmp,
+    row.names = FALSE
   )
   res <- suppressWarnings(shalla_cat("nowhere-at-all.invalid", use_file = tmp))
   expect_true(is.na(res$shalla_category))

@@ -11,7 +11,7 @@ test_that("openai cat validates input", {
 
 test_that("openai cat returns correct structure", {
   skip_if(identical(Sys.getenv("OPENAI_API_KEY"), ""), "OPENAI_API_KEY not set")
-  
+
   result <- openai_cat("google.com")
   expect_s3_class(result, "data.frame")
   expect_named(result, c("domain_name", "openai_category"))
@@ -21,7 +21,7 @@ test_that("openai cat returns correct structure", {
 
 test_that("openai cat handles multiple domains", {
   skip_if(identical(Sys.getenv("OPENAI_API_KEY"), ""), "OPENAI_API_KEY not set")
-  
+
   domains <- c("google.com", "facebook.com")
   result <- openai_cat(domains)
   expect_s3_class(result, "data.frame")
@@ -31,14 +31,14 @@ test_that("openai cat handles multiple domains", {
 
 test_that("openai cat preprocesses domains correctly", {
   skip_if(identical(Sys.getenv("OPENAI_API_KEY"), ""), "OPENAI_API_KEY not set")
-  
+
   result <- openai_cat("http://www.google.com")
   expect_equal(result$domain_name[1], "google.com")
 })
 
 test_that("openai cat accepts custom categories", {
   skip_if(identical(Sys.getenv("OPENAI_API_KEY"), ""), "OPENAI_API_KEY not set")
-  
+
   custom_cats <- c("search", "social", "other")
   result <- openai_cat("google.com", categories = custom_cats)
   expect_s3_class(result, "data.frame")

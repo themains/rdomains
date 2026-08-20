@@ -13,9 +13,11 @@ test_that("claude cat validates input", {
 })
 
 test_that("claude cat returns correct structure", {
-  skip_if(identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""), 
-          "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set")
-  
+  skip_if(
+    identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
+    "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"
+  )
+
   result <- claude_cat("google.com")
   expect_s3_class(result, "data.frame")
   expect_named(result, c("domain_name", "claude_category"))
@@ -24,9 +26,11 @@ test_that("claude cat returns correct structure", {
 })
 
 test_that("claude cat handles multiple domains", {
-  skip_if(identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""), 
-          "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set")
-  
+  skip_if(
+    identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
+    "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"
+  )
+
   domains <- c("google.com", "facebook.com")
   result <- claude_cat(domains)
   expect_s3_class(result, "data.frame")
@@ -35,17 +39,21 @@ test_that("claude cat handles multiple domains", {
 })
 
 test_that("claude cat preprocesses domains correctly", {
-  skip_if(identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""), 
-          "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set")
-  
+  skip_if(
+    identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
+    "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"
+  )
+
   result <- claude_cat("https://www.facebook.com")
   expect_equal(result$domain_name[1], "facebook.com")
 })
 
 test_that("claude cat accepts custom categories", {
-  skip_if(identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""), 
-          "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set")
-  
+  skip_if(
+    identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
+    "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"
+  )
+
   custom_cats <- c("search", "social", "other")
   result <- claude_cat("facebook.com", categories = custom_cats)
   expect_s3_class(result, "data.frame")

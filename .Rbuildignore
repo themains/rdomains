@@ -21,3 +21,4 @@ CLAUDE.md
 AGENTS.md
 ReadMe.md
 .github/
+^\.lintr$

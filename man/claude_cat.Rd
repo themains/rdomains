@@ -15,7 +15,8 @@ claude_cat(
 \arguments{
 \item{domains}{vector of domain names}
 
-\item{api_key}{Anthropic API key. If not provided, looks for ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable}
+\item{api_key}{Anthropic API key. If not provided, looks for the
+ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable}
 
 \item{categories}{vector of categories to classify into. If NULL, uses default web categories}
 

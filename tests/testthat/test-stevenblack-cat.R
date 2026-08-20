@@ -7,17 +7,17 @@ test_that("stevenblack_cat returns expected data structure", {
     "0.0.0.0 googleadservices.com",
     "127.0.0.1 malware-example.com"
   )
-  
+
   # Create temporary hosts file
   temp_hosts <- tempfile(fileext = ".txt")
   writeLines(mock_hosts, temp_hosts)
-  
+
   # Test function
   result <- stevenblack_cat(c("google.com", "doubleclick.net"), use_file = temp_hosts)
-  
+
   # Clean up
   unlink(temp_hosts)
-  
+
   # Check structure. The third column is the vintage of the list that produced the
   # category -- see source_vintage(). For this list it is the file's own date, because
   # Steven Black's hosts file is actively maintained.
@@ -25,27 +25,27 @@ test_that("stevenblack_cat returns expected data structure", {
   expect_equal(ncol(result), 3)
   expect_equal(names(result), c("domain", "stevenblack", "source_last_published"))
   expect_equal(nrow(result), 2)
-  
+
   # Check classifications
-  expect_equal(result$stevenblack[1], "safe")  # google.com not in blocklist
-  expect_equal(result$stevenblack[2], "ads")   # doubleclick.net classified as ads
+  expect_equal(result$stevenblack[1], "safe") # google.com not in blocklist
+  expect_equal(result$stevenblack[2], "ads") # doubleclick.net classified as ads
 })
 
 test_that("stevenblack_cat handles domain cleaning", {
   mock_hosts <- c("0.0.0.0 example.com")
   temp_hosts <- tempfile(fileext = ".txt")
   writeLines(mock_hosts, temp_hosts)
-  
+
   # Test with various domain formats
   domains <- c(
     "http://example.com",
     "https://www.example.com",
     "example.com/path"
   )
-  
+
   result <- stevenblack_cat(domains, use_file = temp_hosts)
   unlink(temp_hosts)
-  
+
   # All should be classified as blocked since they resolve to example.com
   expect_equal(sum(result$stevenblack == "blocked"), 3)
 })
@@ -66,18 +66,18 @@ test_that("stevenblack_cat handles errors appropriately", {
 
 test_that("get_stevenblack_data creates file", {
   skip_if_offline()
-  
+
   temp_dir <- tempdir()
-  
+
   # Test download (this might be slow, so we'll skip on CRAN)
   skip_on_cran()
-  
+
   # Download base variant
   result_file <- get_stevenblack_data(outdir = temp_dir, variant = "base", overwrite = TRUE)
-  
+
   expect_true(file.exists(result_file))
-  expect_true(file.size(result_file) > 1000)  # Should be a substantial file
-  
+  expect_true(file.size(result_file) > 1000) # Should be a substantial file
+
   # Clean up
   unlink(result_file)
 })
@@ -92,16 +92,16 @@ test_that("get_stevenblack_data validates variants", {
 test_that("get_stevenblack_data respects overwrite parameter", {
   temp_dir <- tempdir()
   test_file <- file.path(temp_dir, "stevenblack_hosts_base.txt")
-  
+
   # Create a dummy file
   writeLines("test", test_file)
-  
+
   # Should error without overwrite
   expect_error(
     get_stevenblack_data(outdir = temp_dir, overwrite = FALSE),
     "File already exists"
   )
-  
+
   # Clean up
   unlink(test_file)
 })
@@ -123,8 +123,10 @@ test_that("the ads label needs an ad token, not an inner substring", {
   on.exit(unlink(temp_hosts), add = TRUE)
 
   res <- stevenblack_cat(
-    c("downloaduj.pl", "gadgetproof.net", "cryptonova84trade.com",
-      "doubleclick.net", "ad.example.com", "ads-server.net"),
+    c(
+      "downloaduj.pl", "gadgetproof.net", "cryptonova84trade.com",
+      "doubleclick.net", "ad.example.com", "ads-server.net"
+    ),
     use_file = temp_hosts
   )
 
@@ -138,8 +140,10 @@ test_that("blocklist lookup is case-insensitive, as DNS is", {
   temp_hosts <- tempfile(fileext = ".txt")
   writeLines("0.0.0.0 doubleclick.net", temp_hosts)
   on.exit(unlink(temp_hosts), add = TRUE)
-  expect_equal(stevenblack_cat("DoubleClick.NET", use_file = temp_hosts)$stevenblack,
-               "ads")
+  expect_equal(
+    stevenblack_cat("DoubleClick.NET", use_file = temp_hosts)$stevenblack,
+    "ads"
+  )
 })
 
 # The list blocks hosts as written, and 34,151 of the live list's 99,278 entries carry a

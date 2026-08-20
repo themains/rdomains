@@ -92,29 +92,32 @@ robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
     return(hit)
   }
 
-  result <- tryCatch({
-    resp <- request(paste0(scheme_host, "/robots.txt")) |>
-      req_user_agent(agent) |>
-      req_timeout(timeout) |>
-      req_error(is_error = function(resp) FALSE) |>
-      req_perform()
-    status <- resp_status(resp)
-    if (status >= 500) {
-      list(rules = FALSE, crawl_delay = NA_real_, status = status)
-    } else if (status >= 400) {
-      list(rules = NULL, crawl_delay = NA_real_, status = status)
-    } else {
-      body <- resp_body_string(resp)
-      if (nchar(body, type = "bytes") > RD_ROBOTS_MAX_BYTES) {
+  result <- tryCatch(
+    {
+      resp <- request(paste0(scheme_host, "/robots.txt")) |>
+        req_user_agent(agent) |>
+        req_timeout(timeout) |>
+        req_error(is_error = function(resp) FALSE) |>
+        req_perform()
+      status <- resp_status(resp)
+      if (status >= 500) {
         list(rules = FALSE, crawl_delay = NA_real_, status = status)
+      } else if (status >= 400) {
+        list(rules = NULL, crawl_delay = NA_real_, status = status)
       } else {
-        parsed <- parse_robots(body, agent)
-        list(rules = parsed$rules, crawl_delay = parsed$crawl_delay, status = status)
+        body <- resp_body_string(resp)
+        if (nchar(body, type = "bytes") > RD_ROBOTS_MAX_BYTES) {
+          list(rules = FALSE, crawl_delay = NA_real_, status = status)
+        } else {
+          parsed <- parse_robots(body, agent)
+          list(rules = parsed$rules, crawl_delay = parsed$crawl_delay, status = status)
+        }
       }
+    },
+    error = function(e) {
+      list(rules = FALSE, crawl_delay = NA_real_, status = NA_integer_)
     }
-  }, error = function(e) {
-    list(rules = FALSE, crawl_delay = NA_real_, status = NA_integer_)
-  })
+  )
 
   result$fetched_at <- Sys.time()
   .rdomains_env[[key]] <- result

@@ -139,7 +139,8 @@ RD_UNAVAILABLE_MAX_WORDS <- 60L
 #' @noRd
 html_title <- function(html) {
   m <- str_match(html, regex("<title[^>]*>(.*?)</title>",
-                                               ignore_case = TRUE, dotall = TRUE))
+    ignore_case = TRUE, dotall = TRUE
+  ))
   if (is.na(m[1, 2])) "" else tolower(str_trim(m[1, 2]))
 }
 
@@ -151,8 +152,10 @@ html_title <- function(html) {
 #' @noRd
 first_marker <- function(lowered, markers) {
   for (vendor in names(markers)) {
-    if (any(vapply(markers[[vendor]], function(m) grepl(m, lowered, fixed = TRUE),
-                   logical(1)))) {
+    if (any(vapply(
+      markers[[vendor]], function(m) grepl(m, lowered, fixed = TRUE),
+      logical(1)
+    ))) {
       return(vendor)
     }
   }
@@ -171,7 +174,7 @@ looks_like_interstitial <- function(html, domain = "") {
     return(TRUE)
   }
   if (nzchar(domain) && identical(title, tolower(str_trim(domain))) &&
-      nchar(html) < 4000) {
+        nchar(html) < 4000) {
     return(TRUE)
   }
   nchar(html) < RD_INTERSTITIAL_MAX_BYTES &&
@@ -210,7 +213,9 @@ looks_parked <- function(text) {
   # below, so unanchored it relabels an arbitrarily long real page as a placeholder.
   if (any(vapply(RD_PARKING_SERVICES, function(s) {
     grepl(paste0("(^|[^a-z0-9-])", gsub("([.\\\\+*?^$(){}|\\[\\]])", "\\\\\\1", s)),
-          lowered, perl = TRUE)
+      lowered,
+      perl = TRUE
+    )
   }, logical(1)))) {
     return(TRUE)
   }
@@ -238,10 +243,14 @@ looks_unavailable <- function(text) {
   if (word_count(lowered) > RD_UNAVAILABLE_MAX_WORDS) {
     return(FALSE)
   }
-  any(vapply(RD_SERVER_ARTIFACTS, function(m) grepl(m, lowered, fixed = TRUE),
-             logical(1))) ||
-    any(vapply(RD_UNAVAILABLE_PHRASES, function(p) grepl(p, lowered, fixed = TRUE),
-               logical(1)))
+  any(vapply(
+    RD_SERVER_ARTIFACTS, function(m) grepl(m, lowered, fixed = TRUE),
+    logical(1)
+  )) ||
+    any(vapply(
+      RD_UNAVAILABLE_PHRASES, function(p) grepl(p, lowered, fixed = TRUE),
+      logical(1)
+    ))
 }
 
 #' Count whitespace-separated words
@@ -284,9 +293,11 @@ word_count <- function(x) {
 #' page_signals("<html><body>This domain is for sale. Inquire now.</body></html>")
 #'
 #' # A real page that merely embeds reCAPTCHA is not blocked
-#' page_signals(paste0("<html><title>Reddit</title><body>",
-#'                     paste(rep("real discussion content", 200), collapse = " "),
-#'                     "<script src='recaptcha/api.js'></script></body></html>"))
+#' page_signals(paste0(
+#'   "<html><title>Reddit</title><body>",
+#'   paste(rep("real discussion content", 200), collapse = " "),
+#'   "<script src='recaptcha/api.js'></script></body></html>"
+#' ))
 page_signals <- function(html, text = NULL, domain = "", status = NULL) {
   assert_character(html, len = 1, any.missing = FALSE)
   if (is.null(text)) {
@@ -301,8 +312,8 @@ page_signals <- function(html, text = NULL, domain = "", status = NULL) {
   reason <- if (blocked) "strong anti-bot marker" else NA_character_
 
   if (!blocked && !is.null(status) && !is.na(status) &&
-      as.integer(status) %in% RD_BLOCK_STATUSES &&
-      looks_like_interstitial(html, domain)) {
+        as.integer(status) %in% RD_BLOCK_STATUSES &&
+        looks_like_interstitial(html, domain)) {
     blocked <- TRUE
     vendor <- "status"
     reason <- paste0("HTTP ", status, " with an interstitial body")

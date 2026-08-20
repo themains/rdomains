@@ -1,5 +1,4 @@
 test_that("Adult ML1 cat", {
-
   report <- adult_ml1_cat("http://www.google.com")
   expect_s3_class(report, "data.frame")
 })

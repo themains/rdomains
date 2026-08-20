@@ -20,9 +20,7 @@
 #' @examples \dontrun{
 #' shalla_cat(domains = "http://www.google.com")
 #' }
-
 shalla_cat <- function(domains = NULL, use_file = NULL) {
-
   validate_domains(domains)
   c_domains <- clean_domains(domains)
 

@@ -1,9 +1,11 @@
 test_that("private and special addresses are never fetchable", {
   # Rejecting these is what stops a domain lookup from becoming a probe of the caller's
   # own network. 169.254.169.254 is the cloud metadata endpoint.
-  for (ip in c("127.0.0.1", "10.1.2.3", "192.168.1.1", "169.254.169.254",
-               "172.16.0.1", "100.64.0.1", "0.0.0.0", "224.0.0.1",
-               "::1", "fe80::1", "fc00::1")) {
+  for (ip in c(
+    "127.0.0.1", "10.1.2.3", "192.168.1.1", "169.254.169.254",
+    "172.16.0.1", "100.64.0.1", "0.0.0.0", "224.0.0.1",
+    "::1", "fe80::1", "fc00::1"
+  )) {
     expect_false(is_global_ip(ip), info = ip)
   }
   for (ip in c("8.8.8.8", "1.1.1.1", "93.184.216.34", "2001:4860:4860::8888")) {
@@ -56,7 +58,8 @@ test_that("conditions map to stable codes by class, not message text", {
 test_that("robots.txt parsing follows RFC 9309", {
   txt <- paste(
     "User-agent: *", "Disallow: /private", "Allow: /private/public",
-    "Crawl-delay: 2", "", "User-agent: badbot", "Disallow: /", sep = "\n"
+    "Crawl-delay: 2", "", "User-agent: badbot", "Disallow: /",
+    sep = "\n"
   )
   p <- parse_robots(txt, "rdomains")
   expect_equal(p$crawl_delay, 2)
@@ -73,7 +76,7 @@ test_that("robots.txt parsing follows RFC 9309", {
 test_that("robots wildcards and end-anchors work", {
   p <- parse_robots("User-agent: *\nDisallow: /*.pdf$\nDisallow: /tmp/")
   expect_false(robots_path_allowed(p$rules, "/a.pdf"))
-  expect_true(robots_path_allowed(p$rules, "/a.pdf?x=1"))  # $ anchors the end
+  expect_true(robots_path_allowed(p$rules, "/a.pdf?x=1")) # $ anchors the end
   expect_false(robots_path_allowed(p$rules, "/tmp/x"))
   expect_true(robots_path_allowed(p$rules, "/ok.html"))
 })
@@ -137,7 +140,8 @@ test_that("every row has the same schema and types, whatever happened", {
   # the cause or silently coerces. This is what caught http_status becoming a character.
   started <- Sys.time()
   ok <- fetch_row(
-    "a.com", "a.com", started, status = "ok", stage = "process",
+    "a.com", "a.com", started,
+    status = "ok", stage = "process",
     http_status = 200L, final_url = "https://a.com", content_bytes = 100L,
     parsed = list(title = "T", description = NA_character_, lang = "en", text = "words"),
     signals = list(n_tokens = 5L, page_state = "content", block_vendor = NA_character_),
@@ -196,7 +200,9 @@ test_that("a robots.txt group is matched on the whole product token", {
 
 test_that("an unrelated named group does not shadow the wildcard group", {
   txt <- paste("User-agent: main", "Disallow: /", "",
-               "User-agent: *", "Allow: /", sep = "\n")
+    "User-agent: *", "Allow: /",
+    sep = "\n"
+  )
   expect_true(robots_path_allowed(parse_robots(txt, "rdomains")$rules, "/anything"))
 })
 

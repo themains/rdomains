@@ -33,46 +33,49 @@ NULL
 #' @keywords internal
 #' @noRd
 archive_snapshot <- function(domain, timeout = 30, target = NULL) {
-  tryCatch({
-    resp <- request("https://web.archive.org/cdx/search/cdx") |>
-      req_url_query(
-        url = domain, output = "json", filter = "statuscode:200",
-        fl = "timestamp,original",
-        # Without a target, -1 asks for the last row: the most recent capture. With one,
-        # take the first capture at or after the date -- CDX has no "closest" operator,
-        # and `from=` plus limit 1 is the cheap equivalent.
-        !!!(if (is.null(target)) list(limit = -1L) else list(from = target, limit = 1L))
-      ) |>
-      req_user_agent(rdomains_user_agent()) |>
-      req_timeout(timeout) |>
-      # The CDX endpoint is intermittent and rate-limits. Without retries the lookup
-      # silently returns NULL and the fallback simply does not happen -- the feature
-      # looks broken at random. The sibling package configures three retries against
-      # archive.org for the same reason.
-      req_retry(max_tries = 3, max_seconds = 60) |>
-      req_error(is_error = function(resp) FALSE) |>
-      req_perform()
+  tryCatch(
+    {
+      resp <- request("https://web.archive.org/cdx/search/cdx") |>
+        req_url_query(
+          url = domain, output = "json", filter = "statuscode:200",
+          fl = "timestamp,original",
+          # Without a target, -1 asks for the last row: the most recent capture. With one,
+          # take the first capture at or after the date -- CDX has no "closest" operator,
+          # and `from=` plus limit 1 is the cheap equivalent.
+          !!!(if (is.null(target)) list(limit = -1L) else list(from = target, limit = 1L))
+        ) |>
+        req_user_agent(rdomains_user_agent()) |>
+        req_timeout(timeout) |>
+        # The CDX endpoint is intermittent and rate-limits. Without retries the lookup
+        # silently returns NULL and the fallback simply does not happen -- the feature
+        # looks broken at random. The sibling package configures three retries against
+        # archive.org for the same reason.
+        req_retry(max_tries = 3, max_seconds = 60) |>
+        req_error(is_error = function(resp) FALSE) |>
+        req_perform()
 
-    if (resp_status(resp) != 200L) {
-      return(NULL)
-    }
-    rows <- fromJSON(resp_body_string(resp))
-    if (is.null(rows) || !length(rows) || nrow(rows) < 1) {
-      return(NULL)
-    }
-    last <- rows[nrow(rows), ]
-    timestamp <- as.character(last[[1]])
-    original <- as.character(last[[2]])
-    if (!nzchar(timestamp) || !nzchar(original)) {
-      return(NULL)
-    }
-    list(
-      # `id_` returns the raw capture without the Wayback toolbar, which would otherwise
-      # be extracted as page text.
-      url = paste0("https://web.archive.org/web/", timestamp, "id_/", original),
-      timestamp = timestamp
-    )
-  }, error = function(e) NULL)
+      if (resp_status(resp) != 200L) {
+        return(NULL)
+      }
+      rows <- fromJSON(resp_body_string(resp))
+      if (is.null(rows) || !length(rows) || nrow(rows) < 1) {
+        return(NULL)
+      }
+      last <- rows[nrow(rows), ]
+      timestamp <- as.character(last[[1]])
+      original <- as.character(last[[2]])
+      if (!nzchar(timestamp) || !nzchar(original)) {
+        return(NULL)
+      }
+      list(
+        # `id_` returns the raw capture without the Wayback toolbar, which would otherwise
+        # be extracted as page text.
+        url = paste0("https://web.archive.org/web/", timestamp, "id_/", original),
+        timestamp = timestamp
+      )
+    },
+    error = function(e) NULL
+  )
 }
 
 #' Fetch a blocked page from the archive
@@ -92,23 +95,26 @@ archive_fetch <- function(domain, timeout = 45, max_bytes = 10 * 1024^2,
   if (is.null(snapshot)) {
     return(NULL)
   }
-  tryCatch({
-    resp <- request(snapshot$url) |>
-      req_user_agent(user_agent) |>
-      req_timeout(timeout) |>
-      req_retry(max_tries = 3, max_seconds = 60) |>
-      req_error(is_error = function(resp) FALSE) |>
-      req_options(maxfilesize_large = max_bytes) |>
-      req_perform()
-    if (resp_status(resp) != 200L) {
-      return(NULL)
-    }
-    body <- resp_body_string(resp)
-    if (!nzchar(body)) {
-      return(NULL)
-    }
-    list(html = body, timestamp = snapshot$timestamp, url = snapshot$url)
-  }, error = function(e) NULL)
+  tryCatch(
+    {
+      resp <- request(snapshot$url) |>
+        req_user_agent(user_agent) |>
+        req_timeout(timeout) |>
+        req_retry(max_tries = 3, max_seconds = 60) |>
+        req_error(is_error = function(resp) FALSE) |>
+        req_options(maxfilesize_large = max_bytes) |>
+        req_perform()
+      if (resp_status(resp) != 200L) {
+        return(NULL)
+      }
+      body <- resp_body_string(resp)
+      if (!nzchar(body)) {
+        return(NULL)
+      }
+      list(html = body, timestamp = snapshot$timestamp, url = snapshot$url)
+    },
+    error = function(e) NULL
+  )
 }
 
 #' Turn a Wayback timestamp into a date
@@ -122,5 +128,6 @@ archive_date <- function(timestamp) {
     return(NA_character_)
   }
   paste(substr(timestamp, 1, 4), substr(timestamp, 5, 6), substr(timestamp, 7, 8),
-        sep = "-")
+    sep = "-"
+  )
 }

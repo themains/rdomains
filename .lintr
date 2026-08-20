@@ -1,6 +1,8 @@
 linters: linters_with_defaults(
-    line_length_linter(100),
-    object_name_linter = NULL,
-    cyclocomp_linter = NULL
+    line_length_linter(100L),
+    object_name_linter(styles = c("snake_case", "dotted.case", "SNAKE_CASE"))
   )
-exclusions: list("tests/testthat.R", "data-raw", "revdep", "docs")
+exclusions: list(
+    "R/RcppExports.R",
+    "tests/testthat/_fixtures"
+  )

@@ -20,7 +20,7 @@ The function retrieves domain analysis results including categories from various
 services. Not all services will have categories for all domains.
 }
 \details{
-Get the API Access Key from \url{https://www.virustotal.com/}. Either pass the API Key to the function
+Get the API Access Key from \url{https://www.virustotal.com/}. Either pass the API Key to the function # nolint: line_length_linter.
 or set the environmental variable: \code{VirustotalToken}. Environment variables persist within
 a R session.
 }

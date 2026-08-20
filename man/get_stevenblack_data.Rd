@@ -7,9 +7,11 @@
 get_stevenblack_data(outdir = "./", variant = "base", overwrite = FALSE)
 }
 \arguments{
-\item{outdir}{Optional; folder to which you want to save the file; Default is current directory}
+\item{outdir}{Optional; folder to save the file in. Default is the
+current directory}
 
-\item{variant}{Optional; which variant to download. Options: "base", "porn", "social", "gambling", "all"}
+\item{variant}{Optional; which variant to download. Options: "base",
+"porn", "social", "gambling", "all"}
 
 \item{overwrite}{Optional; default is FALSE. If TRUE, the file is overwritten.}
 }

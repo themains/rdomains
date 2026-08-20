@@ -35,7 +35,8 @@ test_that("a corrupt sidecar is a miss, not an error", {
   # The cache must never be the reason a run fails.
   dir <- withr::local_tempdir()
   cache_put(dir, "https://a.com", "<html>x</html>",
-            meta = list(fetched_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")))
+    meta = list(fetched_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"))
+  )
   paths <- cache_paths(dir, cache_key("https://a.com"))
   writeLines("{not valid json", paths$meta)
   expect_null(suppressWarnings(cache_get(dir, "https://a.com", ttl = 86400)))
@@ -51,7 +52,8 @@ test_that("cache_clear empties the cache and reports what it removed", {
   dir <- withr::local_tempdir()
   for (u in c("https://a.com", "https://b.com")) {
     cache_put(dir, u, "<html>x</html>",
-              meta = list(fetched_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")))
+      meta = list(fetched_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"))
+    )
   }
   expect_equal(cache_clear(dir), 2L)
   expect_null(cache_get(dir, "https://a.com", ttl = 86400))
