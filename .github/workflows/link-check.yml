@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   links:
-    uses: gojiplus/r-canon/.github/workflows/reusable-link-check.yml@v1
+    uses: gojiplus/r-canon/.github/workflows/reusable-link-check.yml@v2
     with:
       # An API endpoint that answers 401 without a key, and two publishers
       # that answer 403 to anything that looks automated. All three are
