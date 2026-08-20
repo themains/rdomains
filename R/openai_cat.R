@@ -19,18 +19,17 @@ classify_domain_openai <- function(domain, categories, model, api_key) {
   )
 
   result <- tryCatch({
-    response <- httr::POST(
-      url = "https://api.openai.com/v1/chat/completions",
-      httr::add_headers(
-        "Authorization" = paste("Bearer", api_key),
-        "Content-Type" = "application/json"
-      ),
-      body = jsonlite::toJSON(request_body, auto_unbox = TRUE),
-      encode = "raw"
-    )
+    response <- request("https://api.openai.com/v1/chat/completions") |>
+      req_headers_redacted(Authorization = paste("Bearer", api_key)) |>
+      req_body_json(request_body, auto_unbox = TRUE) |>
+      req_error(is_error = function(resp) FALSE) |>
+      req_perform()
 
-    if (status_code(response) == 200) {
-      result <- fromJSON(content(response, "text", encoding = "UTF-8"))
+    if (resp_status(response) == 200) {
+      # fromJSON() rather than resp_body_json(): the response is indexed as a
+      # data frame below, which needs jsonlite's simplification. resp_body_json()
+      # does not simplify by default and would return a list.
+      result <- fromJSON(resp_body_string(response))
       category <- str_trim(result$choices[1, ]$message$content)
 
       if (category %in% categories) {
@@ -39,7 +38,7 @@ classify_domain_openai <- function(domain, categories, model, api_key) {
         "other"
       }
     } else {
-      cli_warn("API call failed for domain {domain} - Status: {status_code(response)}")
+      cli_warn("API call failed for domain {domain} - Status: {resp_status(response)}")
       NA_character_
     }
   }, error = function(e) {

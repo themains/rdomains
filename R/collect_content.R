@@ -304,17 +304,18 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   started <- Sys.time()
   url <- request_url(input, domain)
 
-  blank <- function(code, stage, http_status = NA_integer_, robots_allowed = NA) {
+  blank <- function(code, stage, http_status = NA_integer_, robots_allowed = NA,
+                    source = "live") {
     fetch_row(domain, input, started, status = "failed", stage = stage,
               error_code = code, http_status = http_status,
-              robots_allowed = robots_allowed)
+              robots_allowed = robots_allowed, source = source)
   }
 
   if (!is.null(archive_date)) {
     recovered <- archive_fetch(domain, timeout = timeout, max_bytes = max_bytes,
                                user_agent = user_agent, target = archive_date)
     if (is.null(recovered)) {
-      return(blank("no_archive_snapshot", "fetch"))
+      return(blank("no_archive_snapshot", "fetch", source = "archive"))
     }
     a_parsed <- html_text_content(recovered$html)
     a_signals <- page_signals(recovered$html, text = a_parsed$text, domain = domain)
