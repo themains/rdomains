@@ -1,7 +1,7 @@
 test_that("source_vintage lists every source", {
   v <- source_vintage()
   expect_s3_class(v, "data.frame")
-  expect_setequal(v$key, c("shalla", "dmoz", "stevenblack", "uni"))
+  expect_setequal(v$key, c("shalla", "dmoz", "ut1", "stevenblack", "uni"))
   expect_true(all(c("source", "last_published", "status", "note") %in% names(v)))
 })
 
@@ -29,6 +29,14 @@ test_that("maintained sources never warn", {
   reset_vintage_warnings()
   expect_silent(warn_source_vintage("stevenblack"))
   expect_silent(warn_source_vintage("uni"))
+  expect_silent(warn_source_vintage("ut1"))
+})
+
+test_that("Shallalist points at its maintained successor", {
+  # The point of naming it: shalla_cat() answers from a list that stopped in 2022, and
+  # ut1_cat() answers from one updated continuously.
+  expect_match(source_vintage("shalla")$successor, "UT-Capitole")
+  expect_equal(source_vintage("ut1")$status, "maintained")
 })
 
 test_that("shalla_cat reports the vintage of the label it returns", {

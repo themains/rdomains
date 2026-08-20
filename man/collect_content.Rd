@@ -8,13 +8,16 @@ collect_content(
   domains = NULL,
   delay = 1,
   timeout = 10,
-  max_bytes = 2 * 1024^2,
+  max_bytes = 10 * 1024^2,
   obey_robots = TRUE,
   max_crawl_delay = 30,
   max_redirects = 5,
   cache_dir = NULL,
   cache_ttl = 7 * 86400,
   cache_max_size = 1024^3,
+  allow_hosts = character(),
+  archive_fallback = TRUE,
+  archive_date = NULL,
   user_agent = rdomains_user_agent()
 )
 }
@@ -26,7 +29,10 @@ this upward.}
 
 \item{timeout}{Per-request timeout, seconds.}
 
-\item{max_bytes}{Cap on the response body actually read.}
+\item{max_bytes}{Cap on the response body actually read. The default matches
+piedomains' 10 MB. A smaller cap looks prudent and is not: cnn.com's homepage
+alone is roughly 6 MB, so a 2 MB limit rejects major news sites as
+`content_too_large` while they return HTTP 200.}
 
 \item{obey_robots}{Whether to fetch and honour robots.txt. Turning this off is
 discouraged and is your responsibility, not the package's.}
@@ -44,6 +50,21 @@ into a cache that does.}
 \item{cache_ttl}{Seconds a cached page stays fresh.}
 
 \item{cache_max_size}{Prune the cache above this many bytes, oldest first.}
+
+\item{allow_hosts}{Hosts exempt from the private-address checks, by exact name. Only
+the hosts named are exempt, so a redirect elsewhere is still refused. Intended for
+testing against a local server.}
+
+\item{archive_fallback}{When a host serves an anti-bot interstitial, try the
+Internet Archive's most recent capture. Rows recovered this way carry
+`source = "archive"` and a `snapshot_timestamp`, so the vintage is never
+hidden. Dead domains are deliberately *not* recovered this way.}
+
+\item{archive_date}{Fetch each domain as it was on this date (`"YYYYMMDD"`) from the
+Internet Archive instead of fetching it live. This is how you ask what a domain
+*used to be* -- and, set against a live run, how you measure whether a label has gone
+stale. Rows carry `source = "archive"` and the realised `snapshot_timestamp`, which
+is the capture actually found and not necessarily the date you asked for.}
 
 \item{user_agent}{Override the identifying user-agent.}
 }

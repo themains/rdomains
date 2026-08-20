@@ -205,8 +205,13 @@ is_thin <- function(text, min_tokens = 30L) {
 #' @noRd
 looks_parked <- function(text) {
   lowered <- tolower(text)
-  if (any(vapply(RD_PARKING_SERVICES, function(s) grepl(s, lowered, fixed = TRUE),
-                 logical(1)))) {
+  # The service name has to start a name, not sit inside one: "dan.com" is a substring of
+  # "jordan.com" and "sedo.com" of "cassedo.com". This check runs before the length guard
+  # below, so unanchored it relabels an arbitrarily long real page as a placeholder.
+  if (any(vapply(RD_PARKING_SERVICES, function(s) {
+    grepl(paste0("(^|[^a-z0-9-])", gsub("([.\\\\+*?^$(){}|\\[\\]])", "\\\\\\1", s)),
+          lowered, perl = TRUE)
+  }, logical(1)))) {
     return(TRUE)
   }
   # A phrase alone is not enough: length separates a placeholder from a shop.

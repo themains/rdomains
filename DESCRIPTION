@@ -32,12 +32,16 @@ Imports:
     cli (>= 3.6.0),
     checkmate (>= 2.3.0),
     glue (>= 1.6.0),
-    readr (>= 2.1.0)
+    readr (>= 2.1.0),
+    spiderbar,
+    ipaddress
 Suggests:
     testthat,
     rmarkdown,
     knitr (>= 1.11),
-    withr
+    withr,
+    webfakes,
+    reticulate
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8

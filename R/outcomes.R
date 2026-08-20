@@ -41,6 +41,7 @@ RD_ERROR_CODES <- tribble(
   "content_type_rejected", "fetch",    FALSE, "Response was not HTML.",
   "content_too_large",     "fetch",    FALSE, "Body exceeded the byte cap.",
   "bot_blocked",           "fetch",    FALSE, "An anti-bot interstitial was served.",
+  "no_archive_snapshot",   "fetch",    FALSE, "No archived capture for the requested date.",
   "too_many_redirects",    "fetch",    FALSE, "Redirect chain exceeded max_redirects.",
   "empty_text",            "process",  FALSE, "No text could be extracted.",
   "thin_content",          "process",  FALSE, "Below the token floor for an honest label.",

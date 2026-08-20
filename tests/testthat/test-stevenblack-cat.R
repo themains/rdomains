@@ -105,3 +105,55 @@ test_that("get_stevenblack_data respects overwrite parameter", {
   # Clean up
   unlink(test_file)
 })
+# The category is derived from keywords in the domain name, and "ad" is a substring of
+# "trade", "download", "gadget", "espadrilles" and "nokiadns". Against the live list
+# (99,278 blocked hosts) an unanchored "ad" labels 13,423 hosts "ads", of which 10,581
+# (78.8%) contain no ad token at all.
+test_that("the ads label needs an ad token, not an inner substring", {
+  mock_hosts <- c(
+    "0.0.0.0 downloaduj.pl",
+    "0.0.0.0 gadgetproof.net",
+    "0.0.0.0 cryptonova84trade.com",
+    "0.0.0.0 doubleclick.net",
+    "0.0.0.0 ad.example.com",
+    "0.0.0.0 ads-server.net"
+  )
+  temp_hosts <- tempfile(fileext = ".txt")
+  writeLines(mock_hosts, temp_hosts)
+  on.exit(unlink(temp_hosts), add = TRUE)
+
+  res <- stevenblack_cat(
+    c("downloaduj.pl", "gadgetproof.net", "cryptonova84trade.com",
+      "doubleclick.net", "ad.example.com", "ads-server.net"),
+    use_file = temp_hosts
+  )
+
+  expect_equal(
+    res$stevenblack,
+    c("blocked", "blocked", "blocked", "ads", "ads", "ads")
+  )
+})
+
+test_that("blocklist lookup is case-insensitive, as DNS is", {
+  temp_hosts <- tempfile(fileext = ".txt")
+  writeLines("0.0.0.0 doubleclick.net", temp_hosts)
+  on.exit(unlink(temp_hosts), add = TRUE)
+  expect_equal(stevenblack_cat("DoubleClick.NET", use_file = temp_hosts)$stevenblack,
+               "ads")
+})
+
+# The list blocks hosts as written, and 34,151 of the live list's 99,278 entries carry a
+# "www." that clean_domains() strips; 1,870 of those have no bare counterpart. Looking up
+# only the bare form reports a blocked host as safe -- the harmful direction for a
+# blocklist.
+test_that("a host blocked only in its www. form is not reported safe", {
+  temp_hosts <- tempfile(fileext = ".txt")
+  writeLines(c("0.0.0.0 www.ads.example.com", "0.0.0.0 bare-example.net"), temp_hosts)
+  on.exit(unlink(temp_hosts), add = TRUE)
+
+  res <- stevenblack_cat(
+    c("www.ads.example.com", "ads.example.com", "bare-example.net", "not-listed.org"),
+    use_file = temp_hosts
+  )
+  expect_equal(res$stevenblack, c("ads", "ads", "blocked", "safe"))
+})

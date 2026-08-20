@@ -7,6 +7,41 @@
   (`cache_max_size`), and a corrupt entry is a miss rather than an error.
   Nothing persists past the session unless you pass `rdomains_cache_dir()`.
 - New `rdomains_cache_dir()` and `cache_clear()`.
+- `collect_content()` and `pie_cat()` take an `archive_date`, fetching each domain as it
+  was on that date rather than as it is now. Set against a live run, that is how you
+  measure whether a label has gone stale -- cnn.com classifies as `news` from a 2020
+  capture and `news` today, at 0.966 and 0.709 confidence. Rows carry the *realised*
+  `snapshot_timestamp`, which is the capture found and rarely the date asked for.
+- `collect_content()` recovers pages from the Internet Archive when a host serves an
+  anti-bot interstitial -- detection plus a fallback rather than an evasion arms race.
+  Recovered rows carry `source = "archive"` and a `snapshot_timestamp`, so the vintage is
+  never hidden. A domain that no longer resolves is deliberately **not** recovered this
+  way: answering "what was this" while looking like "what is this" is the staleness this
+  package exists to surface.
+- New `pie_cat()`: fetches a domain's homepage and classifies its **current** content
+  with the piedomains model, rather than looking the domain up in a list written years
+  ago. It reaches the model through the Python package via `reticulate`, so the four
+  fragile pieces of the model input -- the domain prefix, temperature scaling, label
+  projection and the text cleaner -- stay on the Python side rather than becoming a
+  second place they can drift. `parked` and `unavailable` pages are labelled from the
+  page itself and cost no model call.
+- `collect_content()`'s `max_bytes` default is now 10 MB, matching piedomains. At 2 MB
+  it rejected cnn.com -- roughly 6 MB of homepage -- as `content_too_large` while the
+  server returned 200.
+- New `ut1_cat()` and `get_ut1_data()`: the UT-Capitole blacklists, the **maintained
+  successor to Shallalist**. Where `shalla_cat()` answers from a list that stopped in
+  January 2022, this one is updated continuously. Categories are UT1's own and are
+  reported verbatim, with `ut1_usage` saying whether UT1 maintains the list for blocking
+  or for allowing -- both describe content.
+- `collect_content()` honours an explicit `http://` or `https://` in the input, keeping
+  its port and path. Forcing `https://` meant http-only hosts were unreachable.
+- An oversized response is now reported as `content_too_large` rather than
+  `connection_error`. curl aborts the transfer, so the limit surfaced as a request
+  failure -- and `connection_error` is retryable, so callers would have retried a
+  too-large page forever.
+- End-to-end tests run against a real local HTTP server (`webfakes`), covering redirects
+  to private addresses, robots.txt refusal, oversized bodies, bot walls, and whether the
+  cache actually prevents a second request.
 
 # rdomains 0.5.0
 

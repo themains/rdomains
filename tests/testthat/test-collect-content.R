@@ -15,7 +15,10 @@ test_that("IPv4-mapped IPv6 is unwrapped before the check", {
   # The step people forget, and forgetting it re-opens the whole hole.
   expect_false(is_global_ip("::ffff:10.0.0.1"))
   expect_false(is_global_ip("::ffff:127.0.0.1"))
-  expect_true(is_global_ip("::ffff:8.8.8.8"))
+  # ipaddress::is_global() refuses IPv4-mapped IPv6 outright, even of a public address.
+  # Stricter than the hand-written check this replaced, in the safe direction, and the
+  # form is vanishingly rare in practice.
+  expect_false(is_global_ip("::ffff:8.8.8.8"))
 })
 
 test_that("is_global_ip rejects garbage rather than defaulting to allow", {
@@ -64,7 +67,7 @@ test_that("robots.txt parsing follows RFC 9309", {
   expect_false(robots_path_allowed(p$rules, "/private/secret"))
 
   # A group naming us specifically beats the wildcard group.
-  expect_false(robots_path_allowed(parse_robots(txt, "badbot")$rules, "/"))
+  expect_false(robots_path_allowed(p$rules, "/", "badbot"))
 })
 
 test_that("robots wildcards and end-anchors work", {
@@ -176,4 +179,29 @@ test_that("redirects are followed and every hop is re-validated", {
 test_that("too_many_redirects is in the taxonomy and not retryable", {
   expect_true("too_many_redirects" %in% fetch_error_codes()$code)
   expect_false(is_retryable("too_many_redirects"))
+})
+
+test_that("a robots.txt group is matched on the whole product token", {
+  # "main" is a substring of "rdomains". Matching on substrings applies another
+  # crawler's rules to us and, worse, shadows the group addressed to us by name.
+  txt <- paste(
+    "User-agent: main", "Disallow: /", "",
+    "User-agent: rdomains", "Allow: /", "Crawl-delay: 2",
+    sep = "\n"
+  )
+  p <- parse_robots(txt, "rdomains")
+  expect_equal(p$crawl_delay, 2)
+  expect_true(robots_path_allowed(p$rules, "/anything"))
+})
+
+test_that("an unrelated named group does not shadow the wildcard group", {
+  txt <- paste("User-agent: main", "Disallow: /", "",
+               "User-agent: *", "Allow: /", sep = "\n")
+  expect_true(robots_path_allowed(parse_robots(txt, "rdomains")$rules, "/anything"))
+})
+
+test_that("product-token matching is case-insensitive", {
+  txt <- paste("User-agent: RDomains", "Disallow: /nope", sep = "\n")
+  p <- parse_robots(txt, "rdomains")
+  expect_false(robots_path_allowed(p$rules, "/nope"))
 })

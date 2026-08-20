@@ -42,7 +42,7 @@ not_news <- function(url_list = NULL) {
   )
 
   tibble(
-    url_list = url_list,
+    url = url_list,
     not_news = str_detect(url_list, stringr::regex(soft_news_pattern, ignore_case = TRUE)),
     news = str_detect(url_list, stringr::regex(hard_news_pattern, ignore_case = TRUE))
   )
