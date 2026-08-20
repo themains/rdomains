@@ -1,7 +1,7 @@
 #' Get Category from University Domain List
 #'
 #' Fetches university domain json from:
-#' \url{https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json}
+#' \url{https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json} # nolint: line_length_linter.
 #'
 #' @param domains vector of domain names
 #'
@@ -12,15 +12,15 @@
 #' @examples \dontrun{
 #' uni_cat(domains = "http://www.google.com")
 #' }
-
 uni_cat <- function(domains = NULL) {
-
   validate_domains(domains)
   c_domains <- clean_domains(domains)
 
-  uni_list <- fromJSON(paste0("https://raw.githubusercontent.com/Hipo/",
-                              "university-domains-list/master/",
-                              "world_universities_and_domains.json"))
+  # One line on purpose: split across literals, the link checker only ever
+  # sees the first fragment, which 404s.
+  uni_list <- fromJSON(
+    "https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json" # nolint: line_length_linter.
+  )
 
   # `domains` is a list column -- 281 of the list's 10,256 universities give more than
   # one host. match() would coerce it with as.character(), turning a two-element entry

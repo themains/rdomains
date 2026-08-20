@@ -39,9 +39,11 @@ page_signals("<html><title>Just a moment...</title><body>cf_chl_opt</body></html
 page_signals("<html><body>This domain is for sale. Inquire now.</body></html>")
 
 # A real page that merely embeds reCAPTCHA is not blocked
-page_signals(paste0("<html><title>Reddit</title><body>",
-                    paste(rep("real discussion content", 200), collapse = " "),
-                    "<script src='recaptcha/api.js'></script></body></html>"))
+page_signals(paste0(
+  "<html><title>Reddit</title><body>",
+  paste(rep("real discussion content", 200), collapse = " "),
+  "<script src='recaptcha/api.js'></script></body></html>"
+))
 }
 \seealso{
 [fetch_error_codes()] for how these map onto run outcomes.

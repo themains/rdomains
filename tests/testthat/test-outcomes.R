@@ -13,10 +13,12 @@ test_that("the codes match piedomains verbatim", {
   # These strings are a shared public contract across the two packages. Changing one
   # silently breaks aggregation across them.
   codes <- fetch_error_codes()$code
-  shared <- c("invalid_domain", "dns_error", "connection_error", "timeout",
-              "http_error", "robots_blocked", "content_type_rejected",
-              "content_too_large", "empty_text", "bot_blocked", "thin_content",
-              "unknown")
+  shared <- c(
+    "invalid_domain", "dns_error", "connection_error", "timeout",
+    "http_error", "robots_blocked", "content_type_rejected",
+    "content_too_large", "empty_text", "bot_blocked", "thin_content",
+    "unknown"
+  )
   expect_true(all(shared %in% codes))
 })
 

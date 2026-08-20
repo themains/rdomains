@@ -65,7 +65,11 @@ html_text_content <- function(html) {
   }
 
   title <- first_text(doc, "//title")
-  description <- first_attr(doc, "//meta[translate(@name,'DESCRIPTION','description')='description']", "content")
+  description <- first_attr(
+    doc,
+    "//meta[translate(@name,'DESCRIPTION','description')='description']",
+    "content"
+  )
   lang <- first_attr(doc, "/html", "lang")
 
   body <- xml_find_first(doc, "//body")

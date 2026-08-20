@@ -26,9 +26,7 @@
 #' stevenblack_cat("doubleclick.net")
 #' stevenblack_cat(c("google.com", "googleadservices.com", "malware-example.com"))
 #' }
-
 stevenblack_cat <- function(domain = NULL, use_file = NULL) {
-
   validate_domains(domain, "domain")
   clean_doms <- clean_domains(domain)
 
@@ -41,18 +39,21 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
       hosts_file <- cached
     } else {
       hosts_file <- tempfile(fileext = ".hosts")
-      tryCatch({
-        cli_inform("Downloading Steven Black's hosts file...")
-        curl::curl_download(
-          "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-          hosts_file
-        )
-      }, error = function(e) {
-        cli_abort(c(
-          "Failed to download hosts file",
-          "x" = e$message
-        ))
-      })
+      tryCatch(
+        {
+          cli_inform("Downloading Steven Black's hosts file...")
+          curl::curl_download(
+            "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+            hosts_file
+          )
+        },
+        error = function(e) {
+          cli_abort(c(
+            "Failed to download hosts file",
+            "x" = e$message
+          ))
+        }
+      )
       .rdomains_env$stevenblack_file <- hosts_file
       downloaded <- TRUE
     }
@@ -66,14 +67,17 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
     error = function(e) NA_character_
   )
 
-  hosts_lines <- tryCatch({
-    readLines(hosts_file, warn = FALSE)
-  }, error = function(e) {
-    cli_abort(c(
-      "Failed to read hosts file",
-      "x" = e$message
-    ))
-  })
+  hosts_lines <- tryCatch(
+    {
+      readLines(hosts_file, warn = FALSE)
+    },
+    error = function(e) {
+      cli_abort(c(
+        "Failed to read hosts file",
+        "x" = e$message
+      ))
+    }
+  )
 
   blocked_pattern <- "^(0\\.0\\.0\\.0|127\\.0\\.0\\.1)\\s+"
   blocked_lines <- hosts_lines[str_detect(hosts_lines, blocked_pattern)]
@@ -103,9 +107,15 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
     category <- if (is_blocked(clean_doms[i])) {
       if (str_detect(clean_doms[i], stringr::regex(ads_pattern, ignore_case = TRUE))) {
         "ads"
-      } else if (str_detect(clean_doms[i], stringr::regex("malware|virus|trojan|phishing", ignore_case = TRUE))) {
+      } else if (str_detect(
+        clean_doms[i],
+        stringr::regex("malware|virus|trojan|phishing", ignore_case = TRUE)
+      )) {
         "malware"
-      } else if (str_detect(clean_doms[i], stringr::regex("track|analytics|metric|stats", ignore_case = TRUE))) {
+      } else if (str_detect(
+        clean_doms[i],
+        stringr::regex("track|analytics|metric|stats", ignore_case = TRUE)
+      )) {
         "tracking"
       } else {
         "blocked"

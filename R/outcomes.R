@@ -30,25 +30,25 @@ RD_STAGES <- c("validate", "fetch", "process", "infer")
 #' @keywords internal
 #' @noRd
 RD_ERROR_CODES <- tribble(
-  ~code,                   ~stage,     ~retryable, ~description,
-  "invalid_domain",        "validate", FALSE, "Not a fetchable http(s) host.",
-  "robots_blocked",        "validate", FALSE, "Disallowed by the host's robots.txt.",
-  "private_address",       "validate", FALSE, "Host resolves to a non-global address.",
-  "dns_error",             "fetch",    TRUE,  "Host did not resolve.",
-  "connection_error",      "fetch",    TRUE,  "Connection refused or reset.",
-  "timeout",               "fetch",    TRUE,  "Request exceeded the timeout.",
-  "http_error",            "fetch",    TRUE,  "Non-2xx status.",
-  "content_type_rejected", "fetch",    FALSE, "Response was not HTML.",
-  "content_too_large",     "fetch",    FALSE, "Body exceeded the byte cap.",
-  "bot_blocked",           "fetch",    FALSE, "An anti-bot interstitial was served.",
-  "no_archive_snapshot",   "fetch",    FALSE, "No archived capture for the requested date.",
-  "too_many_redirects",    "fetch",    FALSE, "Redirect chain exceeded max_redirects.",
-  "empty_text",            "process",  FALSE, "No text could be extracted.",
-  "thin_content",          "process",  FALSE, "Below the token floor for an honest label.",
-  "service_unavailable",   "infer",    TRUE,  "Classification service asleep or down.",
-  "rate_limited",          "infer",    TRUE,  "Classification service rate-limited us.",
-  "service_error",         "infer",    TRUE,  "Classification service returned an error.",
-  "unknown",               NA,         FALSE, "Unclassified failure."
+  ~code, ~stage, ~retryable, ~description,
+  "invalid_domain", "validate", FALSE, "Not a fetchable http(s) host.",
+  "robots_blocked", "validate", FALSE, "Disallowed by the host's robots.txt.",
+  "private_address", "validate", FALSE, "Host resolves to a non-global address.",
+  "dns_error", "fetch", TRUE, "Host did not resolve.",
+  "connection_error", "fetch", TRUE, "Connection refused or reset.",
+  "timeout", "fetch", TRUE, "Request exceeded the timeout.",
+  "http_error", "fetch", TRUE, "Non-2xx status.",
+  "content_type_rejected", "fetch", FALSE, "Response was not HTML.",
+  "content_too_large", "fetch", FALSE, "Body exceeded the byte cap.",
+  "bot_blocked", "fetch", FALSE, "An anti-bot interstitial was served.",
+  "no_archive_snapshot", "fetch", FALSE, "No archived capture for the requested date.",
+  "too_many_redirects", "fetch", FALSE, "Redirect chain exceeded max_redirects.",
+  "empty_text", "process", FALSE, "No text could be extracted.",
+  "thin_content", "process", FALSE, "Below the token floor for an honest label.",
+  "service_unavailable", "infer", TRUE, "Classification service asleep or down.",
+  "rate_limited", "infer", TRUE, "Classification service rate-limited us.",
+  "service_error", "infer", TRUE, "Classification service returned an error.",
+  "unknown", NA, FALSE, "Unclassified failure."
 )
 
 #' Reasons a domain can fail to get a category

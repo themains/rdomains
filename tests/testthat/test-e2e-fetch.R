@@ -10,7 +10,7 @@
 
 skip_if_not_installed("webfakes")
 
-`%||%` <- function(x, y) if (is.null(x)) y else x
+`%||%` <- function(x, y) if (is.null(x)) y else x # nolint: object_name_linter.
 
 # One app serving every case the fetcher has to get right.
 test_app <- function() {
@@ -180,15 +180,19 @@ test_that("the cache actually prevents a second request", {
   }
 
   before <- hits()
-  a <- collect_content(srv$url("/page"), obey_robots = FALSE,
-                       allow_hosts = "127.0.0.1", cache_dir = dir)
+  a <- collect_content(srv$url("/page"),
+    obey_robots = FALSE,
+    allow_hosts = "127.0.0.1", cache_dir = dir
+  )
   after_first <- hits()
-  b <- collect_content(srv$url("/page"), obey_robots = FALSE,
-                       allow_hosts = "127.0.0.1", cache_dir = dir)
+  b <- collect_content(srv$url("/page"),
+    obey_robots = FALSE,
+    allow_hosts = "127.0.0.1", cache_dir = dir
+  )
   after_second <- hits()
 
   expect_equal(after_first - before, 1L)
-  expect_equal(after_second - after_first, 0L)   # the second fetch never reached the server
+  expect_equal(after_second - after_first, 0L) # the second fetch never reached the server
   expect_false(a$from_cache)
   expect_true(b$from_cache)
   expect_equal(a$text, b$text)
@@ -208,10 +212,14 @@ test_that("a blocked page is recovered from the archive, with its vintage visibl
   skip_on_cran()
   skip_if_offline()
 
-  res <- collect_content("allrecipes.com", obey_robots = FALSE,
-                         cache_dir = withr::local_tempdir())
-  skip_if(is.na(res$source) || res$source != "archive",
-          "no recent archive capture available right now")
+  res <- collect_content("allrecipes.com",
+    obey_robots = FALSE,
+    cache_dir = withr::local_tempdir()
+  )
+  skip_if(
+    is.na(res$source) || res$source != "archive",
+    "no recent archive capture available right now"
+  )
 
   expect_equal(res$status, "ok")
   expect_equal(res$source, "archive")
@@ -227,8 +235,10 @@ test_that("a dead domain is not resurrected from the archive", {
   skip_on_cran()
   skip_if_offline()
 
-  res <- collect_content("no-such-domain-xyzzy-99999.invalid", obey_robots = FALSE,
-                         cache_dir = withr::local_tempdir())
+  res <- collect_content("no-such-domain-xyzzy-99999.invalid",
+    obey_robots = FALSE,
+    cache_dir = withr::local_tempdir()
+  )
   expect_equal(res$status, "failed")
   expect_equal(res$error_code, "dns_error")
   expect_equal(res$source, "live")
@@ -240,10 +250,18 @@ test_that("archive_date fetches a domain as it was, not as it is", {
   skip_on_cran()
   skip_if_offline()
 
-  res <- collect_content("cnn.com", archive_date = "20200101",
-                         cache_dir = withr::local_tempdir())
-  skip_if(!identical(res$source, "archive"),
-          "archive.org CDX did not answer (it rate-limits)")
+  res <- collect_content("cnn.com",
+    archive_date = "20200101",
+    cache_dir = withr::local_tempdir()
+  )
+  # Skip on the error code, not on source: a failed archive lookup now also
+  # reports source = "archive", because that is where the request went. Using
+  # source here would stop skipping and start asserting against a capture
+  # archive.org declined to serve.
+  skip_if(
+    identical(res$error_code, "no_archive_snapshot"),
+    "archive.org CDX did not answer (it rate-limits)"
+  )
 
   expect_equal(res$status, "ok")
   # The realised capture, not the date asked for -- they are rarely identical.
@@ -255,8 +273,10 @@ test_that("a date with no capture is reported, not silently fetched live", {
   skip_on_cran()
   skip_if_offline()
 
-  res <- collect_content("no-such-domain-xyzzy-99999.invalid", archive_date = "20200101",
-                         cache_dir = withr::local_tempdir())
+  res <- collect_content("no-such-domain-xyzzy-99999.invalid",
+    archive_date = "20200101",
+    cache_dir = withr::local_tempdir()
+  )
   expect_equal(res$status, "failed")
   expect_equal(res$error_code, "no_archive_snapshot")
   # Critically: it did not quietly fall back to a live fetch of a different thing.

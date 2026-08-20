@@ -129,40 +129,45 @@ pie_backend <- function() {
   }
 
   text_mod <- tryCatch(reticulate::import("piedomains.text"),
-                       error = function(e) NULL)
+    error = function(e) NULL
+  )
   if (is.null(text_mod)) {
     cli_warn("Could not import {.pkg piedomains.text}.")
     return(NULL)
   }
 
   function(domains, texts, threshold) {
-    tryCatch({
-      # classify_from_paths() reads files and runs piedomains' *whole* pipeline --
-      # extraction, the domain prefix, temperature scaling, label projection. Handing it
-      # files rather than strings is what keeps all four on the Python side.
-      #
-      # The text written here has already been extracted and cleaned by
-      # html_text_content(), and piedomains will extract again. On plain text that pass
-      # is identity, and its cleaner (collapse whitespace, lowercase) is idempotent over
-      # text that is already collapsed and lowercased -- so the double pass costs
-      # nothing. The alternative, sending raw HTML, would mean carrying every page's
-      # markup across the bridge for a 256-token window.
-      dir <- file.path(tempfile("rdomains-pie-"), "html")
-      dir.create(dir, recursive = TRUE)
-      on.exit(unlink(dirname(dir), recursive = TRUE), add = TRUE)
+    tryCatch(
+      {
+        # classify_from_paths() reads files and runs piedomains' *whole* pipeline --
+        # extraction, the domain prefix, temperature scaling, label projection. Handing it
+        # files rather than strings is what keeps all four on the Python side.
+        #
+        # The text written here has already been extracted and cleaned by
+        # html_text_content(), and piedomains will extract again. On plain text that pass
+        # is identity, and its cleaner (collapse whitespace, lowercase) is idempotent over
+        # text that is already collapsed and lowercased -- so the double pass costs
+        # nothing. The alternative, sending raw HTML, would mean carrying every page's
+        # markup across the bridge for a 256-token window.
+        dir <- file.path(tempfile("rdomains-pie-"), "html")
+        dir.create(dir, recursive = TRUE)
+        on.exit(unlink(dirname(dir), recursive = TRUE), add = TRUE)
 
-      paths <- lapply(seq_along(domains), function(i) {
-        writeLines(texts[i], file.path(dir, paste0(domains[i], ".html")))
-        list(domain = domains[i], text_path = paste0("html/", domains[i], ".html"))
-      })
+        paths <- lapply(seq_along(domains), function(i) {
+          writeLines(texts[i], file.path(dir, paste0(domains[i], ".html")))
+          list(domain = domains[i], text_path = paste0("html/", domains[i], ".html"))
+        })
 
-      classifier <- text_mod$TextClassifier(cache_dir = dirname(dir))
-      pie_tidy(classifier$classify_from_paths(paths))
-    }, error = function(e) {
-      cli_warn(c("piedomains could not classify these pages.",
-                 "x" = conditionMessage(e)))
-      NULL
-    })
+        classifier <- text_mod$TextClassifier(cache_dir = dirname(dir))
+        pie_tidy(classifier$classify_from_paths(paths))
+      },
+      error = function(e) {
+        cli_warn(c("piedomains could not classify these pages.",
+          "x" = conditionMessage(e)
+        ))
+        NULL
+      }
+    )
   }
 }
 

@@ -12,9 +12,7 @@
 #' @examples \dontrun{
 #' adult_ml1_cat("http://www.google.com")
 #' }
-
 adult_ml1_cat <- function(domains = NULL) {
-
   validate_domains(domains)
   c_domains <- clean_domains(domains)
 
@@ -39,8 +37,9 @@ adult_ml1_cat <- function(domains = NULL) {
   }
 
   p_adult <- predict(glm_shalla, features,
-                     s = "lambda.min",
-                     type = "response")[, 1]
+    s = "lambda.min",
+    type = "response"
+  )[, 1]
 
   tibble(
     domain_name = c_domains,

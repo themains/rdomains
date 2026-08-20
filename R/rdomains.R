@@ -2,7 +2,7 @@
 #'
 #' Want to know what kind of content is carried on a domain?
 #' Get the results quickly using rdomains. The package provides access to virustotal
-#' API, shalla, aws, OpenAI GPT models, Anthropic Claude models, 
+#' API, shalla, aws, OpenAI GPT models, Anthropic Claude models,
 #' and validated ML model based off shallalist data to predict content of a domain.
 #'
 #' To learn how to use rdomains, see this vignette: \url{../doc/rdomains.html}.
@@ -15,8 +15,8 @@
 #' @importFrom glmnet predict.glmnet
 #' @importFrom utils read.table URLencode untar unzip read.csv write.csv packageVersion
 #' @importFrom curl curl_download nslookup
-#' @importFrom httr content GET oauth_app oauth_signature add_headers POST status_code
-#' @importFrom httr2 req_url_query
+#' @importFrom httr2 req_url_query req_headers req_headers_redacted
+#' @importFrom httr2 req_body_json req_error req_perform resp_status resp_body_string
 #' @importFrom httr2 request req_user_agent req_timeout req_throttle req_retry
 #'   req_error req_options req_perform resp_status resp_content_type resp_body_string
 #'   resp_url url_parse resp_header

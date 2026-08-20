@@ -17,7 +17,6 @@ Imports:
     stats,
     methods,
     XML,
-    httr,
     httr2,
     xml2,
     curl,

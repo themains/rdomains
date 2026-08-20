@@ -23,9 +23,7 @@
 #' dmoz_cat(domains = "http://www.google.com")
 #' dmoz_cat(domains = c("http://www.google.com", "http://plus.google.com"))
 #' }
-
 dmoz_cat <- function(domains = NULL, use_file = NULL) {
-
   validate_domains(domains)
   c_domains <- clean_domains(domains)
 

@@ -59,8 +59,10 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
   published <- file.info(tmp)$mtime
 
   untar(tmp, exdir = exdir)
-  files <- list.files(exdir, pattern = "^domains$", recursive = TRUE,
-                      full.names = TRUE)
+  files <- list.files(exdir,
+    pattern = "^domains$", recursive = TRUE,
+    full.names = TRUE
+  )
   if (!length(files)) {
     cli_abort("No category lists found in the downloaded archive.")
   }
@@ -73,8 +75,10 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
   # What is dropped is the handful of lists whose names carry no content meaning at all:
   # generic university allowlists and housekeeping directories. Keeping those is what
   # made `wikipedia.org` come back as `liste_bu`.
-  CONTENTLESS <- c("liste_blanche", "liste_bu", "exceptions_liste_bu",
-                   "update", "reaffected", "special", "examen_pix")
+  CONTENTLESS <- c(
+    "liste_blanche", "liste_bu", "exceptions_liste_bu",
+    "update", "reaffected", "special", "examen_pix"
+  )
   categories <- basename(dirname(files))
   keep <- !categories %in% CONTENTLESS
   dropped_lists <- categories[!keep]
@@ -120,7 +124,10 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
     "i" = "{nrow(rows)} domains across {length(unique(rows$category))} categories",
     "i" = "List published {format(published, '%Y-%m-%d')}",
     if (length(dropped_lists)) {
-      c("i" = "Skipped {length(dropped_lists)} list{?s} with no content meaning: {.val {dropped_lists}}")
+      c("i" = paste(
+        "Skipped {length(dropped_lists)} list{?s} with no content meaning:",
+        "{.val {dropped_lists}}"
+      ))
     },
     if (multi > 0) {
       c("i" = "{multi} domain{?s} were in more than one category; kept the most specific")

@@ -16,7 +16,7 @@ vignette: >
 The latest development version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:
 
 ```{r, eval=FALSE, install}
-#library(devtools)
+# library(devtools) # nolint
 install_github("themains/rdomains")
 ```
 
@@ -108,8 +108,9 @@ openai_cat("google.com")
 You can also specify custom categories:
 
 ```{r, eval=FALSE, openai_custom}
-openai_cat(c("amazon.com", "github.com"), 
-           categories = c("ecommerce", "technology", "social", "other"))
+openai_cat(c("amazon.com", "github.com"),
+  categories = c("ecommerce", "technology", "social", "other")
+)
 ```
 
 #### Anthropic Claude
@@ -117,7 +118,7 @@ openai_cat(c("amazon.com", "github.com"),
 Get domain categorization using Anthropic's Claude models. You'll need an Anthropic API key:
 
 ```{r, eval=FALSE, claude}
-# Set your API key  
+# Set your API key
 Sys.setenv("ANTHROPIC_API_KEY", "your-api-key-here")
 
 # Classify domains
