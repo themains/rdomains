@@ -29,3 +29,4 @@ jobs:
         ^https://api\.anthropic\.com/v1/messages$
         ^https://www\.science\.org/
         ^http://www\.washingtontimes\.com/
+        ^https://web\.archive\.org/cdx/search/cdx$
