@@ -1,0 +1,41 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | pie-cat
+⠋ |         11 | pie-cat
+⠹ | 1       32 | pie-cat
+⠇ | 2       37 | pie-cat
+✖ | 2       40 | pie-cat
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:114:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `out$pie_category` to equal `c("news", "sports")`.
+Differences:
+`actual`:   "sports" "sports"
+`expected`: "news"   "sports"
+
+
+Failure ('test-pie-cat.R:120:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `reverse$pie_category` to equal `rev(out$pie_category)`.
+Differences:
+`actual`:   "news"   "news"
+`expected`: "sports" "sports"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:114:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `out$pie_category` to equal `c("news", "sports")`.
+Differences:
+`actual`:   "sports" "sports"
+`expected`: "news"   "sports"
+
+
+Failure ('test-pie-cat.R:120:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `reverse$pie_category` to equal `rev(out$pie_category)`.
+Differences:
+`actual`:   "news"   "news"
+`expected`: "sports" "sports"
+
+
+[ FAIL 2 | WARN 0 | SKIP 0 | PASS 40 ]

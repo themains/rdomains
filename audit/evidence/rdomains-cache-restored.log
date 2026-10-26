@@ -1,0 +1,8 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | page-cache
+✔ |         19 | page-cache
+
+══ Results ═════════════════════════════════════════════════════════════════════
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 19 ]
+ℹ Testing rdomains

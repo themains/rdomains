@@ -4,17 +4,17 @@
 \alias{stevenblack_cat}
 \title{Get Category from Steven Black's Host List}
 \usage{
-stevenblack_cat(domain = NULL, use_file = NULL)
+stevenblack_cat(domains = NULL, use_file = NULL)
 }
 \arguments{
-\item{domain}{domain names as character vector}
+\item{domains}{domain names as character vector}
 
 \item{use_file}{path to a local Steven Black hosts file. If NULL, downloads from GitHub
 once per session and reuses it}
 }
 \value{
-data.frame with the original domain name, the category, and the date of the
-  list that supplied it
+data.frame with the normalized domain_name, the category, and the date of the
+list that supplied it
 }
 \description{
 Classifies domains based on Steven Black's unified host list which blocks
@@ -25,9 +25,12 @@ in the blocklist and categorizes it accordingly.
 Steven Black's host list is a consolidated list from multiple sources including
 adaway.org, mvps.org, malwaredomainlist.com, and someonewhocares.org.
 
-Unlike the Shallalist and DMOZ lookups, this list is actively maintained, so the
-returned \code{source_last_published} is the fetched file's own modification date
-rather than a constant. See \code{\link{source_vintage}}.
+Absence from the list is \code{not_listed}, not a safety assessment. Subcategories
+such as \code{ads} are domain-name heuristics applied only to listed hosts.
+
+Publication dates come from the \code{.metadata.json} sidecar written by the downloader,
+checked against the file contents. \code{source_fetched_at} is the download time.
+Files without matching metadata return \code{NA} dates; filesystem timestamps are not used.
 }
 \examples{
 \dontrun{

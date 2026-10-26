@@ -65,3 +65,24 @@ test_that("rdomains_cache_dir does not create anything", {
   expect_type(d, "character")
   expect_false(dir.exists(file.path(d, "v1")))
 })
+
+
+test_that("cache budget includes metadata and a completed compressed file", {
+  dir <- withr::local_tempdir()
+  meta <- list(fetched_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+               extra = paste(rep("metadata", 50), collapse = " "))
+  cache_put(dir, "https://example.com", "body", meta, max_size = 100)
+  expect_null(cache_get(dir, "https://example.com", ttl = 60))
+})
+
+test_that("valid JSON with an invalid cache timestamp is a cache miss", {
+  dir <- withr::local_tempdir()
+  url <- "https://example.com"
+  cache_put(dir, url, "body", list(fetched_at = "2026-10-26T00:00:00Z"))
+  paths <- cache_paths(dir, cache_key(url))
+  for (body in c("1", "null", "[]", '{"fetched_at":[]}',
+                 '{"fetched_at":["2026-10-26T00:00:00Z","2026-10-25T00:00:00Z"]}')) {
+    writeLines(body, paths$meta)
+    expect_null(cache_get(dir, url, ttl = 86400))
+  }
+})

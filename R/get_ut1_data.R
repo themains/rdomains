@@ -9,8 +9,9 @@
 #' [ut1_cat()] therefore reports UT1's category verbatim rather than mapping it onto
 #' another taxonomy and losing the distinction.
 #'
-#' A domain may appear in more than one category; the first is kept and the number of
-#' multi-category domains is reported, rather than the collision being silent.
+#' A domain may appear in more than one category; the smallest category is kept
+#' (ties by category name),
+#' and the number of extra memberships is reported, rather than the collision being silent.
 #'
 #' @param outdir Optional; folder to save the file in. Default is the working directory.
 #' @param overwrite Optional; default `FALSE`. If `TRUE`, an existing file is replaced.
@@ -27,6 +28,8 @@
 #' ut1_cat("example.com")
 #' }
 get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
+  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
+  checkmate::assert_flag(overwrite)
   outdir <- normalizePath(outdir, mustWork = FALSE)
   if (!dir.exists(outdir)) {
     dir.create(outdir, recursive = TRUE)
@@ -45,18 +48,14 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
   on.exit(unlink(c(tmp, exdir), recursive = TRUE), add = TRUE)
 
   cli_inform("Downloading UT-Capitole blacklists (~25 MB)...")
-  tryCatch(
-    curl_download(
+  metadata <- tryCatch(
+    download_source(
       "https://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz", tmp
     ),
     error = function(e) {
       cli_abort(c("Failed to download UT1 blacklists", "x" = conditionMessage(e)))
     }
   )
-
-  # The tarball's own modification time is the list's vintage, and the whole reason to
-  # prefer it over Shallalist. Preserve it onto the CSV so ut1_cat() can report it.
-  published <- file.info(tmp)$mtime
 
   untar(tmp, exdir = exdir)
   files <- list.files(exdir,
@@ -91,7 +90,7 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
     }
     value <- str_trim(readLines(usage_file, warn = FALSE)[1])
     # A leading # is a note, not a usage value -- `phishing` says "no longer maintained".
-    if (startsWith(value, "#")) NA_character_ else value
+    if (is.na(value) || startsWith(value, "#")) NA_character_ else value
   }, character(1))
 
   rows <- map_df(seq_along(files), function(i) {
@@ -111,18 +110,18 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
   # (37k) is better described by shopping. Keeping "the first" made millions of
   # order-dependent choices silently.
   sizes <- table(rows$category)
-  rows <- rows[order(as.integer(sizes[rows$category])), ]
+  rows <- rows[order(as.integer(sizes[rows$category]), rows$category), ]
   multi <- sum(duplicated(rows$domain))
   rows <- rows[!duplicated(rows$domain), ]
   rows <- rows[order(rows$domain), ]
 
   utils::write.csv(rows, output_file, row.names = FALSE)
-  Sys.setFileTime(output_file, published)
+  save_source_metadata(output_file, metadata)
 
   cli_inform(c(
     "v" = "UT1 data saved to {.file {output_file}}",
     "i" = "{nrow(rows)} domains across {length(unique(rows$category))} categories",
-    "i" = "List published {format(published, '%Y-%m-%d')}",
+    "i" = "Source publication date: {metadata$source_last_published}",
     if (length(dropped_lists)) {
       c("i" = paste(
         "Skipped {length(dropped_lists)} list{?s} with no content meaning:",

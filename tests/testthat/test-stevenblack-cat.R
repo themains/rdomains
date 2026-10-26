@@ -18,16 +18,16 @@ test_that("stevenblack_cat returns expected data structure", {
   # Clean up
   unlink(temp_hosts)
 
-  # Check structure. The third column is the vintage of the list that produced the
-  # category -- see source_vintage(). For this list it is the file's own date, because
-  # Steven Black's hosts file is actively maintained.
   expect_s3_class(result, "data.frame")
-  expect_equal(ncol(result), 3)
-  expect_equal(names(result), c("domain", "stevenblack", "source_last_published"))
+  expect_equal(ncol(result), 4)
+  expect_equal(
+    names(result),
+    c("domain_name", "stevenblack", "source_last_published", "source_fetched_at")
+  )
   expect_equal(nrow(result), 2)
 
   # Check classifications
-  expect_equal(result$stevenblack[1], "safe") # google.com not in blocklist
+  expect_equal(result$stevenblack[1], "not_listed") # google.com not in blocklist
   expect_equal(result$stevenblack[2], "ads") # doubleclick.net classified as ads
 })
 
@@ -159,5 +159,5 @@ test_that("a host blocked only in its www. form is not reported safe", {
     c("www.ads.example.com", "ads.example.com", "bare-example.net", "not-listed.org"),
     use_file = temp_hosts
   )
-  expect_equal(res$stevenblack, c("ads", "ads", "blocked", "safe"))
+  expect_equal(res$stevenblack, c("ads", "ads", "blocked", "not_listed"))
 })

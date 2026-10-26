@@ -1,5 +1,27 @@
 # rdomains 0.5.0.9000 (development)
 
+## October 2026 audit repairs
+
+- Pass original HTML to piedomains >=0.15.0; preserve duplicate inputs, apply thresholds
+  to the full distribution, report actual checkpoint provenance and separate fetch
+  outcomes from inference failures. Text-only `pages` inputs must be fetched again.
+- Preserve path/query case in cache keys and start a new cache namespace. Check robots
+  against the requested path and every content redirect; guard robots redirects too.
+  Validate crawler limits before making requests.
+- Reject empty CDX results and select historical captures at or before the requested date.
+- Default to `gpt-6-luna` and `claude-haiku-5-5` with their supported request parameters.
+  Reject invalid/truncated categories and preserve explicit VirusTotal key precedence.
+  Live paid-API tests now require explicit opt-in.
+- Standardize Steven Black input to `domains` and both Steven Black and VirusTotal
+  output to `domain_name`. VirusTotal credentials now use `api_key`.
+- Separate publication dates from retrieval times using checksum-bound metadata.
+  Unverified caller files have unknown dates. Correct the DMOZ snapshot year to 2015.
+  Steven Black absence now returns `not_listed`; it is not a safety assessment.
+- Document the bundled 2017 adult model and the piedomains checkpoint's known label
+  contamination. These repairs do not retrain either model.
+
+## Earlier development changes
+
 - `collect_content()` now caches fetched pages. A cache hit **replays the stored
   provenance** -- the time the page was really fetched, the URL it really resolved
   to -- rather than synthesising a fresh timestamp, so a cached row still says when
@@ -8,9 +30,7 @@
   Nothing persists past the session unless you pass `rdomains_cache_dir()`.
 - New `rdomains_cache_dir()` and `cache_clear()`.
 - `collect_content()` and `pie_cat()` take an `archive_date`, fetching each domain as it
-  was on that date rather than as it is now. Set against a live run, that is how you
-  measure whether a label has gone stale -- cnn.com classifies as `news` from a 2020
-  capture and `news` today, at 0.966 and 0.709 confidence. Rows carry the *realised*
+  was on or before that date. Rows carry the *realised*
   `snapshot_timestamp`, which is the capture found and rarely the date asked for.
 - `collect_content()` recovers pages from the Internet Archive when a host serves an
   anti-bot interstitial -- detection plus a fallback rather than an evasion arms race.

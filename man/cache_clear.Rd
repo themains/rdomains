@@ -8,7 +8,7 @@ cache_clear(dir = NULL)
 }
 \arguments{
 \item{dir}{Cache directory. Defaults to the session cache used when
-[collect_content()] is called without `cache_dir`.}
+\code{\link[=collect_content]{collect_content()}} is called without \code{cache_dir}.}
 }
 \value{
 Invisibly, the number of cached pages removed.

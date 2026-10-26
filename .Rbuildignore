@@ -22,3 +22,5 @@ AGENTS.md
 ^README\.md$
 .github/
 ^\.lintr$
+
+^audit$

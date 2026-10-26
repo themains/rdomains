@@ -1,0 +1,61 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-correctness
+⠧ | 1        7 | audit-correctness
+⠸ | 1       23 | audit-correctness
+✖ | 1       24 | audit-correctness
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:29:3'): local lookup files do not invent source publication dates
+Expected `stevenblack_cat("notlisted.com", hosts)$stevenblack` to equal "not_listed".
+Differences:
+`actual`:   "safe"
+`expected`: "not_listed"
+
+────────────────────────────────────────────────────────────────────────────────
+
+⠏ |          0 | stevenblack-cat
+✖ | 2    1  12 | stevenblack-cat
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-stevenblack-cat.R:30:3'): stevenblack_cat returns expected data structure
+Expected `result$stevenblack[1]` to equal "not_listed".
+Differences:
+`actual`:   "safe"
+`expected`: "not_listed"
+
+
+Failure ('test-stevenblack-cat.R:162:3'): a host blocked only in its www. form is not reported safe
+Expected `res$stevenblack` to equal `c("ads", "ads", "blocked", "not_listed")`.
+Differences:
+`actual`:   "ads" "ads" "blocked" "safe"
+`expected`: "ads" "ads" "blocked" "not_listed"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Skipped tests (1) ───────────────────────────────────────────────────────────
+• On CRAN (1): 'test-stevenblack-cat.R:68:3'
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:29:3'): local lookup files do not invent source publication dates
+Expected `stevenblack_cat("notlisted.com", hosts)$stevenblack` to equal "not_listed".
+Differences:
+`actual`:   "safe"
+`expected`: "not_listed"
+
+
+Failure ('test-stevenblack-cat.R:30:3'): stevenblack_cat returns expected data structure
+Expected `result$stevenblack[1]` to equal "not_listed".
+Differences:
+`actual`:   "safe"
+`expected`: "not_listed"
+
+
+Failure ('test-stevenblack-cat.R:162:3'): a host blocked only in its www. form is not reported safe
+Expected `res$stevenblack` to equal `c("ads", "ads", "blocked", "not_listed")`.
+Differences:
+`actual`:   "ads" "ads" "blocked" "safe"
+`expected`: "ads" "ads" "blocked" "not_listed"
+
+
+[ FAIL 3 | WARN 0 | SKIP 1 | PASS 36 ]

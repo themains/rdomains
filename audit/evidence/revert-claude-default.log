@@ -1,0 +1,26 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-providers
+⠼ | 1       14 | audit-providers
+⠼ | 1       24 | audit-providers
+✖ | 1       37 | audit-providers
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-providers.R:18:3'): current provider requests produce validated categories
+Expected `requests[[2]]$model` to equal "claude-haiku-5-5".
+Differences:
+`actual`:   "claude-3-haiku-20240307"
+`expected`: "claude-haiku-5-5"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-providers.R:18:3'): current provider requests produce validated categories
+Expected `requests[[2]]$model` to equal "claude-haiku-5-5".
+Differences:
+`actual`:   "claude-3-haiku-20240307"
+`expected`: "claude-haiku-5-5"
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 37 ]

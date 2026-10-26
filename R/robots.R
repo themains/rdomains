@@ -54,7 +54,7 @@ parse_robots <- function(txt, agent = "rdomains") {
 
 #' Is a path allowed by parsed rules?
 #'
-#' @param rules Result of [parse_robots()]'s `rules`.
+#' @param rules The `rules` element returned by `parse_robots()`.
 #' @param path Request path, beginning with "/".
 #' @param agent Our product token.
 #'
@@ -85,8 +85,11 @@ robots_path_allowed <- function(rules, path, agent = "rdomains") {
 #' @keywords internal
 #' @noRd
 robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
-                              ttl = 86400) {
-  key <- paste0("robots:", scheme_host)
+                              ttl = 86400, allow_hosts = character(),
+                              user_agent = rdomains_user_agent()) {
+  key <- paste("robots", scheme_host, agent, user_agent, paste(sort(allow_hosts), collapse = ","),
+    sep = ":"
+  )
   hit <- .rdomains_env[[key]]
   if (!is.null(hit) && difftime(Sys.time(), hit$fetched_at, units = "secs") < ttl) {
     return(hit)
@@ -94,11 +97,17 @@ robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
 
   result <- tryCatch(
     {
-      resp <- request(paste0(scheme_host, "/robots.txt")) |>
-        req_user_agent(agent) |>
-        req_timeout(timeout) |>
-        req_error(is_error = function(resp) FALSE) |>
-        req_perform()
+      fetched <- guarded_get(
+        paste0(scheme_host, "/robots.txt"), timeout,
+        RD_ROBOTS_MAX_BYTES, user_agent, allow_hosts
+      )
+      resp <- fetched$response
+      if (is.null(resp)) {
+        return(list(
+          rules = FALSE, crawl_delay = NA_real_, status = NA_integer_,
+          fetched_at = Sys.time()
+        ))
+      }
       status <- resp_status(resp)
       if (status >= 500) {
         list(rules = FALSE, crawl_delay = NA_real_, status = status)

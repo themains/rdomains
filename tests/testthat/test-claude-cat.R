@@ -13,6 +13,8 @@ test_that("claude cat validates input", {
 })
 
 test_that("claude cat returns correct structure", {
+  skip_if(Sys.getenv("RDOMAINS_LIVE_API_TESTS") != "true", "Live API tests are opt-in")
+  skip_on_cran()
   skip_if(
     identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
     "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"
@@ -26,6 +28,8 @@ test_that("claude cat returns correct structure", {
 })
 
 test_that("claude cat handles multiple domains", {
+  skip_if(Sys.getenv("RDOMAINS_LIVE_API_TESTS") != "true", "Live API tests are opt-in")
+  skip_on_cran()
   skip_if(
     identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
     "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"
@@ -39,6 +43,8 @@ test_that("claude cat handles multiple domains", {
 })
 
 test_that("claude cat preprocesses domains correctly", {
+  skip_if(Sys.getenv("RDOMAINS_LIVE_API_TESTS") != "true", "Live API tests are opt-in")
+  skip_on_cran()
   skip_if(
     identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
     "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"
@@ -49,6 +55,8 @@ test_that("claude cat preprocesses domains correctly", {
 })
 
 test_that("claude cat accepts custom categories", {
+  skip_if(Sys.getenv("RDOMAINS_LIVE_API_TESTS") != "true", "Live API tests are opt-in")
+  skip_on_cran()
   skip_if(
     identical(Sys.getenv("ANTHROPIC_API_KEY"), "") && identical(Sys.getenv("CLAUDE_API_KEY"), ""),
     "ANTHROPIC_API_KEY or CLAUDE_API_KEY not set"

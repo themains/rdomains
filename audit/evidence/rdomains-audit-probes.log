@@ -1,0 +1,56 @@
+CACHE_CASE_COLLISION
+[1] "UPPER PAGE"
+MODEL_BRIDGE_PROBES (deterministic scorer, real Python input/output path)
+threshold_0.1_labels news,shopping
+threshold_0.9_labels news,shopping
+# A tibble: 2 × 2
+  domain_name pie_category
+  <chr>       <chr>
+1 example.com sports
+2 example.com sports
+# A tibble: 1 × 6
+  status stage   error_code pie_category label_source model_repo
+  <chr>  <chr>   <chr>      <chr>        <chr>        <chr>
+1 ok     process <NA>       <NA>         model        soodoku/piedomains-text
+# A tibble: 1 × 4
+      n    ok failed retryable
+  <int> <int>  <int>     <int>
+1     1     1      0         0
+INVALID_THRESHOLD
+[1] "news"
+MISSING_PAGE_STATE
+[1] NA
+Warning messages:
+1: Unknown or uninitialised column: `page_state`.
+2: Unknown or uninitialised column: `page_state`.
+3: Unknown or uninitialised column: `page_state`.
+UT1_VINTAGE
+Downloading UT-Capitole blacklists (~25 MB)...
+✔ UT1 data saved to
+  '/var/folders/ks/1g8bn5m566n_w4l5hwwjv4180000gn/T//RtmpGkVb4r/file80d63ed90115/ut1_domain_category.csv'
+ℹ 1 domains across 1 categories
+ℹ List published 2026-10-26
+# A tibble: 1 × 4
+  domain_name ut1_category ut1_usage source_last_published
+  <chr>       <chr>        <chr>     <chr>
+1 example.com news         black     2026-10-26
+LLM_CUSTOM_CATEGORY
+# A tibble: 1 × 2
+  domain_name openai_category
+  <chr>       <chr>
+1 example.com other
+VIRUSTOTAL_EXPLICIT_KEY
+       domain vendor
+1 example.com   news
+explicit_key_used FALSE
+DMOZ_VINTAGE
+# A tibble: 1 × 2
+  last_published note
+  <chr>          <chr>
+1 2017-03        DMOZ closed in March 2017. These labels are at least that old,…
+ARCHIVE_EMPTY_RESPONSE
+$url
+[1] "https://web.archive.org/web/timestampid_/original"
+
+$timestamp
+[1] "timestamp"

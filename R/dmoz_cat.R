@@ -2,13 +2,18 @@
 #'
 #' Fetches category (or categories) of content hosted by a domain according to DMOZ.
 #' The function checks if path to the DMOZ file is provided by the user.
-#' If not, it looks for \code{dmoz_domain_cateory.csv} in the working directory. It also returns
+#' If not, it looks for \code{dmoz_domain_category.csv} in the working directory. It also returns
 #' results for prominent subdomains.
 #'
 #' DMOZ closed in March 2017 and the snapshot shipped here is from 2015, so these labels
 #' describe the domain as it was a decade ago. The returned \code{source_last_published}
-#' column carries that vintage, and a warning is issued once per session. See
+#' column carries that vintage when the file has verified download metadata.
+#' A warning is issued once per session. See
 #' \code{\link{source_vintage}}.
+#'
+#' Publication dates come from the `.metadata.json` sidecar written by the downloader,
+#' checked against the file contents. `source_fetched_at` is the download time.
+#' Files without matching metadata return `NA` dates; filesystem timestamps are not used.
 #'
 #' @param domains vector of domain names
 #' @param use_file path to the dmoz file, which can be downloaded using \code{\link{get_dmoz_data}}
@@ -45,6 +50,7 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
   }
   hostname <- tolower(dmoz$hostname)
 
+  metadata <- load_source_metadata(data_file)
   warn_source_vintage("dmoz")
 
   # DMOZ recorded hosts as they were published, and 84% of the rows keep the "www."
@@ -56,6 +62,7 @@ dmoz_cat <- function(domains = NULL, use_file = NULL) {
       dmoz$category[match(c_domains, hostname)],
       dmoz$category[match(paste0("www.", c_domains), hostname)]
     ),
-    source_last_published = SOURCE_VINTAGE$dmoz$last_published
+    source_last_published = metadata$source_last_published,
+    source_fetched_at = metadata$source_fetched_at
   )
 }

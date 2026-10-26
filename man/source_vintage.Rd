@@ -8,16 +8,16 @@ source_vintage(source = NULL)
 }
 \arguments{
 \item{source}{Optional; one of \code{"shalla"}, \code{"dmoz"}, \code{"stevenblack"},
-\code{"uni"}. If \code{NULL}, every source is returned.}
+\code{"ut1"}, \code{"uni"}. If \code{NULL}, every source is returned.}
 }
 \value{
 A tibble with one row per source: \code{key}, \code{source},
-  \code{last_published}, \code{status}, \code{successor} and \code{note}.
+\code{last_published}, \code{status}, \code{successor} and \code{note}.
 }
 \description{
-Every lookup in this package answers from a static list, and those lists have very
-different vintages. Two of them are no longer published at all. Use this to see which
-answers can be trusted to describe a domain as it is today.
+The sources listed here answer from static lists, and those lists have very
+different vintages. Two of them are no longer published at all. Use this to see
+publication dates and maintenance status; freshness alone does not establish accuracy.
 }
 \examples{
 source_vintage()

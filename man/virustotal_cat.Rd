@@ -4,15 +4,15 @@
 \alias{virustotal_cat}
 \title{Get Category from VirusTotal}
 \usage{
-virustotal_cat(domains = NULL, apikey = NULL)
+virustotal_cat(domains = NULL, api_key = NULL)
 }
 \arguments{
 \item{domains}{domain names as character vector}
 
-\item{apikey}{virustotal API key}
+\item{api_key}{virustotal API key}
 }
 \value{
-data.frame with domain and VirusTotal analysis results
+data.frame with domain_name and VirusTotal analysis results
 }
 \description{
 Returns category of content from multiple security vendors using the VirusTotal API v3.

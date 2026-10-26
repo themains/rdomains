@@ -1,0 +1,200 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | pie-cat                                                        Error in python_config_impl(python) :
+  Error running '/Users/soodoku/.virtualenvs/r-reticulate/bin/python': No such file.
+The Python installation used to create the virtualenv has been moved or removed:
+  '/Library/Frameworks/Python.framework/Versions/3.11/bin'
+Downloading cpython-3.13.16-macos-aarch64-none (download) (24.1MiB)
+ Downloaded cpython-3.13.16-macos-aarch64-none (download)
+Installed 1 package in 60ms
+
+⠸ |   1      3 | pie-cat
+⠙ | 4 5      3 | pie-cat
+⠼ | 8 8     19 | pie-cat                                                        ERROR: The requested version of Python
+('/tmp/piedomains-audit-20261026/.venv/bin/python') cannot be used, as
+another version of Python
+('/Users/soodoku/.cache/uv/archive-v0/JVuFRtGtLNPfUP8r/bin/python') has
+already been initialized. Please restart the R session if you need to
+attach reticulate to a different version of Python.
+
+✖ | 9 8     27 | pie-cat [3.1s]
+────────────────────────────────────────────────────────────────────────────────
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Warning ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+piedomains classification failed.
+x Install reticulate and Python piedomains >= 0.15.0.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-pie-cat.R:24:5
+ 2. │ └─testthat:::expect_condition_matching_(...)
+ 3. │   └─testthat:::quasi_capture(...)
+ 4. │     ├─testthat (local) .capture(...)
+ 5. │     │ └─base::withCallingHandlers(...)
+ 6. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 7. └─rdomains::pie_cat(pages = pie_page(), threshold = bad)
+ 8.   └─cli::cli_warn(c("piedomains classification failed.", x = conditionMessage(scored))) at rdomains-audit-20261026/R/pie_cat.R:90:5
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Error ('test-pie-cat.R:87:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Error in `reticulate::use_python(python, required = TRUE)`: failed to initialize requested version of Python
+Backtrace:
+    ▆
+ 1. └─reticulate::use_python(python, required = TRUE) at test-pie-cat.R:87:3
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 3.2 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Failure ('test-pie-cat.R:24:5'): pie thresholds filter the full distribution and retain the argmax
+Expected `pie_cat(pages = pie_page(), threshold = bad)` to throw a error.
+
+Error ('test-pie-cat.R:87:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Error in `reticulate::use_python(python, required = TRUE)`: failed to initialize requested version of Python
+Backtrace:
+    ▆
+ 1. └─reticulate::use_python(python, required = TRUE) at test-pie-cat.R:87:3
+
+[ FAIL 9 | WARN 8 | SKIP 0 | PASS 27 ]

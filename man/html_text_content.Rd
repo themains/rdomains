@@ -10,8 +10,8 @@ html_text_content(html)
 \item{html}{Raw HTML as a single string.}
 }
 \value{
-A list with `text` (cleaned, lowercased), `title`, `description` and `lang`.
-  Missing elements are `NA_character_`; `text` is `""` when nothing could be extracted.
+A list with \code{text} (cleaned, lowercased), \code{title}, \code{description} and \code{lang}.
+Missing elements are \code{NA_character_}; \code{text} is \code{""} when nothing could be extracted.
 }
 \description{
 Extract text, title, description and language from HTML
@@ -24,5 +24,5 @@ html <- "<html lang='en'><head><title>Example</title>
 html_text_content(html)
 }
 \seealso{
-[page_signals()], which uses this to decide whether a page is classifiable.
+\code{\link[=page_signals]{page_signals()}}, which uses this to decide whether a page is classifiable.
 }

@@ -2,8 +2,9 @@
 #'
 #' Want to know what kind of content is carried on a domain?
 #' Get the results quickly using rdomains. The package provides access to virustotal
-#' API, shalla, aws, OpenAI GPT models, Anthropic Claude models,
-#' and validated ML model based off shallalist data to predict content of a domain.
+#' API, UT-Capitole, archived lists, OpenAI models, Anthropic Claude models,
+#' and a historical model trained on Shallalist data. Use [pie_cat()] to classify
+#' fetched content through the Python piedomains text model.
 #'
 #' To learn how to use rdomains, see this vignette: \url{../doc/rdomains.html}.
 #'
@@ -18,10 +19,10 @@
 #' @importFrom httr2 req_url_query req_headers req_headers_redacted
 #' @importFrom httr2 req_body_json req_error req_perform resp_status resp_body_string
 #' @importFrom httr2 request req_user_agent req_timeout req_throttle req_retry
-#'   req_error req_options req_perform resp_status resp_content_type resp_body_string
-#'   resp_url url_parse resp_header
+#' @importFrom httr2 req_options resp_content_type
+#' @importFrom httr2 resp_url url_parse resp_header
 #' @importFrom xml2 read_xml as_list read_html xml_find_all xml_find_first xml_remove
-#'   xml_text xml_attr url_absolute
+#' @importFrom xml2 xml_text xml_attr url_absolute
 #' @importFrom XML readHTMLTable
 #' @importFrom virustotal set_key domain_report
 #' @importFrom R.utils gunzip

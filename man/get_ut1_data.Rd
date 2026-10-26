@@ -9,24 +9,25 @@ get_ut1_data(outdir = "./", overwrite = FALSE)
 \arguments{
 \item{outdir}{Optional; folder to save the file in. Default is the working directory.}
 
-\item{overwrite}{Optional; default `FALSE`. If `TRUE`, an existing file is replaced.}
+\item{overwrite}{Optional; default \code{FALSE}. If \code{TRUE}, an existing file is replaced.}
 }
 \value{
 Invisibly, the path to the written CSV.
 }
 \description{
 Downloads and flattens the University of Toulouse (UT1) blacklists into a single
-`domain,category` CSV. These are the **maintained successor** to Shallalist: where
+\verb{domain,category} CSV. These are the \strong{maintained successor} to Shallalist: where
 Shallalist last published in January 2022, UT1 is updated continuously.
 }
 \details{
 The archive carries ~69 categories under its own French-influenced vocabulary
-(`drogue`, `publicite`, `tricheur`), which does not line up with Shallalist's names.
-[ut1_cat()] therefore reports UT1's category verbatim rather than mapping it onto
+(\code{drogue}, \code{publicite}, \code{tricheur}), which does not line up with Shallalist's names.
+\code{\link[=ut1_cat]{ut1_cat()}} therefore reports UT1's category verbatim rather than mapping it onto
 another taxonomy and losing the distinction.
 
-A domain may appear in more than one category; the first is kept and the number of
-multi-category domains is reported, rather than the collision being silent.
+A domain may appear in more than one category; the smallest category is kept
+(ties by category name),
+and the number of extra memberships is reported, rather than the collision being silent.
 }
 \examples{
 \dontrun{
@@ -38,6 +39,6 @@ ut1_cat("example.com")
 \url{https://dsi.ut-capitole.fr/blacklists/}
 }
 \seealso{
-[ut1_cat()], and [source_vintage()] for how this compares with the
-  discontinued sources.
+\code{\link[=ut1_cat]{ut1_cat()}}, and \code{\link[=source_vintage]{source_vintage()}} for how this compares with the
+discontinued sources.
 }

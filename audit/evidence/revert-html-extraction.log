@@ -1,0 +1,26 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | pie-cat
+⠋ |         11 | pie-cat
+⠹ | 1       32 | pie-cat
+✖ | 1       41 | pie-cat
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:114:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `out$pie_category` to equal `c("news", "sports")`.
+Differences:
+`actual`:   "sports" "sports"
+`expected`: "news"   "sports"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:114:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `out$pie_category` to equal `c("news", "sports")`.
+Differences:
+`actual`:   "sports" "sports"
+`expected`: "news"   "sports"
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 41 ]

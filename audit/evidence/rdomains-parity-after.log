@@ -1,0 +1,25 @@
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 4640.83it/s]
+2026-10-26 08:43:49,392 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on cpu: 44 classes, temperature 1.248
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 33012.83it/s]
+2026-10-26 08:43:53,119 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on cpu: 44 classes, temperature 1.248
+threshold 0 category news confidence 0.7678742 labels 44
+# A tibble: 1 × 4
+  model_repo                 model_revision piedomains_version model_temperature
+  <chr>                      <chr>          <chr>                          <dbl>
+1 gojiberries/piedomains-te… 38d7e6403f911… 0.15.0                          1.25
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 27917.52it/s]
+2026-10-26 08:43:54,121 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on cpu: 44 classes, temperature 1.248
+threshold 0.99 category news confidence 0.7678742 labels 1
+# A tibble: 1 × 4
+  model_repo                 model_revision piedomains_version model_temperature
+  <chr>                      <chr>          <chr>                          <dbl>
+1 gojiberries/piedomains-te… 38d7e6403f911… 0.15.0                          1.25
+PASS: R and native Python predictions match the same raw HTML and checkpoint.
+/Users/soodoku/.local/share/uv/python/cpython-3.13.2-macos-aarch64-none/lib/python3.13/multiprocessing/resource_tracker.py:277: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-wzgalmag'}
+  warnings.warn(

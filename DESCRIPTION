@@ -2,12 +2,13 @@ Package: rdomains
 Title: Get the Category of Content Hosted by a Domain
 Version: 0.5.0.9000
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
-Description: Get the category of content hosted by a domain. Use Shallalist (service discontinued),
-    'VirusTotal' (which provides access to lots of services) <https://www.virustotal.com/>,
-    'DMOZ' <https://archive.org/details/dmoz-rdf-20150327>, University Domain list
-    <https://github.com/Hipo/university-domains-list>, 'OpenAI' 'GPT' models, 'Anthropic' 'Claude' models,
-    or validated machine learning classifiers based on 'Shallalist' data to learn about the kind
-    of content hosted by a domain.
+Description: Fetch website content and classify it through the Python 'piedomains'
+    text model. Look up domains in UT-Capitole, Steven Black, university, archived
+    'Shallalist' and 'DMOZ' lists, or use 'VirusTotal' <https://www.virustotal.com/>,
+    'OpenAI' and 'Anthropic' APIs. Report collection outcomes and source provenance.
+    Includes a historical domain-name classifier trained on 'Shallalist' data.
+URL: https://themains.github.io/rdomains/, https://github.com/themains/rdomains
+BugReports: https://github.com/themains/rdomains/issues
 Depends:
     R (>= 4.1.0)
 Imports:
@@ -33,17 +34,18 @@ Imports:
     glue (>= 1.6.0),
     readr (>= 2.1.0),
     spiderbar,
-    ipaddress
+    ipaddress,
+    withr
 Suggests:
     testthat,
     rmarkdown,
     knitr (>= 1.11),
-    withr,
     webfakes,
     reticulate
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3

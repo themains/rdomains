@@ -1,0 +1,34 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-correctness
+⠴ | 1        5 | audit-correctness
+⠴ | 1       15 | audit-correctness
+✖ | 1       24 | audit-correctness
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:6:3'): lookups parse URL hosts independently of ports queries and fragments
+Expected `clean_domains(values)` to equal `rep("example.com", length(values))`.
+Differences:
+    actual             | expected
+[1] "example.com:443"  - "example.com" [1]
+[2] "example.com?x=1"  - "example.com" [2]
+[3] "example.com#part" - "example.com" [3]
+[4] "example.com:443"  - "example.com" [4]
+[5] "example.com."     - "example.com" [5]
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:6:3'): lookups parse URL hosts independently of ports queries and fragments
+Expected `clean_domains(values)` to equal `rep("example.com", length(values))`.
+Differences:
+    actual             | expected
+[1] "example.com:443"  - "example.com" [1]
+[2] "example.com?x=1"  - "example.com" [2]
+[3] "example.com#part" - "example.com" [3]
+[4] "example.com:443"  - "example.com" [4]
+[5] "example.com."     - "example.com" [5]
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 24 ]

@@ -1,0 +1,71 @@
+── Installing package rdomains into temporary library ──────────────────────────
+── Building pkgdown site for package rdomains ──────────────────────────────────
+Reading from: /private/tmp/rdomains-audit-20261026
+Writing to: /private/tmp/rdomains-audit-20261026/docs
+── Sitrep ──────────────────────────────────────────────────────────────────────
+✖ Bootstrap 3 is deprecated; please switch to Bootstrap 5.
+ℹ Learn more at
+  <https://www.tidyverse.org/blog/2021/12/pkgdown-2-0-0/#bootstrap-5>.
+✔ URLs ok.
+✔ Favicons ok.
+✔ Open graph metadata ok.
+✔ Articles metadata ok.
+✔ Reference metadata ok.
+── Initialising site ───────────────────────────────────────────────────────────
+── Building home ───────────────────────────────────────────────────────────────
+Reading AGENTS.md
+Reading CLAUDE.md
+Reading .github/ISSUE_TEMPLATE.md
+Reading README.md
+Writing `404.html`
+── Building function reference ─────────────────────────────────────────────────
+Reading man/adult_ml1_cat.Rd
+Writing `reference/adult_ml1_cat.html`
+Reading man/cache_clear.Rd
+Writing `reference/cache_clear.html`
+Reading man/claude_cat.Rd
+Reading man/collect_content.Rd
+Writing `reference/collect_content.html`
+Reading man/dmoz_cat.Rd
+Writing `reference/dmoz_cat.html`
+Reading man/fetch_error_codes.Rd
+Writing `reference/fetch_error_codes.html`
+Reading man/fetch_report.Rd
+Writing `reference/fetch_report.html`
+Reading man/get_dmoz_data.Rd
+Reading man/get_shalla_data.Rd
+Reading man/get_stevenblack_data.Rd
+Reading man/get_ut1_data.Rd
+Writing `reference/get_ut1_data.html`
+Reading man/glm_shalla.Rd
+Reading man/html_text_content.Rd
+Writing `reference/html_text_content.html`
+Reading man/not_news.Rd
+Writing `reference/not_news.html`
+Reading man/openai_cat.Rd
+Reading man/page_signals.Rd
+Writing `reference/page_signals.html`
+Reading man/pie_cat.Rd
+Writing `reference/pie_cat.html`
+Reading man/rdomains-package.Rd
+Writing `reference/rdomains-package.html`
+Reading man/rdomains_cache_dir.Rd
+Writing `reference/rdomains_cache_dir.html`
+Reading man/shalla_cat.Rd
+Writing `reference/shalla_cat.html`
+Reading man/source_vintage.Rd
+Writing `reference/source_vintage.html`
+Reading man/stevenblack_cat.Rd
+Writing `reference/stevenblack_cat.html`
+Reading man/uni_cat.Rd
+Reading man/ut1_cat.Rd
+Writing `reference/ut1_cat.html`
+Reading man/virustotal_cat.Rd
+── Building articles ───────────────────────────────────────────────────────────
+Reading vignettes/rdomains.Rmd
+── Building news ───────────────────────────────────────────────────────────────
+── Building sitemap ────────────────────────────────────────────────────────────
+── Building redirects ──────────────────────────────────────────────────────────
+── Checking for problems ───────────────────────────────────────────────────────
+── Finished building pkgdown site for package rdomains ─────────────────────────
+── Finished building pkgdown site for package rdomains ─────────────────────────

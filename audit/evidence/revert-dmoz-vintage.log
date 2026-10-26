@@ -1,0 +1,28 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | source-vintage
+⠸ | 1       13 | source-vintage
+⠴ | 1       15 | source-vintage
+✖ | 1       21 | source-vintage
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-source-vintage.R:12:3'): source_vintage names the two dead lists
+Expected `source_vintage("dmoz")$last_published` to equal "2015".
+Differences:
+`actual`:   "2017-03"
+`expected`: "2015"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-source-vintage.R:12:3'): source_vintage names the two dead lists
+Expected `source_vintage("dmoz")$last_published` to equal "2015".
+Differences:
+`actual`:   "2017-03"
+`expected`: "2015"
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 21 ]
+
+No one gets it right on their first try

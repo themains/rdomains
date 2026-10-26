@@ -1,0 +1,27 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | pie-cat
+⠏ |         10 | pie-cat
+⠹ |         33 | pie-cat
+⠇ | 1       38 | pie-cat
+✖ | 1       41 | pie-cat
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:117:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `out$model_repo` to equal `rep("gojiberries/piedomains-text", 2)`.
+Differences:
+`actual`:   "soodoku/piedomains-text"     "soodoku/piedomains-text"
+`expected`: "gojiberries/piedomains-text" "gojiberries/piedomains-text"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:117:3'): Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity
+Expected `out$model_repo` to equal `rep("gojiberries/piedomains-text", 2)`.
+Differences:
+`actual`:   "soodoku/piedomains-text"     "soodoku/piedomains-text"
+`expected`: "gojiberries/piedomains-text" "gojiberries/piedomains-text"
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 41 ]

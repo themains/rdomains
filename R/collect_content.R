@@ -8,9 +8,9 @@
 #' Static HTML only -- no headless browser. Pages that render their content with JavaScript
 #' will come back thin, and `page_state` says so rather than pretending otherwise.
 #'
-#' **This crawler identifies itself and obeys robots.txt.** That is a deliberate departure
-#' from piedomains, which I audited and found does neither on its live path. A CRAN package
-#' fetching arbitrary URLs on a user's behalf has no business impersonating a browser.
+#' The crawler identifies itself and checks robots.txt before each content request.
+#' Address checks precede each redirect hop; DNS and the HTTP client resolve separately,
+#' so this is not a substitute for an egress firewall against DNS rebinding.
 #'
 #' @keywords internal
 #' @noRd
@@ -63,12 +63,16 @@ is_global_ip <- function(ip) {
 #' unreachable, and the package cannot be exercised against a local test server.
 #'
 #' @param input the caller's original string
-#' @param domain the cleaned domain
 #' @return a URL
 #' @keywords internal
 #' @noRd
-request_url <- function(input, domain) {
-  if (grepl("^https?://", input)) sub("/+$", "", input) else paste0("https://", domain)
+request_url <- function(input) {
+  input <- trimws(input)
+  if (grepl("^[a-z][a-z0-9+.-]*://", input, ignore.case = TRUE)) {
+    input
+  } else {
+    paste0("https://", input)
+  }
 }
 
 #' Reject a URL we should not fetch
@@ -177,17 +181,18 @@ classify_condition <- function(cnd) {
 #'   Internet Archive instead of fetching it live. This is how you ask what a domain
 #'   *used to be* -- and, set against a live run, how you measure whether a label has gone
 #'   stale. Rows carry `source = "archive"` and the realised `snapshot_timestamp`, which
-#'   is the capture actually found and not necessarily the date you asked for.
+#'   is the latest capture on or before the requested day.
 #' @param archive_fallback When a host serves an anti-bot interstitial, try the
 #'   Internet Archive's most recent capture. Rows recovered this way carry
 #'   `source = "archive"` and a `snapshot_timestamp`, so the vintage is never
-#'   hidden. Dead domains are deliberately *not* recovered this way.
+#'   hidden. Dead domains and explicitly exempted hosts are not recovered this way.
 #' @param user_agent Override the identifying user-agent.
 #'
 #' @return A tibble with one row per input: `domain_name`, `status`, `stage`, `error_code`,
 #'   `retryable`, `http_status`, `final_url`, `fetched_at`, `content_bytes`, `title`,
-#'   `description`, `lang`, `text`, `n_tokens`, `page_state`, `block_vendor`,
-#'   `robots_allowed`, `source_last_published`.
+#'   `description`, `lang`, `text`, `html`, `n_tokens`, `page_state`, `block_vendor`,
+#'   `robots_allowed`, `from_cache`, `source`, `snapshot_timestamp`, `source_last_published`.
+#'   Live pages have no inferred publication date; `fetched_at` records retrieval.
 #'
 #' @export
 #' @seealso [fetch_report()] to summarise the run, [page_signals()] for what the page
@@ -215,6 +220,19 @@ collect_content <- function(domains = NULL,
                             user_agent = rdomains_user_agent()) {
   cache_dir <- cache_dir %||% default_cache_dir()
   validate_domains(domains)
+  validate_number(delay, "delay")
+  validate_number(timeout, "timeout", lower = .Machine$double.eps)
+  validate_number(max_bytes, "max_bytes", lower = 1, integer = TRUE)
+  validate_number(max_crawl_delay, "max_crawl_delay")
+  validate_number(max_redirects, "max_redirects", integer = TRUE)
+  validate_number(cache_ttl, "cache_ttl")
+  validate_number(cache_max_size, "cache_max_size")
+  checkmate::assert_flag(obey_robots)
+  checkmate::assert_flag(archive_fallback)
+  assert_character(cache_dir, len = 1, any.missing = FALSE, min.chars = 1)
+  assert_character(allow_hosts, any.missing = FALSE, min.chars = 1)
+  assert_character(user_agent, len = 1, any.missing = FALSE, min.chars = 1)
+  if (!is.null(archive_date)) validate_archive_date(archive_date)
   clean <- clean_domains(domains)
 
   rows <- lapply(seq_along(clean), function(i) {
@@ -253,6 +271,7 @@ collect_content <- function(domains = NULL,
 #' @param from_cache whether the row was replayed from cache rather than fetched
 #' @param source "live" or "archive"
 #' @param snapshot_timestamp Wayback capture timestamp, when source is archive
+#' @param html Raw response HTML, retained for model-specific extraction.
 #'
 #' @return a one-row tibble
 #' @keywords internal
@@ -262,7 +281,7 @@ fetch_row <- function(domain, input, started,
                       http_status = NA_integer_, final_url = NA_character_,
                       content_bytes = NA_integer_, parsed = NULL, signals = NULL,
                       robots_allowed = NA, from_cache = FALSE,
-                      source = "live", snapshot_timestamp = NA_character_) {
+                      source = "live", snapshot_timestamp = NA_character_, html = NA_character_) {
   tibble(
     domain_name = as.character(domain),
     input = as.character(input),
@@ -281,6 +300,7 @@ fetch_row <- function(domain, input, started,
     description = as.character(parsed$description %||% NA_character_),
     lang = as.character(parsed$lang %||% NA_character_),
     text = as.character(parsed$text %||% NA_character_),
+    html = as.character(html),
     n_tokens = as.integer(signals$n_tokens %||% 0L),
     page_state = as.character(signals$page_state %||% NA_character_),
     block_vendor = as.character(signals$block_vendor %||% NA_character_),
@@ -288,7 +308,11 @@ fetch_row <- function(domain, input, started,
     from_cache = as.logical(from_cache),
     source = as.character(source),
     snapshot_timestamp = as.character(snapshot_timestamp),
-    source_last_published = format(started, "%Y-%m")
+    source_last_published = if (source == "archive") {
+      archive_date(snapshot_timestamp)
+    } else {
+      NA_character_
+    }
   )
 }
 
@@ -304,7 +328,7 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
                       cache_max_size, allow_hosts, archive_fallback, archive_date,
                       user_agent) {
   started <- Sys.time()
-  url <- request_url(input, domain)
+  url <- request_url(input)
 
   blank <- function(code, stage, http_status = NA_integer_, robots_allowed = NA,
                     source = "live") {
@@ -327,21 +351,23 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     a_signals <- page_signals(recovered$html, text = a_parsed$text, domain = domain)
     return(fetch_row(
       domain, input, started,
-      status = if (a_signals$thin) "failed" else "ok",
+      status = if (a_signals$blocked || a_signals$page_state == "thin") "failed" else "ok",
       stage = "process",
-      error_code = if (a_signals$thin) "thin_content" else NA_character_,
-      final_url = recovered$url,
+      error_code = if (a_signals$blocked) {
+        "bot_blocked"
+      } else if (a_signals$page_state == "thin") {
+        "thin_content"
+      } else {
+        NA_character_
+      },
+      http_status = 200L, final_url = recovered$url,
       content_bytes = nchar(recovered$html, type = "bytes"),
       parsed = a_parsed, signals = a_signals,
-      source = "archive", snapshot_timestamp = recovered$timestamp
+      source = "archive", snapshot_timestamp = recovered$timestamp, html = recovered$html
     ))
   }
 
-  # A cache hit replays what was stored, including the time the page was actually
-  # fetched. piedomains' collector synthesises a fresh timestamp and fetch_success = TRUE
-  # on a hit -- it reports a fetch that never happened, at a time it did not happen, so a
-  # cached row is indistinguishable from a live one on re-read. The whole point of this
-  # package's provenance work is that a row says when it is from.
+  # Cache hits retain the original collection time and outcome.
   hit <- cache_get(cache_dir, url, cache_ttl)
   if (!is.null(hit)) {
     parsed <- html_text_content(hit$html)
@@ -359,81 +385,17 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
       content_bytes = hit$meta$content_bytes,
       parsed = parsed, signals = signals,
       robots_allowed = hit$meta$robots_allowed %||% NA,
-      from_cache = TRUE
+      from_cache = TRUE, html = hit$html
     )
     return(row)
   }
 
-  bad <- check_url(url, allow_hosts = allow_hosts)
-  if (!is.null(bad)) {
-    return(blank(bad, if (bad == "dns_error") "fetch" else "validate"))
-  }
-
-  crawl_delay <- delay
-  if (obey_robots) {
-    parsed_origin <- url_parse(url)
-    origin <- paste0(
-      parsed_origin$scheme, "://", parsed_origin$hostname,
-      if (!is.null(parsed_origin$port)) paste0(":", parsed_origin$port) else ""
-    )
-    rules <- robots_for_origin(origin, agent = "rdomains", timeout = timeout)
-    if (!robots_path_allowed(rules$rules, "/")) {
-      return(blank("robots_blocked", "validate", robots_allowed = FALSE))
-    }
-    if (!is.na(rules$crawl_delay)) {
-      if (rules$crawl_delay > max_crawl_delay) {
-        return(blank("robots_blocked", "validate", robots_allowed = FALSE))
-      }
-      crawl_delay <- max(crawl_delay, rules$crawl_delay)
-    }
-  }
-
-  # Redirects are followed by hand rather than by curl, so every hop goes back through
-  # check_url(). Letting curl follow them would validate only the domain the caller asked
-  # for: a host redirecting to 127.0.0.1 or 169.254.169.254 would then be fetched, which
-  # makes the address guard decorative. Validating the entry URL alone is not an SSRF
-  # guard.
-  chain <- character()
-  current <- url
-  resp <- NULL
-  for (hop in seq_len(max_redirects + 1L)) {
-    resp <- tryCatch(
-      {
-        request(current) |>
-          req_user_agent(user_agent) |>
-          req_timeout(timeout) |>
-          req_throttle(capacity = 1L, fill_time_s = crawl_delay) |>
-          req_retry(max_tries = 2, max_seconds = 30) |>
-          # Without this a 403 interstitial throws and page_signals() never sees the body --
-          # which is exactly the case we most need to classify.
-          req_error(is_error = function(resp) FALSE) |>
-          req_options(maxfilesize_large = max_bytes, followlocation = FALSE) |>
-          req_perform()
-      },
-      error = function(e) e
-    )
-
-    if (inherits(resp, "condition")) {
-      return(blank(classify_condition(resp), "fetch", robots_allowed = TRUE))
-    }
-
-    code <- resp_status(resp)
-    location <- tryCatch(resp_header(resp, "location"), error = function(e) NULL)
-    if (!(code >= 300 && code < 400) || is.null(location) || !nzchar(location)) {
-      break
-    }
-    if (hop > max_redirects) {
-      return(blank("too_many_redirects", "fetch",
-        http_status = code,
-        robots_allowed = TRUE
-      ))
-    }
-    current <- url_absolute(location, current)
-    chain <- c(chain, current)
-    bad_hop <- check_url(current, allow_hosts = allow_hosts)
-    if (!is.null(bad_hop)) {
-      return(blank(bad_hop, "validate", http_status = code, robots_allowed = TRUE))
-    }
+  fetched <- guarded_get(url, timeout, max_bytes, user_agent, allow_hosts,
+                         max_redirects, obey_robots, delay, max_crawl_delay)
+  resp <- fetched$response
+  if (is.null(resp)) {
+    return(blank(fetched$error_code, fetched$stage,
+                 robots_allowed = fetched$robots_allowed))
   }
 
   # Named `http_code`, not `status`. tibble() evaluates its arguments sequentially and
@@ -448,13 +410,13 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   if (bytes > max_bytes) {
     return(blank("content_too_large", "fetch",
       http_status = http_code,
-      robots_allowed = TRUE
+      robots_allowed = fetched$robots_allowed
     ))
   }
   if (!is.na(ctype) && !grepl("html|xml", ctype, fixed = FALSE)) {
     return(blank("content_type_rejected", "fetch",
       http_status = http_code,
-      robots_allowed = TRUE
+      robots_allowed = fetched$robots_allowed
     ))
   }
 
@@ -491,7 +453,7 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
         meta = list(
           requested_url = url, final_url = final, http_status = http_code,
           content_bytes = bytes, status = state_status, stage = "process",
-          error_code = code, robots_allowed = TRUE,
+          error_code = code, robots_allowed = fetched$robots_allowed,
           fetched_at = format(started, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
         ),
         max_size = cache_max_size
@@ -504,7 +466,8 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   # A block means the site is alive and would not serve *us*. Asking an archive that was
   # allowed in is the honest response. A dead domain is deliberately not recovered this
   # way -- see R/archive.R.
-  if (archive_fallback && identical(code, "bot_blocked")) {
+  if (archive_fallback && identical(code, "bot_blocked") &&
+        !tolower(url_parse(url)$hostname) %in% tolower(allow_hosts)) {
     recovered <- archive_fetch(domain,
       timeout = timeout, max_bytes = max_bytes,
       user_agent = user_agent
@@ -516,10 +479,10 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
         return(fetch_row(
           domain, input, started,
           status = "ok", stage = "process", error_code = NA_character_,
-          http_status = http_code, final_url = recovered$url,
+          http_status = 200L, final_url = recovered$url,
           content_bytes = nchar(recovered$html, type = "bytes"),
-          parsed = a_parsed, signals = a_signals, robots_allowed = TRUE,
-          source = "archive", snapshot_timestamp = recovered$timestamp
+          parsed = a_parsed, signals = a_signals, robots_allowed = fetched$robots_allowed,
+          source = "archive", snapshot_timestamp = recovered$timestamp, html = recovered$html
         ))
       }
     }
@@ -533,8 +496,8 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     http_status = http_code,
     final_url = final,
     content_bytes = bytes,
-    parsed = parsed,
+    parsed = parsed, html = body,
     signals = signals,
-    robots_allowed = TRUE
+    robots_allowed = fetched$robots_allowed
   )
 }

@@ -9,9 +9,9 @@
 #' a R session.
 #'
 #' @param domains domain names as character vector
-#' @param apikey virustotal API key
+#' @param api_key virustotal API key
 #'
-#' @return data.frame with domain and VirusTotal analysis results
+#' @return data.frame with domain_name and VirusTotal analysis results
 #'
 #' @export
 #' @references \url{https://docs.virustotal.com/reference/domains}
@@ -20,19 +20,12 @@
 #' virustotal_cat("http://www.google.com")
 #' virustotal_cat(c("google.com", "facebook.com"))
 #' }
-virustotal_cat <- function(domains = NULL, apikey = NULL) {
+virustotal_cat <- function(domains = NULL, api_key = NULL) {
   validate_domains(domains, "domains")
 
-  if (identical(Sys.getenv("VirustotalToken"), "")) {
-    if (is.null(apikey)) {
-      cli_abort(c(
-        "VirusTotal API key not found",
-        "i" = "Provide via {.arg apikey} parameter",
-        "i" = "Or set environment variable: {.envvar VirustotalToken}"
-      ))
-    }
-    set_key(apikey)
-  }
+  key <- get_api_key(api_key, c("VIRUSTOTAL_API_KEY", "VirustotalToken"), "VirusTotal")
+  withr::local_envvar(c(VIRUSTOTAL_API_KEY = key, VirustotalToken = key))
+  domains <- clean_domains(domains)
 
   results <- map_df(domains, function(domain) {
     res <- tryCatch(
@@ -42,7 +35,7 @@ virustotal_cat <- function(domains = NULL, apikey = NULL) {
           "Error processing domain: {domain}",
           "x" = e$message
         ))
-        data.frame(domain = domain)
+        data.frame(domain_name = domain)
       }
     )
 
@@ -53,9 +46,9 @@ virustotal_cat <- function(domains = NULL, apikey = NULL) {
     if (has_categories) {
       categories <- res$data$attributes$categories
       cat_df <- as.data.frame(as.list(categories), stringsAsFactors = FALSE)
-      data.frame(domain = domain, cat_df, stringsAsFactors = FALSE)
+      data.frame(domain_name = domain, cat_df, stringsAsFactors = FALSE)
     } else {
-      data.frame(domain = domain)
+      data.frame(domain_name = domain)
     }
   })
 

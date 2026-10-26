@@ -8,11 +8,21 @@
 \description{
 Want to know what kind of content is carried on a domain?
 Get the results quickly using rdomains. The package provides access to virustotal
-API, shalla, aws, OpenAI GPT models, Anthropic Claude models,
-and validated ML model based off shallalist data to predict content of a domain.
+API, UT-Capitole, archived lists, OpenAI models, Anthropic Claude models,
+and a historical model trained on Shallalist data. Use \code{\link[=pie_cat]{pie_cat()}} to classify
+fetched content through the Python piedomains text model.
 }
 \details{
 To learn how to use rdomains, see this vignette: \url{../doc/rdomains.html}.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://themains.github.io/rdomains/}
+  \item \url{https://github.com/themains/rdomains}
+  \item Report bugs at \url{https://github.com/themains/rdomains/issues}
+}
+
 }
 \author{
 Gaurav Sood

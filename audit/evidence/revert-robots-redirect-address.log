@@ -1,0 +1,48 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-http
+⠋ |          1 | audit-http
+⠴ |          6 | audit-http
+⠼ |         15 | audit-http
+⠇ |         29 | audit-http
+⠹ |         43 | audit-http
+⠼ | 1       54 | audit-http
+✖ | 2       54 | audit-http [12.0s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:77:3'): a robots redirect never sends an HTTP request to a rejected destination
+Expected `robots_path_allowed(rules$rules, "/")` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+Failure ('test-audit-http.R:78:3'): a robots redirect never sends an HTTP request to a rejected destination
+Expected `urls` to equal "https://redirect-test.example/robots.txt".
+Differences:
+actual vs expected
+  "https://redirect-test.example/robots.txt"
+- "https://rejected.example/robots.txt"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 12.0 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:77:3'): a robots redirect never sends an HTTP request to a rejected destination
+Expected `robots_path_allowed(rules$rules, "/")` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+Failure ('test-audit-http.R:78:3'): a robots redirect never sends an HTTP request to a rejected destination
+Expected `urls` to equal "https://redirect-test.example/robots.txt".
+Differences:
+actual vs expected
+  "https://redirect-test.example/robots.txt"
+- "https://rejected.example/robots.txt"
+
+
+[ FAIL 2 | WARN 0 | SKIP 0 | PASS 54 ]

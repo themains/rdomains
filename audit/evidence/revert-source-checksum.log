@@ -1,0 +1,25 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | source-metadata
+⠦ | 1       16 | source-metadata
+✖ | 1       18 | source-metadata
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-source-metadata.R:10:3'): source provenance survives only with the matching data file
+Expected `all(is.na(unlist(load_source_metadata(path))))` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-source-metadata.R:10:3'): source provenance survives only with the matching data file
+Expected `all(is.na(unlist(load_source_metadata(path))))` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 18 ]
