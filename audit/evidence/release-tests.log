@@ -1,0 +1,129 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-correctness
+⠦ |          7 | audit-correctness
+⠴ |         26 | audit-correctness
+✔ |         29 | audit-correctness
+
+⠏ |          0 | audit-http
+⠋ |          1 | audit-http
+⠴ |          6 | audit-http
+⠴ |         16 | audit-http
+⠴ |         26 | audit-http
+⠏ |         40 | audit-http
+⠸ |         54 | audit-http
+⠦ |         57 | audit-http
+⠏ |         60 | audit-http
+⠹ |         63 | audit-http
+✔ |         69 | audit-http [4.3s]
+
+⠏ |          0 | audit-providers
+⠹ |         43 | audit-providers
+✔ |         46 | audit-providers
+
+⠏ |          0 | claude-cat
+✔ |      4   2 | claude-cat
+
+⠏ |          0 | collect-content
+⠙ |      2  60 | collect-content
+✔ |      3  66 | collect-content
+
+⠏ |          0 | dmoz-cat
+✔ |      1   7 | dmoz-cat
+
+⠏ |          0 | e2e-fetch
+⠋ |          1 | e2e-fetch
+⠴ |          6 | e2e-fetch                                                      > Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+
+⠇ |          9 | e2e-fetch                                                      > Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+
+⠙ |         12 | e2e-fetch                                                      > Waiting 1s for throttling delay
+
+⠸ |         14 | e2e-fetch
+⠴ |         16 | e2e-fetch
+⠧ |         18 | e2e-fetch                                                      > Waiting 1s for throttling delay
+
+⠋ |         21 | e2e-fetch
+⠸ |         24 | e2e-fetch
+⠦ |         27 | e2e-fetch
+⠙ |         32 | e2e-fetch
+✔ |      4  33 | e2e-fetch [15.3s]
+
+⠏ |          0 | extract-text
+✔ |         20 | extract-text
+
+⠏ |          0 | ml-cat
+✔ |          4 | ml-cat
+
+⠏ |          0 | not-news
+✔ |          6 | not-news
+
+⠏ |          0 | openai-cat
+✔ |      4   2 | openai-cat
+
+⠏ |          0 | outcomes
+⠴ |         26 | outcomes
+✔ |         27 | outcomes
+
+⠏ |          0 | page-cache
+✔ |         19 | page-cache
+
+⠏ |          0 | page-signals
+✔ |         31 | page-signals
+
+⠏ |          0 | pie-cat
+⠏ |         10 | pie-cat
+⠹ |         33 | pie-cat
+✔ |         42 | pie-cat
+
+⠏ |          0 | real-model
+✔ |      1   0 | real-model
+
+⠏ |          0 | release-correctness
+✔ |         34 | release-correctness
+
+⠏ |          0 | result-contract
+⠙ |         32 | result-contract
+✔ |         33 | result-contract
+
+⠏ |          0 | shalla-cat
+✔ |      1   4 | shalla-cat
+
+⠏ |          0 | source-metadata
+✔ |         20 | source-metadata
+
+⠏ |          0 | source-vintage
+✔ |         22 | source-vintage
+
+⠏ |          0 | stevenblack-cat
+✔ |      1  14 | stevenblack-cat
+
+⠏ |          0 | uni-cat
+✔ |          4 | uni-cat
+
+⠏ |          0 | utils
+⠼ |         25 | utils
+✔ |         26 | utils
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 22.0 s
+
+── Skipped tests (19) ──────────────────────────────────────────────────────────
+• Live API tests are opt-in (8): 'test-claude-cat.R:16:3',
+  'test-claude-cat.R:31:3', 'test-claude-cat.R:46:3', 'test-claude-cat.R:58:3',
+  'test-openai-cat.R:13:3', 'test-openai-cat.R:25:3', 'test-openai-cat.R:37:3',
+  'test-openai-cat.R:46:3'
+• On CRAN (10): 'test-collect-content.R:110:3', 'test-collect-content.R:129:3',
+  'test-collect-content.R:174:3', 'test-dmoz-cat.R:3:3',
+  'test-e2e-fetch.R:212:3', 'test-e2e-fetch.R:235:3', 'test-e2e-fetch.R:250:3',
+  'test-e2e-fetch.R:273:3', 'test-shalla-cat.R:3:3',
+  'test-stevenblack-cat.R:68:3'
+• Real model tests are opt-in (1): 'test-real-model.R:2:3'
+
+[ FAIL 0 | WARN 0 | SKIP 19 | PASS 560 ]
+
+💅 Your tests are beautiful 💅

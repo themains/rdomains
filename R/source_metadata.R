@@ -108,7 +108,6 @@ lookup_source_file <- function(provider, use_file = NULL) {
   }
   path <- tempfile()
   url <- SOURCE_VINTAGE[[provider]]$url
-  if (provider == "stevenblack") url <- paste0(url, "hosts")
   metadata <- download_source(url, path)
   save_source_metadata(path, metadata)
   .rdomains_env[[key]] <- path

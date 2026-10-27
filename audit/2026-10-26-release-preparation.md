@@ -38,8 +38,11 @@ checks R 4.5/Python 3.12, real-weight parity, and cached offline inference.
 - Real pinned checkpoint: 6 assertions passed on CPU with network access disabled,
   including native Python equivalence and repeated inputs. The Python interpreter
   emitted a multiprocessing semaphore-cleanup warning at shutdown on macOS.
-- Full suite, package check, independent review and candidate CI are release gates;
-  their final results will be recorded before release preparation is declared complete.
+- Full suite: 560 assertions passed, 19 skipped (live services and real-model opt-in),
+  zero failures or warnings. R CMD check: 0 errors, 0 warnings, 0 notes on R 4.6.0/macOS.
+- Shipped links: 51 checked occurrences, 40 successful, 11 established exclusions,
+  zero errors after correcting the Steven Black registry URL.
+- Independent review and candidate CI remain release gates.
 
 Tests use mocked paid providers. No paid inference or training was run. Docker's
 local daemon was unavailable; native R and Python checks were used.

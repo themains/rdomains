@@ -31,7 +31,7 @@ get_stevenblack_data <- function(outdir = ".", variant = "base", overwrite = FAL
       if (variant == "all") "gambling-porn-social" else variant, "/hosts"
     )
   }
-  metadata <- download_source(paste0(SOURCE_VINTAGE$stevenblack$url, suffix), output)
+  metadata <- download_source(sub("hosts$", suffix, SOURCE_VINTAGE$stevenblack$url), output)
   save_source_metadata(output, metadata)
   invisible(output)
 }

@@ -58,7 +58,7 @@ SOURCE_VINTAGE <- list(
     successor = NA_character_
   ),
   stevenblack = list(
-    url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/",
+    url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
     source = "Steven Black unified hosts",
     last_published = NA_character_,
     status = "maintained",
