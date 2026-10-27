@@ -1,14 +1,14 @@
 release-correctness: .............12...................
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
-── 1. Failure ('test-release-correctness.R:86:3'): unresolved redirects are not
+── 1. Failure ('test-release-correctness.R:85:3'): unresolved redirects are not
 Expected `result$status` to be identical to "failed".
 Differences:
 `actual`:   "ok"
 `expected`: "failed"
 
 
-── 2. Failure ('test-release-correctness.R:87:3'): unresolved redirects are not
+── 2. Failure ('test-release-correctness.R:86:3'): unresolved redirects are not
 Expected `result$error_code` to be identical to "redirect_error".
 Differences:
 `actual`:   NA
@@ -16,6 +16,7 @@ Differences:
 
 
 ══ DONE ════════════════════════════════════════════════════════════════════════
+Don't worry, you'll get it.
 ℹ Testing rdomains
 Error:
 ! Test failures.

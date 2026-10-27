@@ -50,7 +50,9 @@ pie_cat <- function(domains = NULL, pages = NULL, threshold = 0.10, model = NULL
     if (!all(pages$provider == "piedomains")) {
       cli_abort("Only piedomains results can be retried as pages.")
     }
+    input_id <- pages$input_id
     pages <- if (nrow(pages)) bind_rows(pages$details) else fetch_row("", "", Sys.time())[FALSE, ]
+    pages$input_id <- input_id
   }
   rows <- infer_pages(domains, pages, threshold, ...)
   input <- rows$input %||% rows$domain_name

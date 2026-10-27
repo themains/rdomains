@@ -111,7 +111,9 @@ archive_fetch <- function(domain, timeout = 45, max_bytes = 10 * 1024^2,
       fetched <- guarded_get(snapshot$url, timeout, max_bytes, user_agent)
       resp <- fetched$response
       if (is.null(resp)) {
-        return(archive_failure("archive_unavailable"))
+        return(archive_failure(fetched$error_code %||% "archive_unavailable",
+          fetched$http_status %||% NA_integer_
+        ))
       }
       if (resp_status(resp) != 200L) {
         return(archive_failure(if (resp_status(resp) == 429L) {

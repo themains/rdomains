@@ -191,3 +191,22 @@ test_that("live, cache and archive apply the same content rules", {
   expect_true(cached$from_cache)
   expect_equal(as.numeric(live$fetched_at), as.numeric(cached$fetched_at), tolerance = 1)
 })
+
+test_that("archive fetch preserves permanent resource guard failures", {
+  code <- "content_too_large"
+  local_mocked_bindings(
+    archive_snapshot = function(...) {
+      list(
+        url = "https://web.archive.org/web/20200101000000id_/https://example.com",
+        timestamp = "20200101000000"
+      )
+    },
+    guarded_get = function(...) list(response = NULL, error_code = code)
+  )
+  for (reason in c("content_too_large", "private_address", "too_many_redirects")) {
+    code <- reason
+    result <- collect_content("example.com", archive_date = "20200101")
+    expect_identical(result$error_code, reason)
+    expect_false(result$retryable)
+  }
+})

@@ -1,4 +1,4 @@
-result-contract: .......123.......................
+result-contract: .......123..........................
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
 ── 1. Failure ('test-result-contract.R:33:3'): lookup memberships are independen
@@ -28,7 +28,7 @@ Differences:
 
 
 ══ DONE ════════════════════════════════════════════════════════════════════════
-No one is perfect!
+No one gets it right on their first try
 ℹ Testing rdomains
 Error:
 ! Test failures.

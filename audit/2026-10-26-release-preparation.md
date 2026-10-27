@@ -67,3 +67,32 @@ Paid labeling or training needs a spending limit before execution.
 Version 0.6.0 reflects deliberate API changes listed in NEWS. Preparing the candidate
 and draft release does not submit to CRAN or publish a tag. Those actions follow the
 reviewed candidate, completed CI and publication authorization.
+
+## Independent review repairs
+
+Reviewer: `gpt-6-astra`, selected through the agent tool with a fresh context and
+isolated clone `/tmp/rdomains-independent-060`; base `1bad000`, first candidate `221a525`.
+The reviewer independently matched 560 assertions / 19 skips, zero lint, and six
+offline real-model assertions. Its initial package-check invocation enabled extra
+network tests through devtools' default environment; final verification explicitly
+sets `env_vars = c(NOT_CRAN = "false")`.
+
+Four concrete findings were reproduced locally and repaired:
+
+1. Inference-only retries discarded caller-restored IDs. The outer result IDs now
+   become the retained page IDs before inference. The new test failed two assertions
+   before repair and passed afterward.
+2. VirusTotal authentication and missing-resource errors were wrongly retryable.
+   Typed conditions and available HTTP status now determine the outcome. A shared
+   provider mapping also serves the LLM adapters. The supported dependency minimum
+   is virustotal 0.7.0, verified on CRAN. Malformed vendor labels fail one row.
+3. Archive resource guards became transient outages. The original guard code and
+   available status are retained. Size, private-address and redirect-limit probes
+   failed six assertions before repair and passed afterward.
+4. The mocked Python test left a fake model in the session cache. It now restores
+   the prior cache. The combined mocked/real tier failed three assertions before
+   repair; CI now runs the combined tier before a separate offline check.
+
+Targeted production reversals cover the new ID, vendor and archive fixes in addition
+to the original 18 checks. The full model tier and release gates are rerun on the
+repaired candidate; review closure remains pending until independently verified.

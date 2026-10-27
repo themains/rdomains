@@ -27,15 +27,7 @@ llm_response <- function(req, categories, parser, model) {
       status <- resp_status(response)
       result$http_status <- as.integer(status)
       if (status != 200L) {
-        result$error_code <- if (status == 429L) {
-          "rate_limited"
-        } else if (status >= 500L) {
-          "service_unavailable"
-        } else if (status %in% c(401L, 403L)) {
-          "authentication_error"
-        } else {
-          "provider_error"
-        }
+        result$error_code <- provider_error_code(status)
         return(result)
       }
       body <- fromJSON(resp_body_string(response), simplifyVector = FALSE)

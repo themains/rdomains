@@ -1,0 +1,51 @@
+release-correctness: ..................................123456
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-release-correctness.R:209:5'): archive fetch preserves perm
+Expected `result$error_code` to be identical to `reason`.
+Differences:
+`actual`:   "archive_unavailable"
+`expected`: "content_too_large"
+
+
+── 2. Failure ('test-release-correctness.R:210:5'): archive fetch preserves perm
+Expected `result$retryable` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+── 3. Failure ('test-release-correctness.R:209:5'): archive fetch preserves perm
+Expected `result$error_code` to be identical to `reason`.
+Differences:
+`actual`:   "archive_unavailable"
+`expected`: "private_address"
+
+
+── 4. Failure ('test-release-correctness.R:210:5'): archive fetch preserves perm
+Expected `result$retryable` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+── 5. Failure ('test-release-correctness.R:209:5'): archive fetch preserves perm
+Expected `result$error_code` to be identical to `reason`.
+Differences:
+`actual`:   "archive_unavailable"
+`expected`: "too_many_redirects"
+
+
+── 6. Failure ('test-release-correctness.R:210:5'): archive fetch preserves perm
+Expected `result$retryable` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+Frustration is a natural part of programming :)
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

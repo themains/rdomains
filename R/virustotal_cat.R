@@ -33,16 +33,40 @@ virustotal_cat <- function(domains, api_key = NULL) {
     response <- tryCatch(domain_report(result$domain_name[i]), error = function(e) e)
     if (inherits(response, "condition")) {
       result$status[i] <- "failed"
-      result$error_code[i] <- "service_error"
-      result$retryable[i] <- TRUE
+      status <- response$status_code
+      if (is.null(status) || !is.numeric(status) || length(status) != 1L || is.na(status)) {
+        status <- NA_integer_
+      }
+      result$http_status[i] <- as.integer(status)
+      result$error_code[i] <- if (inherits(response, "virustotal_auth_error")) {
+        "authentication_error"
+      } else if (inherits(response, "virustotal_rate_limit_error")) {
+        "rate_limited"
+      } else {
+        provider_error_code(status)
+      }
+      result$retryable[i] <- is_retryable(result$error_code[i])
       result$details[[i]] <- list(message = conditionMessage(response))
     } else {
-      categories <- response$data$attributes$categories
-      if (length(categories)) {
-        result <- set_result_labels(
-          result, i,
+      labels <- tryCatch({
+        categories <- response$data$attributes$categories
+        if (!length(categories)) {
+          label_table()
+        } else {
+          valid <- !is.null(names(categories)) && all(nzchar(names(categories))) &&
+            all(vapply(categories, function(x) {
+              is.character(x) && length(x) == 1L && !is.na(x) && nzchar(trimws(x))
+            }, logical(1)))
+          if (!valid) stop("Malformed vendor labels")
           label_table(unlist(categories, use.names = FALSE), vendor = names(categories))
-        )
+        }
+      }, error = function(e) e)
+      if (inherits(labels, "condition")) {
+        result$status[i] <- "failed"
+        result$error_code[i] <- "invalid_response"
+        result$details[[i]] <- list(message = conditionMessage(labels))
+      } else {
+        result <- set_result_labels(result, i, labels)
       }
     }
     result$source_fetched_at[i] <- format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")

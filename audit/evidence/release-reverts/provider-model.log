@@ -1,4 +1,4 @@
-result-contract: ....1............................
+result-contract: ....1...............................
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
 ── 1. Failure ('test-result-contract.R:10:3'): provider outcomes preserve input
@@ -9,6 +9,7 @@ Differences:
 
 
 ══ DONE ════════════════════════════════════════════════════════════════════════
+I believe in you!
 ℹ Testing rdomains
 Error:
 ! Test failures.

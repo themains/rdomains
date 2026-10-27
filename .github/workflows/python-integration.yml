@@ -41,15 +41,11 @@ jobs:
         with:
           path: ~/.cache/huggingface/hub
           key: piedomains-text-38d7e6403f911902f47b9218ce5c645a06dd02fe
-      - name: Test R floor and deterministic bridge
+      - name: Test R floor, bridge and pinned model
         shell: Rscript {0}
         run: |
           Sys.unsetenv(c("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "CLAUDE_API_KEY"))
-          Sys.setenv(RDOMAINS_REAL_MODEL_TESTS = "false")
           devtools::test(stop_on_failure = TRUE)
-      - name: Verify pinned model parity
-        shell: Rscript {0}
-        run: devtools::test(filter = "real-model", stop_on_failure = TRUE)
       - name: Verify cached model offline
         shell: Rscript {0}
         env:

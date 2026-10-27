@@ -155,3 +155,22 @@ is_retryable <- function(code) {
   hit <- RD_ERROR_CODES$retryable[match(code, RD_ERROR_CODES$code)]
   isTRUE(hit)
 }
+
+#' Map provider HTTP failures without retrying invalid credentials or missing resources
+#' @keywords internal
+#' @noRd
+provider_error_code <- function(status) {
+  if (is.na(status)) {
+    "service_error"
+  } else if (status == 429L) {
+    "rate_limited"
+  } else if (status >= 500L || status %in% c(408L, 425L)) {
+    "service_unavailable"
+  } else if (status %in% c(401L, 403L)) {
+    "authentication_error"
+  } else if (status %in% c(404L, 410L)) {
+    "http_not_found"
+  } else {
+    "provider_error"
+  }
+}

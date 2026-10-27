@@ -1,11 +1,11 @@
 release-correctness: ...1............................
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
-── 1. Error ('test-release-correctness.R:34:3'): malformed cache records are mis
+── 1. Error ('test-release-correctness.R:33:3'): malformed cache records are mis
 Error in `validate_number(status, "status", lower = 100, upper = 599, integer = TRUE)`: `status` must be a finite integer between 100 and 599.
 Backtrace:
     ▆
- 1. └─rdomains::collect_content(...) at test-release-correctness.R:34:3
+ 1. └─rdomains::collect_content(...) at test-release-correctness.R:33:3
  2.   └─base::lapply(...) at rdomains/R/collect_content.R:253:3
  3.     └─rdomains (local) FUN(X[[i]], ...)
  4.       └─rdomains:::fetch_one(...) at rdomains/R/collect_content.R:254:5
@@ -16,6 +16,7 @@ Backtrace:
  9.                 └─rlang::abort(...)
 
 ══ DONE ════════════════════════════════════════════════════════════════════════
+Keep trying!
 ℹ Testing rdomains
 Error:
 ! Test failures.

@@ -1,0 +1,22 @@
+result-contract: .................................1.2
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-result-contract.R:112:3'): inference-only retries preserve
+Expected `retried$input_id` to be identical to `result$input_id`.
+Differences:
+  `actual`:  1  2
+`expected`: 42 99
+
+
+── 2. Failure ('test-result-contract.R:114:3'): inference-only retries preserve
+Expected `vapply(retried$details, function(x) x$input_id, integer(1))` to equal `result$input_id`.
+Differences:
+  `actual`:  1  2
+`expected`: 42 99
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

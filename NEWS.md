@@ -23,6 +23,10 @@
   distinct retryable outcomes; not-found pages and unresolved redirects do not report success.
 - Corrupt cache records are misses. Substantive articles mentioning parking marketplaces
   are not classified as parked by that mention alone. Acquired pages share one processing path.
+- VirusTotal preserves typed authentication, quota and HTTP failures; invalid vendor
+  labels fail the affected row. Archive resource guards retain their permanent failure reasons.
+- Inference-only retries preserve caller-restored batch IDs. Mocked model tests restore
+  the session cache, so mocked and real-model checks can run together.
 - `pie_cat(model = ...)` selects a checkpoint explicitly. The pinned default is reused
   within a session; custom checkpoints are loaded afresh. Saved results support inference-only retry.
 - R 4.5 is the tested minimum. A dedicated R/Python job exercises the bridge and verifies

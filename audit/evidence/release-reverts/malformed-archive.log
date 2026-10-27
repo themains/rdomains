@@ -1,14 +1,14 @@
 release-correctness: ...........................12.....
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
-── 1. Failure ('test-release-correctness.R:159:3'): malformed CDX responses diff
+── 1. Failure ('test-release-correctness.R:158:3'): malformed CDX responses diff
 Expected `archive_snapshot("example.com")$error_code` to be identical to "archive_invalid_response".
 Differences:
 `actual`:   "no_archive_snapshot"
 `expected`: "archive_invalid_response"
 
 
-── 2. Failure ('test-release-correctness.R:161:3'): malformed CDX responses diff
+── 2. Failure ('test-release-correctness.R:160:3'): malformed CDX responses diff
 Expected `archive_snapshot("example.com")$error_code` to be identical to "archive_invalid_response".
 Differences:
 `actual`:   "no_archive_snapshot"
@@ -16,6 +16,7 @@ Differences:
 
 
 ══ DONE ════════════════════════════════════════════════════════════════════════
+No one gets it right on their first try
 ℹ Testing rdomains
 Error:
 ! Test failures.

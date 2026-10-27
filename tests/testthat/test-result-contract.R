@@ -101,3 +101,56 @@ test_that("model overrides are scoped and unused collection arguments are reject
   expect_error(pie_cat(pages = pages, timeout = 1), class = "rlib_error_dots_nonempty")
   expect_error(pie_cat("example.com", pages = pages), "Supply either")
 })
+
+test_that("inference-only retries preserve caller-restored batch identifiers", {
+  local_mocked_bindings(guarded_get = function(...) {
+    list(response = NULL, error_code = "dns_error", stage = "fetch", robots_allowed = NA)
+  })
+  result <- pie_cat(c("one.example", "two.example"))
+  result$input_id <- c(42L, 99L)
+  retried <- pie_cat(pages = result)
+  expect_identical(retried$input_id, result$input_id)
+  expect_identical(retried$input, result$input)
+  expect_equal(vapply(retried$details, function(x) x$input_id, integer(1)), result$input_id)
+})
+
+test_that("VirusTotal retries transient conditions and retains available HTTP status", {
+  errors <- list(
+    structure(list(message = "bad key"),
+      class = c("virustotal_auth_error", "error", "condition")
+    ),
+    structure(list(message = "quota"),
+      class = c("virustotal_rate_limit_error", "error", "condition")
+    )
+  )
+  for (status in c(404L, 429L, 503L)) {
+    errors[[length(errors) + 1L]] <- structure(list(message = "HTTP error", status_code = status),
+      class = c("virustotal_error", "error", "condition")
+    )
+  }
+  index <- 0L
+  local_mocked_bindings(domain_report = function(...) {
+    index <<- index + 1L
+    stop(errors[[index]])
+  })
+  result <- virustotal_cat(rep("example.com", 5), api_key = "fixture")
+  expect_equal(result$error_code,
+               c("authentication_error", "rate_limited", "http_not_found",
+                 "rate_limited", "service_unavailable"))
+  expect_equal(result$retryable, c(FALSE, TRUE, FALSE, TRUE, TRUE))
+  expect_identical(result$http_status, c(NA_integer_, NA_integer_, 404L, 429L, 503L))
+})
+
+test_that("malformed vendor labels fail one row without aborting the batch", {
+  local_mocked_bindings(domain_report = function(domain) {
+    list(data = list(attributes = list(categories = if (domain == "bad.example") {
+      list(Vendor = c("news", "business"))
+    } else {
+      list(Vendor = "news")
+    })))
+  })
+  result <- virustotal_cat(c("bad.example", "good.example"), api_key = "fixture")
+  expect_equal(result$status, c("failed", "ok"))
+  expect_identical(result$error_code[1], "invalid_response")
+  expect_identical(result$category[2], "news")
+})

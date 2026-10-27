@@ -84,6 +84,9 @@ test_that("Python bridge preserves HTML, duplicate rows, threshold and checkpoin
   python <- Sys.getenv("RDOMAINS_TEST_PYTHON")
   skip_if(!nzchar(python), "Set RDOMAINS_TEST_PYTHON to exercise installed piedomains")
   skip_if_not_installed("reticulate")
+  cached_model <- .rdomains_env$pie_model
+  .rdomains_env$pie_model <- NULL
+  withr::defer(.rdomains_env$pie_model <- cached_model)
   reticulate::use_python(python, required = TRUE)
   reticulate::py_run_string(paste(
     "from piedomains.text import TextClassifier",

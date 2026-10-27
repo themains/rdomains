@@ -1,11 +1,11 @@
-result-contract: ...............12................
+result-contract: ...............12...................
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
 ── 1. Failure ('test-result-contract.R:70:3'): DMOZ downloads return a reusable
 Expected `path` to be identical to `normalizePath(file.path(directory, "dmoz_domain_category.csv"))`.
 Differences:
 `actual` is NULL
-`expected` is a character vector ('/private/var/folders/ks/1g8bn5m566n_w4l5hwwjv4180000gn/T/Rtmp8L4fLu/file1253f5dc44ba2/dmoz_domain_category.csv')
+`expected` is a character vector ('/private/var/folders/ks/1g8bn5m566n_w4l5hwwjv4180000gn/T/RtmpbLQCYM/file13d0e1246614c/dmoz_domain_category.csv')
 
 
 ── 2. Error ('test-result-contract.R:71:3'): DMOZ downloads return a reusable pa
@@ -25,7 +25,6 @@ Backtrace:
  9.       └─rlang::abort(...)
 
 ══ DONE ════════════════════════════════════════════════════════════════════════
-No one is perfect!
 ℹ Testing rdomains
 Error:
 ! Test failures.

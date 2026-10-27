@@ -1,7 +1,7 @@
 release-correctness: ...........1......................
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
-── 1. Failure ('test-release-correctness.R:71:3'): not found pages are not marke
+── 1. Failure ('test-release-correctness.R:70:3'): not found pages are not marke
 Expected `result$error_code` to be identical to "http_not_found".
 Differences:
 `actual`:   "http_error"

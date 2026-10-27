@@ -3,12 +3,17 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 
 SOURCE = Path(__file__).resolve().parents[2]
 OUT = SOURCE / "audit/evidence/release-reverts"
 OUT.mkdir(exist_ok=True)
 CASES = [
+    ("archive-guard", "R/archive.R", 'fetched$error_code %||% "archive_unavailable"', '"archive_unavailable"', "release-correctness"),
+    ("vendor-label-shape", "R/virustotal_cat.R", 'if (!valid) stop("Malformed vendor labels")', 'invisible(valid)', "result-contract"),
+    ("vendor-retry", "R/virustotal_cat.R", 'result$retryable[i] <- is_retryable(result$error_code[i])', 'result$error_code[i] <- "service_error"; result$retryable[i] <- TRUE; result$http_status[i] <- NA_integer_', "result-contract"),
+    ("retry-input-identity", "R/pie_cat.R", "    pages$input_id <- input_id", "    invisible(input_id)", "result-contract"),
     ("parking", "R/page_signals.R", '  lowered <- tolower(text)\n  if (word_count(lowered)', '  if (grepl("sedo.com", text, fixed = TRUE)) return(TRUE)\n  lowered <- tolower(text)\n  if (word_count(lowered)', "release-correctness"),
     ("archive-resource", "R/collect_content.R", 'recovered <- archive_fetch(url,', 'recovered <- archive_fetch(domain,', "release-correctness"),
     ("cache-shape", "R/page_cache.R", '  if (!valid) {', '  if (FALSE) {', "release-correctness"),
@@ -43,6 +48,8 @@ with tempfile.TemporaryDirectory(prefix="rdomains-revert-") as directory:
         return result.returncode
     assert run("before", "release-correctness|result-contract") == 0
     for label, name, old, new, selection in CASES:
+        if len(sys.argv) > 1 and label not in sys.argv[1:]:
+            continue
         path = root / name
         original = path.read_text()
         assert old in original, label

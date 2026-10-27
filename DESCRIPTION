@@ -20,7 +20,7 @@ Imports:
     httr2,
     xml2,
     curl,
-    virustotal,
+    virustotal (>= 0.7.0),
     jsonlite,
     R.utils,
     dplyr (>= 1.1.0),

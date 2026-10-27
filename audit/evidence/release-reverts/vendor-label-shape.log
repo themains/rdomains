@@ -1,0 +1,23 @@
+result-contract: .......................................12.
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-result-contract.R:153:3'): malformed vendor labels fail one
+Expected `result$status` to equal `c("failed", "ok")`.
+Differences:
+`actual`:   "ok"     "ok"
+`expected`: "failed" "ok"
+
+
+── 2. Failure ('test-result-contract.R:154:3'): malformed vendor labels fail one
+Expected `result$error_code[1]` to be identical to "invalid_response".
+Differences:
+`actual`:   NA
+`expected`: "invalid_response"
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+Frustration is a natural part of programming :)
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

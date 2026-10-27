@@ -1,4 +1,4 @@
-result-contract: ..............................1..
+result-contract: ..............................1.....
 
 ══ Failed ══════════════════════════════════════════════════════════════════════
 ── 1. Failure ('test-result-contract.R:99:3'): model overrides are scoped and un
