@@ -1,0 +1,22 @@
+[
+  {
+    "case": "http-retry",
+    "reverted": "[ FAIL 6 | WARN 0 | SKIP 0 | PASS 63 ]",
+    "restored": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 69 ]"
+  },
+  {
+    "case": "invalid-url-row",
+    "reverted": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 25 ]",
+    "restored": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 29 ]"
+  },
+  {
+    "case": "blank-location",
+    "reverted": "[ FAIL 3 | WARN 0 | SKIP 0 | PASS 66 ]",
+    "restored": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 69 ]"
+  },
+  {
+    "case": "robots-failure-cache",
+    "reverted": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 67 ]",
+    "restored": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 69 ]"
+  }
+]

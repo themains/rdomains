@@ -40,6 +40,7 @@ guarded_get <- function(url, timeout, max_bytes, user_agent,
         req <- request(current) |>
           req_user_agent(user_agent) |>
           req_timeout(timeout) |>
+          req_retry(max_tries = 2, max_seconds = 30) |>
           req_error(is_error = function(resp) FALSE) |>
           req_options(maxfilesize_large = max_bytes, followlocation = FALSE)
         if (crawl_delay > 0) {
@@ -57,7 +58,8 @@ guarded_get <- function(url, timeout, max_bytes, user_agent,
     }
     code <- resp_status(resp)
     location <- resp_header(resp, "location")
-    if (!(code %in% c(301L, 302L, 303L, 307L, 308L)) || is.null(location)) {
+    has_location <- !is.null(location) && nzchar(location)
+    if (!(code %in% c(301L, 302L, 303L, 307L, 308L)) || !has_location) {
       if (length(resp$body) > max_bytes) {
         return(fail("content_too_large"))
       }

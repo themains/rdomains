@@ -1,0 +1,79 @@
+{
+  "status": "weak-label candidate; not trained or validated for publication",
+  "source": "/Users/soodoku/Documents/GitHub/themains/piedomains/data/prepared-text",
+  "output": "/Users/soodoku/Documents/GitHub/themains/piedomains/data/training-repair-20261026/corpus",
+  "new_api_calls": 0,
+  "new_api_cost_usd": 0,
+  "policy": "drop training drugs disagreements only; confidence>=0.8; no truncated verdicts",
+  "cached_verdicts_model": "openai/gpt-4.1",
+  "prompt_hash": "d2d97691c4763268",
+  "source_files_sha256": {
+    "labels.json": "90e36f7b7c31595bac11f4a41bbe1dd995198896c0594d059cad7bab122bd89b",
+    "train.jsonl": "cf9c5146bdb3c23ac5920a7d777a69c485f79d6822e39716ec0dfaaf3ebc0f2a",
+    "test.jsonl": "c4d0920015dc72b457de3de7955f8974f874083ed7c6ca97883f5318f8613552",
+    "val.jsonl": "d1a5795537a687698740597f0950053e2bee114565cd45b4375e8142b3a2c7d0"
+  },
+  "output_files_sha256": {
+    "labels.json": "90e36f7b7c31595bac11f4a41bbe1dd995198896c0594d059cad7bab122bd89b",
+    "train.jsonl": "a41ad6263f20bd32163ded0433e8e61b0104d8a99e042a19e56ee0fe30b67a71",
+    "test.jsonl": "c4d0920015dc72b457de3de7955f8974f874083ed7c6ca97883f5318f8613552",
+    "val.jsonl": "d1a5795537a687698740597f0950053e2bee114565cd45b4375e8142b3a2c7d0"
+  },
+  "verdict_cache_sha256": "fdd5b1929b9c7009efbc9b4acb46732e98d1e5191200cc826238f4235376fc20",
+  "labels": 44,
+  "before": {
+    "train": 36233,
+    "val": 4553,
+    "test": 4382
+  },
+  "after": {
+    "train": 35974,
+    "val": 4553,
+    "test": 4382
+  },
+  "removed_training_rows": 259,
+  "unchanged_validation_and_test": true,
+  "moves": {
+    "drugs -> shopping": 32,
+    "drugs -> sports": 6,
+    "drugs -> unavailable": 55,
+    "drugs -> parked": 68,
+    "drugs -> music": 5,
+    "drugs -> isp": 4,
+    "drugs -> library": 1,
+    "drugs -> gamble": 4,
+    "drugs -> homestyle": 10,
+    "kept": 90,
+    "drugs -> wellness": 13,
+    "drugs -> adult": 3,
+    "drugs -> jobsearch": 1,
+    "drugs -> religion": 5,
+    "drugs -> automobile": 2,
+    "drugs -> science": 3,
+    "drugs -> education": 9,
+    "drugs -> imagehosting": 2,
+    "drugs -> gardening": 2,
+    "drugs -> cooking": 1,
+    "drugs -> restaurants": 2,
+    "drugs -> downloads": 1,
+    "drugs -> news": 6,
+    "drugs -> webmail": 1,
+    "drugs -> alcohol": 2,
+    "drugs -> travel": 3,
+    "drugs -> realestate": 5,
+    "drugs -> pets": 1,
+    "drugs -> hospitals": 3,
+    "drugs -> finance": 3,
+    "drugs -> military": 1,
+    "drugs -> forum": 1,
+    "drugs -> socialnet": 2,
+    "drugs -> humor": 1,
+    "drugs -> politics": 1
+  },
+  "skipped": {
+    "abstain": 117,
+    "heuristic_missed": 123,
+    "low_confidence": 5,
+    "invalid_label": 3
+  }
+}

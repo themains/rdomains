@@ -79,7 +79,9 @@ cache_paths <- function(dir, key) {
 #' @keywords internal
 #' @noRd
 cache_get <- function(dir, url, ttl) {
-  paths <- cache_paths(dir, cache_key(url))
+  key <- tryCatch(cache_key(url), error = function(e) NULL)
+  if (is.null(key)) return(NULL)
+  paths <- cache_paths(dir, key)
   if (!file.exists(paths$meta) || !file.exists(paths$html)) {
     return(NULL)
   }

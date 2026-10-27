@@ -84,3 +84,13 @@ test_that("CDX returns only valid captures no later than the requested day", {
   reply <- '[["timestamp","original"],["invalid","https://example.com/"]]'
   expect_null(archive_snapshot("example.com"))
 })
+
+test_that("malformed URLs remain failed rows rather than aborting the batch", {
+  inputs <- c("%", "https://%", "[", "https://[")
+  result <- collect_content(inputs, obey_robots = FALSE, archive_fallback = FALSE,
+                            cache_dir = withr::local_tempdir())
+  expect_equal(result$input, inputs)
+  expect_equal(result$status, rep("failed", length(inputs)))
+  expect_equal(result$stage, rep("validate", length(inputs)))
+  expect_equal(result$error_code, rep("invalid_domain", length(inputs)))
+})

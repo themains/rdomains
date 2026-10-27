@@ -1,0 +1,62 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-http
+⠋ |          1 | audit-http
+⠴ |          6 | audit-http
+⠼ |         15 | audit-http
+⠧ |         28 | audit-http
+⠙ |         42 | audit-http
+⠦ |         57 | audit-http
+⠏ |         60 | audit-http
+⠹ | 1       62 | audit-http
+✖ | 3       66 | audit-http [4.5s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:136:3'): an empty redirect location does not create a self-loop
+Expected `result$error_code` to equal "empty_text".
+Differences:
+`actual`:   "too_many_redirects"
+`expected`: "empty_text"
+
+
+Failure ('test-audit-http.R:137:3'): an empty redirect location does not create a self-loop
+Expected `result$http_status` to equal 302L.
+Differences:
+  `actual`:  NA
+`expected`: 302
+
+
+Failure ('test-audit-http.R:141:3'): an empty redirect location does not create a self-loop
+Expected `hits` to equal "1".
+Differences:
+`actual`:   "3"
+`expected`: "1"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 4.6 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:136:3'): an empty redirect location does not create a self-loop
+Expected `result$error_code` to equal "empty_text".
+Differences:
+`actual`:   "too_many_redirects"
+`expected`: "empty_text"
+
+
+Failure ('test-audit-http.R:137:3'): an empty redirect location does not create a self-loop
+Expected `result$http_status` to equal 302L.
+Differences:
+  `actual`:  NA
+`expected`: 302
+
+
+Failure ('test-audit-http.R:141:3'): an empty redirect location does not create a self-loop
+Expected `hits` to equal "1".
+Differences:
+`actual`:   "3"
+`expected`: "1"
+
+
+[ FAIL 3 | WARN 0 | SKIP 0 | PASS 66 ]
+ℹ Testing rdomains

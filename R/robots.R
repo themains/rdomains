@@ -103,23 +103,21 @@ robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
       )
       resp <- fetched$response
       if (is.null(resp)) {
-        return(list(
-          rules = FALSE, crawl_delay = NA_real_, status = NA_integer_,
-          fetched_at = Sys.time()
-        ))
-      }
-      status <- resp_status(resp)
-      if (status >= 500) {
-        list(rules = FALSE, crawl_delay = NA_real_, status = status)
-      } else if (status >= 400) {
-        list(rules = NULL, crawl_delay = NA_real_, status = status)
+        list(rules = FALSE, crawl_delay = NA_real_, status = NA_integer_)
       } else {
-        body <- resp_body_string(resp)
-        if (nchar(body, type = "bytes") > RD_ROBOTS_MAX_BYTES) {
+        status <- resp_status(resp)
+        if (status >= 500) {
           list(rules = FALSE, crawl_delay = NA_real_, status = status)
+        } else if (status >= 400) {
+          list(rules = NULL, crawl_delay = NA_real_, status = status)
         } else {
-          parsed <- parse_robots(body, agent)
-          list(rules = parsed$rules, crawl_delay = parsed$crawl_delay, status = status)
+          body <- resp_body_string(resp)
+          if (nchar(body, type = "bytes") > RD_ROBOTS_MAX_BYTES) {
+            list(rules = FALSE, crawl_delay = NA_real_, status = status)
+          } else {
+            parsed <- parse_robots(body, agent)
+            list(rules = parsed$rules, crawl_delay = parsed$crawl_delay, status = status)
+          }
         }
       }
     },

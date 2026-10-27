@@ -7,7 +7,9 @@
   outcomes from inference failures. Text-only `pages` inputs must be fetched again.
 - Preserve path/query case in cache keys and start a new cache namespace. Check robots
   against the requested path and every content redirect; guard robots redirects too.
-  Validate crawler limits before making requests.
+  Validate crawler limits before making requests. Retain bounded retries for transient
+  HTTP failures, and return malformed URLs as failed rows without aborting the batch.
+  Empty redirect locations are not followed; fail-closed robots outcomes respect cache TTL.
 - Reject empty CDX results and select historical captures at or before the requested date.
 - Default to `gpt-6-luna` and `claude-haiku-5-5` with their supported request parameters.
   Reject invalid/truncated categories and preserve explicit VirusTotal key precedence.

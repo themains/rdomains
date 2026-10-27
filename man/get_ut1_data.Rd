@@ -36,7 +36,7 @@ ut1_cat("example.com")
 }
 }
 \references{
-\url{https://dsi.ut-capitole.fr/blacklists/}
+\url{https://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz}
 }
 \seealso{
 \code{\link[=ut1_cat]{ut1_cat()}}, and \code{\link[=source_vintage]{source_vintage()}} for how this compares with the

@@ -19,7 +19,7 @@
 #' @return Invisibly, the path to the written CSV.
 #'
 #' @export
-#' @references \url{https://dsi.ut-capitole.fr/blacklists/}
+#' @references \url{https://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz}
 #' @seealso [ut1_cat()], and [source_vintage()] for how this compares with the
 #'   discontinued sources.
 #'

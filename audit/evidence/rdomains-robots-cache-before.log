@@ -1,0 +1,90 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-http
+⠋ |          1 | audit-http
+⠴ |          6 | audit-http
+⠸ |         14 | audit-http
+⠧ |         28 | audit-http
+⠙ |         42 | audit-http
+⠦ |         57 | audit-http
+⠏ |         60 | audit-http
+⠹ | 1       62 | audit-http
+✖ | 5       64 | audit-http [4.6s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:135:3'): an empty redirect location does not create a self-loop
+Expected `result$error_code` to equal "empty_text".
+Differences:
+`actual`:   "too_many_redirects"
+`expected`: "empty_text"
+
+
+Failure ('test-audit-http.R:136:3'): an empty redirect location does not create a self-loop
+Expected `result$http_status` to equal 302L.
+Differences:
+  `actual`:  NA
+`expected`: 302
+
+
+Failure ('test-audit-http.R:140:3'): an empty redirect location does not create a self-loop
+Expected `hits` to equal "1".
+Differences:
+`actual`:   "3"
+`expected`: "1"
+
+
+Failure ('test-audit-http.R:154:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 1L.
+Differences:
+  `actual`: 2
+`expected`: 1
+
+
+Failure ('test-audit-http.R:156:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 2L.
+Differences:
+  `actual`: 3
+`expected`: 2
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 4.7 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:135:3'): an empty redirect location does not create a self-loop
+Expected `result$error_code` to equal "empty_text".
+Differences:
+`actual`:   "too_many_redirects"
+`expected`: "empty_text"
+
+
+Failure ('test-audit-http.R:136:3'): an empty redirect location does not create a self-loop
+Expected `result$http_status` to equal 302L.
+Differences:
+  `actual`:  NA
+`expected`: 302
+
+
+Failure ('test-audit-http.R:140:3'): an empty redirect location does not create a self-loop
+Expected `hits` to equal "1".
+Differences:
+`actual`:   "3"
+`expected`: "1"
+
+
+Failure ('test-audit-http.R:154:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 1L.
+Differences:
+  `actual`: 2
+`expected`: 1
+
+
+Failure ('test-audit-http.R:156:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 2L.
+Differences:
+  `actual`: 3
+`expected`: 2
+
+
+[ FAIL 5 | WARN 0 | SKIP 0 | PASS 64 ]
