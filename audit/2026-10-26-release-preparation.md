@@ -28,7 +28,8 @@ checks R 4.5/Python 3.12, real-weight parity, and cached offline inference.
 
 ## Validation evidence
 
-- New targeted tests: 67 assertions passed, no skips or warnings.
+- Initial new targeted tests: 67 assertions passed, no skips or warnings. Final
+  targeted suites contain 82 assertions after independent-review repairs.
 - `release-revert-checks.py`: 18 isolated production reversals each failed with
   the tests retained, then passed after restoration. Individual logs are in
   `evidence/release-reverts/`; source changes in the working checkout were untouched.
@@ -42,7 +43,8 @@ checks R 4.5/Python 3.12, real-weight parity, and cached offline inference.
   zero failures or warnings. R CMD check: 0 errors, 0 warnings, 0 notes on R 4.6.0/macOS.
 - Shipped links: 51 checked occurrences, 40 successful, 11 established exclusions,
   zero errors after correcting the Steven Black registry URL.
-- Independent review and candidate CI remain release gates.
+- Independent review passed on `a6d6fe0fae102724a64d8f57a7e7486c692a6be3`.
+  Candidate CI is tracked in [PR #17](https://github.com/themains/rdomains/pull/17).
 
 Tests use mocked paid providers. No paid inference or training was run. Docker's
 local daemon was unavailable; native R and Python checks were used.
@@ -94,5 +96,36 @@ Four concrete findings were reproduced locally and repaired:
    repair; CI now runs the combined tier before a separate offline check.
 
 Targeted production reversals cover the new ID, vendor and archive fixes in addition
-to the original 18 checks. The full model tier and release gates are rerun on the
-repaired candidate; review closure remains pending until independently verified.
+to the original 18 checks. The full model tier and release gates were rerun on the
+repaired candidate; all four independent findings are closed.
+
+## Final local and independent verification
+
+Code candidate: `a6d6fe0fae102724a64d8f57a7e7486c692a6be3`. Subsequent evidence and
+submission-comment edits are excluded from the package by `.Rbuildignore`.
+
+Both the implementation checkout and independent checkout passed the full combined
+suite: **581 assertions, 18 skips, zero failures and zero testthat warnings**. The
+skips are eight paid-provider opt-ins and ten CRAN-excluded public-network tests.
+Both R CMD checks passed with **0 errors, 0 warnings, 0 notes**; the package-check
+tier passed 575 assertions with 19 skips (the additional skip is real weights).
+Both lint runs were clean. The independent reviewer also ran 11 unchanged regression
+assertions that failed on the first candidate and passed on the repaired candidate.
+
+The earlier real-weight test ran on CPU. The final combined suite and installed
+artifact smoke test ran on Apple MPS; both matched native Python predictions.
+The known interpreter semaphore-cleanup warning occurred only after successful
+process exit. CI's Ubuntu job verifies the CPU path and Python 3.12/R 4.5 floor.
+
+The built tarball installed successfully into an isolated library. Its smoke test
+verified multiple lookup memberships, typed empty results, RDS save/reload,
+offline real-model inference and caller-restored IDs. The tarball excludes audit
+records, raw training data and generated website files. The final pkgdown build
+and actionlint check passed.
+
+There are 22 targeted production reversal cases, each failed without its fix and
+passed after restoration. The model-test isolation regression was reproduced by
+running mocked and real tests together before and after its fixture repair.
+
+No model weights were changed. No paid providers, training, CRAN submission or
+published release tag were involved in this verification.

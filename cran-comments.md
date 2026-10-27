@@ -8,14 +8,15 @@ breaking API changes. This candidate has not been submitted to CRAN.
 
 * macOS arm64, R 4.6.0
 * R CMD check: 0 errors, 0 warnings, 0 notes
-* Full tests: 560 passed, 19 skipped, 0 warnings or failures
-* Python 3.13.2 / piedomains 0.15.0: six real-model assertions passed offline
+* Full tests with real weights: 581 passed, 18 skipped, 0 warnings or failures
+* Python 3.13.2 / piedomains 0.15.0: real-model assertions passed offline
+* Independent gpt-6-astra review: all findings fixed, matching tests and clean package check
 * lintr and actionlint passed; pkgdown and the executed vignette built successfully
 
 The skipped tests require live services or explicit opt-in. Paid providers are
 covered with mocks. No paid API calls run during routine checks. The Python model
 is optional; its weights are not bundled. The dedicated integration workflow tests
-R 4.5 with Python 3.12. Candidate CI and independent review are tracked in the PR.
+R 4.5 with Python 3.12. Candidate CI is tracked in PR #17; independent review passed on code commit a6d6fe0.
 
 ## Notes for the reviewer
 

@@ -1,0 +1,21 @@
+* installing *source* package ‘rdomains’ ...
+** this is package ‘rdomains’ version ‘0.6.0’
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (rdomains)
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 42964.22it/s]
+2026-10-26 21:25:05,852 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on mps: 44 classes, temperature 1.248
+Installed 0.6.0 artifact: lookup, typed empties, RDS resume, real model and restored IDs passed.
+/Users/soodoku/.local/share/uv/python/cpython-3.13.2-macos-aarch64-none/lib/python3.13/multiprocessing/resource_tracker.py:277: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-yoiaalay'}
+  warnings.warn(
