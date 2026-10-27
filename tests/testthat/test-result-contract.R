@@ -67,7 +67,8 @@ test_that("DMOZ downloads return a reusable path", {
     }
   )
   path <- get_dmoz_data(outdir = directory)
-  expect_identical(path, normalizePath(file.path(directory, "dmoz_domain_category.csv")))
+  expected <- normalizePath(file.path(directory, "dmoz_domain_category.csv"))
+  expect_identical(normalizePath(path), expected)
   expect_equal(suppressWarnings(dmoz_cat("example.com", use_file = path))$category, "news")
 })
 

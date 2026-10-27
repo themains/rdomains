@@ -129,3 +129,11 @@ running mocked and real tests together before and after its fixture repair.
 
 No model weights were changed. No paid providers, training, CRAN submission or
 published release tag were involved in this verification.
+
+## Windows CI follow-up
+
+The Windows check on `a6d6fe0` found a test-only path comparison error: the returned
+absolute path used mixed valid separators while the expected path used backslashes.
+The test now compares normalized paths on both sides and still exercises the returned
+file through `dmoz_cat()`. The DMOZ return-path regression reversal remains required.
+Production code is unchanged; final CI must confirm this test on Windows.
