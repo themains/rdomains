@@ -1,0 +1,128 @@
+
+PROBE: legitimate long article mentions parking marketplace
+# A tibble: 1 × 8
+  page_state blocked block_vendor block_reason parked unavailable thin  n_tokens
+  <chr>      <lgl>   <chr>        <chr>        <lgl>  <lgl>       <lgl>    <int>
+1 parked     FALSE   <NA>         <NA>         TRUE   FALSE       FALSE      308
+
+PROBE: empty retry selection
+ERROR: Assertion on 'domains' failed: Must have length >= 1, but has length 0.
+
+PROBE: HTTP failure retry policy
+[1] TRUE
+
+PROBE: cache valid JSON with invalid HTTP-status shape aborts collection
+ERROR: 'length = 2' in coercion to 'logical(1)'
+
+PROBE: archive receives hostname instead of requested page
+$requested
+[1] "https://example.com/News/story?id=7"
+
+$archive_argument
+[1] "example.com"
+
+$error_code
+[1] "no_archive_snapshot"
+
+
+PROBE: HTTP 302 with content but no Location becomes success
+# A tibble: 1 × 4
+  http_status status error_code retryable
+        <int> <chr>  <chr>      <lgl>
+1         302 ok     <NA>       FALSE
+
+PROBE: HTTP 404 is retryable
+# A tibble: 1 × 4
+  http_status status error_code retryable
+        <int> <chr>  <chr>      <lgl>
+1         404 failed http_error TRUE
+
+PROBE: unavailable archive and empty archive are indistinguishable
+  archive_http_status status          error_code retryable
+1                 503 failed no_archive_snapshot     FALSE
+2                 200 failed no_archive_snapshot     FALSE
+
+PROBE: download helper composability
+DMOZ Data saved to the following destination: /var/folders/ks/1g8bn5m566n_w4l5hwwjv4180000gn/T//RtmpMiYSVQ/file1000f18ce99a1
+$returned
+NULL
+
+$file_exists
+[1] TRUE
+
+
+PROBE: lookup custom file silently picks first duplicate
+$forward
+[1] "news"
+
+$reverse
+[1] "shopping"
+
+
+PROBE: API error outcome loses reason and selected model
+# A tibble: 1 × 2
+  domain_name openai_category
+  <chr>       <chr>
+1 example.com <NA>
+
+PROBE: VirusTotal schema changes with returned vendor
+$with_category
+[1] "domain_name" "VendorA"
+
+$without_category
+[1] "domain_name"
+
+
+PROBE: parking false positive bypasses model and becomes successful label
+# A tibble: 1 × 4
+  status pie_category label_source pie_confidence
+  <chr>  <chr>        <chr>                 <dbl>
+1 ok     parked       heuristic                NA
+
+PROBE: robots timeout becomes nonretryable denial
+# A tibble: 1 × 4
+  status error_code     retryable http_status
+  <chr>  <chr>          <lgl>           <int>
+1 failed robots_blocked FALSE              NA
+
+PROBE: R/Python shared outcome policy has diverged
+$python_only
+[1] "archive_rate_limited" "missing_screenshot"   "llm_error"
+[4] "cannot_classify"
+
+$R_only
+[1] "too_many_redirects"  "service_unavailable" "rate_limited"
+[4] "service_error"
+
+$R_bot_blocked_retryable
+[1] FALSE
+
+$Python_bot_blocked_retryable
+[1] TRUE
+
+
+PROBE: public function formals
+adult_ml1_cat: domains
+cache_clear: dir
+claude_cat: domains, api_key, categories, model, rate_limit
+collect_content: domains, delay, timeout, max_bytes, obey_robots, max_crawl_delay, max_redirects, cache_dir, cache_ttl, cache_max_size, allow_hosts, archive_fallback, archive_date, user_agent
+dmoz_cat: domains, use_file
+fetch_error_codes:
+fetch_report: x
+get_dmoz_data: outdir, overwrite
+get_shalla_data: outdir, overwrite
+get_stevenblack_data: outdir, variant, overwrite
+get_ut1_data: outdir, overwrite
+html_text_content: html
+not_news: url_list
+openai_cat: domains, api_key, categories, model, rate_limit
+page_signals: html, text, domain, status
+pie_cat: domains, pages, threshold, ...
+rdomains_cache_dir:
+shalla_cat: domains, use_file
+source_vintage: source
+stevenblack_cat: domains, use_file
+uni_cat: domains
+ut1_cat: domains, use_file
+virustotal_cat: domains, api_key
+NULL

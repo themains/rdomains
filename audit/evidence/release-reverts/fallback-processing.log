@@ -1,0 +1,22 @@
+release-correctness: ....................12............
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-release-correctness.R:122:3'): archive fallback reports cap
+Expected `result$error_code` to be identical to "thin_content".
+Differences:
+`actual`:   "no_archive_snapshot"
+`expected`: "thin_content"
+
+
+── 2. Failure ('test-release-correctness.R:123:3'): archive fallback reports cap
+Expected `result$archive_error_code` to be identical to "thin_content".
+Differences:
+`actual`:   "no_archive_snapshot"
+`expected`: "thin_content"
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

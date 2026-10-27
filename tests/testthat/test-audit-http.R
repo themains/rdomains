@@ -69,8 +69,10 @@ test_that("a robots redirect never sends an HTTP request to a rejected destinati
       if (grepl("rejected", req$url)) {
         return(httr2::response(status_code = 200, body = charToRaw("User-agent: *\nAllow: /")))
       }
-      httr2::response(status_code = 302,
-                      headers = list(location = "https://rejected.example/robots.txt"))
+      httr2::response(
+        status_code = 302,
+        headers = list(location = "https://rejected.example/robots.txt")
+      )
     }
   )
   rules <- robots_for_origin("https://redirect-test.example")
@@ -98,7 +100,8 @@ test_that("transient failures are retried for content and robots requests", {
         return(res$set_status(503L)$set_header("Retry-After", "0")$send("Unavailable"))
       }
       text <- paste(rep("Journalism reports local elections and government policy.", 20),
-                    collapse = " ")
+        collapse = " "
+      )
       res$set_header("Content-Type", "text/html")$send(paste0("<html><p>", text, "</p></html>"))
     })
     app$get("/counts", function(req, res) {
@@ -106,8 +109,10 @@ test_that("transient failures are retried for content and robots requests", {
     })
     srv <- webfakes::new_app_process(app)
     withr::defer(srv$stop())
-    result <- collect_content(srv$url("/page"), allow_hosts = "127.0.0.1", delay = 0,
-                              cache_dir = withr::local_tempdir(), archive_fallback = FALSE)
+    result <- collect_content(srv$url("/page"),
+      allow_hosts = "127.0.0.1", delay = 0,
+      cache_dir = withr::local_tempdir(), archive_fallback = FALSE
+    )
     expect_equal(result$status, "ok")
     expect_equal(result$http_status, 200L)
     counts <- httr2::request(srv$url("/counts")) |>
@@ -130,10 +135,12 @@ test_that("an empty redirect location does not create a self-loop", {
   app$get("/hits", function(req, res) res$send(as.character(res$app$locals$hits)))
   srv <- webfakes::new_app_process(app)
   withr::defer(srv$stop())
-  result <- collect_content(srv$url("/empty-location"), allow_hosts = "127.0.0.1",
-                            obey_robots = FALSE, delay = 0, max_redirects = 2,
-                            cache_dir = withr::local_tempdir(), archive_fallback = FALSE)
-  expect_equal(result$error_code, "empty_text")
+  result <- collect_content(srv$url("/empty-location"),
+    allow_hosts = "127.0.0.1",
+    obey_robots = FALSE, delay = 0, max_redirects = 2,
+    cache_dir = withr::local_tempdir(), archive_fallback = FALSE
+  )
+  expect_equal(result$error_code, "redirect_error")
   expect_equal(result$http_status, 302L)
   hits <- httr2::request(srv$url("/hits")) |>
     httr2::req_perform() |>

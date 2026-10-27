@@ -11,6 +11,9 @@ get_dmoz_data(outdir = ".", overwrite = FALSE)
 
 \item{overwrite}{Optional; default is FALSE. If TRUE, the file is overwritten.}
 }
+\value{
+Invisibly, the absolute path to the downloaded file.
+}
 \description{
 Downloads archived DMOZ (Open Directory Project) data. DMOZ was discontinued in March 2017.
 This function downloads our preserved 2015 DMOZ snapshot. For more details, check:

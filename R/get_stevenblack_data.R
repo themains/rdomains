@@ -9,6 +9,7 @@
 #'   "porn", "social", "gambling", "all"
 #' @param overwrite Optional; default is FALSE. If TRUE, the file is overwritten.
 #'
+#' @return Invisibly, the absolute path to the downloaded file.
 #' @export
 #'
 #' @references \url{https://github.com/StevenBlack/hosts}
@@ -17,56 +18,20 @@
 #' get_stevenblack_data()
 #' get_stevenblack_data(variant = "all")
 #' }
-get_stevenblack_data <- function(outdir = "./", variant = "base", overwrite = FALSE) {
-  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
-  checkmate::assert_flag(overwrite)
+get_stevenblack_data <- function(outdir = ".", variant = "base", overwrite = FALSE) {
+  variants <- c("base", "porn", "social", "gambling", "all")
   assert_character(variant, len = 1, any.missing = FALSE)
-  # Define available variants and their URLs
-  variants <- list(
-    base = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-    porn = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/porn/hosts",
-    social = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/social/hosts",
-    gambling = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts", # nolint: line_length_linter.
-    all = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling-porn-social/hosts" # nolint: line_length_linter.
-  )
-
-  if (!variant %in% names(variants)) {
-    stop("Invalid variant. Choose from: ", paste(names(variants), collapse = ", "))
-  }
-
-  # Create output filename
-  output_file <- file.path(outdir, paste0("stevenblack_hosts_", variant, ".txt"))
-
-  # Check if file already exists
-  if (!overwrite && file.exists(output_file)) {
-    stop(
-      "File already exists: ", output_file,
-      "\nSet overwrite=TRUE to replace it."
+  if (!variant %in% variants) cli_abort("Unknown {.arg variant}: {.val {variant}}.")
+  output <- source_destination(outdir, paste0("stevenblack_hosts_", variant, ".txt"), overwrite)
+  suffix <- if (variant == "base") {
+    "hosts"
+  } else {
+    paste0(
+      "alternates/",
+      if (variant == "all") "gambling-porn-social" else variant, "/hosts"
     )
   }
-
-  # Create output directory if it doesn't exist
-  if (!dir.exists(outdir)) {
-    dir.create(outdir, recursive = TRUE)
-  }
-
-  # Download the hosts file
-  tryCatch(
-    {
-      cat("Downloading Steven Black's hosts file (", variant, " variant)...\n")
-      metadata <- download_source(variants[[variant]], output_file)
-      save_source_metadata(output_file, metadata)
-      cat("Steven Black's hosts data saved to:", output_file, "\n")
-
-      # Print some statistics
-      hosts_lines <- readLines(output_file, warn = FALSE)
-      blocked_count <- sum(grepl("^(0\\.0\\.0\\.0|127\\.0\\.0\\.1)\\s+", hosts_lines))
-      cat("Total blocked domains:", blocked_count, "\n")
-    },
-    error = function(e) {
-      stop("Failed to download hosts file: ", e$message)
-    }
-  )
-
-  invisible(output_file)
+  metadata <- download_source(paste0(SOURCE_VINTAGE$stevenblack$url, suffix), output)
+  save_source_metadata(output, metadata)
+  invisible(output)
 }

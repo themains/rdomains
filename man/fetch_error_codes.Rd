@@ -14,8 +14,8 @@ The closed set of \code{error_code} values that \code{\link[=collect_content]{co
 return, with the pipeline stage each belongs to and whether it is worth retrying.
 }
 \details{
-These strings are shared verbatim with the Python package \code{piedomains}, so results from
-the two can be aggregated together.
+Shared strings retain their meaning in \code{piedomains}. R-specific acquisition
+failures and retry-policy exceptions are recorded in the versioned contract.
 }
 \examples{
 fetch_error_codes()

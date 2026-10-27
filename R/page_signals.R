@@ -73,20 +73,12 @@ RD_DENIAL_TEXT <- paste0(
 #' @noRd
 RD_INTERSTITIAL_MAX_BYTES <- 60000L
 
-#' Registrars and parking services whose landing pages are unmistakable
-#' @keywords internal
-#' @noRd
-RD_PARKING_SERVICES <- c(
-  "dan.com", "sedo.com", "hugedomains", "afternic", "bodis.com",
-  "parkingcrew", "wc_landing", "domainmarket", "undeveloped.com", "namesilo.com"
-)
-
 #' Phrases a parking page uses about itself. Held to a length limit because a real shop
 #' legitimately says "for sale" while running to thousands of words.
 #' @keywords internal
 #' @noRd
 RD_PARKING_PHRASES <- c(
-  "is for sale", "buy this domain", "may be for sale", "domain for sale",
+  "is for sale", "is listed for sale", "buy this domain", "may be for sale", "domain for sale",
   "this domain is parked", "domain parking", "inquire about this domain",
   "domain name is for sale", "the domain you are looking for is for sale",
   # Found by sampling what the first version missed: orderwith.com, a parked page
@@ -181,20 +173,6 @@ looks_like_interstitial <- function(html, domain = "") {
     grepl(RD_DENIAL_TEXT, html, ignore.case = TRUE, perl = TRUE)
 }
 
-#' Is the extracted text too short to classify honestly?
-#'
-#' @param text Extracted page text.
-#' @param min_tokens Floor, in whitespace-separated tokens.
-#'
-#' @return `TRUE` when the text falls below the floor.
-#' @keywords internal
-#' @noRd
-is_thin <- function(text, min_tokens = 30L) {
-  length(strsplit(str_trim(text), "\\s+")[[1]][nzchar(
-    strsplit(str_trim(text), "\\s+")[[1]]
-  )]) < min_tokens
-}
-
 #' Is this page a domain-parking placeholder rather than a site?
 #'
 #' 7.9% of the piedomains training corpus turned out to be parking pages, unevenly spread:
@@ -208,20 +186,15 @@ is_thin <- function(text, min_tokens = 30L) {
 #' @noRd
 looks_parked <- function(text) {
   lowered <- tolower(text)
-  # The service name has to start a name, not sit inside one: "dan.com" is a substring of
-  # "jordan.com" and "sedo.com" of "cassedo.com". This check runs before the length guard
-  # below, so unanchored it relabels an arbitrarily long real page as a placeholder.
-  if (any(vapply(RD_PARKING_SERVICES, function(s) {
-    grepl(paste0("(^|[^a-z0-9-])", gsub("([.\\\\+*?^$(){}|\\[\\]])", "\\\\\\1", s)),
-      lowered,
-      perl = TRUE
-    )
-  }, logical(1)))) {
-    return(TRUE)
-  }
-  # A phrase alone is not enough: length separates a placeholder from a shop.
   if (word_count(lowered) > RD_PARKED_MAX_WORDS) {
     return(FALSE)
+  }
+  hosted <- grepl(
+    "^(hosted|offered) by (www[.])?(sedo[.]com|hugedomains[.]com|dan[.]com)[.! ]*$",
+    lowered
+  )
+  if (hosted) {
+    return(TRUE)
   }
   any(vapply(RD_PARKING_PHRASES, function(p) grepl(p, lowered, fixed = TRUE), logical(1)))
 }
@@ -300,6 +273,10 @@ word_count <- function(x) {
 #' ))
 page_signals <- function(html, text = NULL, domain = "", status = NULL) {
   assert_character(html, len = 1, any.missing = FALSE)
+  if (!is.null(text)) assert_character(text, len = 1, any.missing = FALSE)
+  if (!is.null(domain)) assert_character(domain, len = 1, any.missing = TRUE)
+  if (length(status) == 1L && is.na(status)) status <- NULL
+  if (!is.null(status)) validate_number(status, "status", lower = 100, upper = 599, integer = TRUE)
   if (is.null(text)) {
     text <- html_text_content(html)$text
   }

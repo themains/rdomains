@@ -6,8 +6,11 @@ guarded_get <- function(url, timeout, max_bytes, user_agent,
                         obey_robots = FALSE, delay = 0, max_crawl_delay = 30) {
   current <- url
   allowed <- NA
-  fail <- function(code, stage = "fetch") {
-    list(response = NULL, error_code = code, stage = stage, robots_allowed = allowed)
+  fail <- function(code, stage = "fetch", http_status = NA_integer_) {
+    list(
+      response = NULL, error_code = code, stage = stage, robots_allowed = allowed,
+      http_status = http_status
+    )
   }
   for (hop in seq_len(max_redirects + 1L)) {
     bad <- check_url(current, allow_hosts = allow_hosts)
@@ -25,7 +28,13 @@ guarded_get <- function(url, timeout, max_bytes, user_agent,
         timeout = timeout, allow_hosts = allow_hosts,
         user_agent = user_agent
       )
+      if (!is.null(rules$error_code)) {
+        return(fail(rules$error_code, http_status = rules$status))
+      }
       path <- sub("^[^:]+://[^/]+", "", httr2::url_build(parsed))
+      if (!is.null(rules$error_code)) {
+        return(fail(rules$error_code, http_status = rules$status))
+      }
       path <- sub("#.*$", "", path)
       if (!nzchar(path)) path <- "/"
       allowed <- robots_path_allowed(rules$rules, path)

@@ -16,82 +16,13 @@
 #' @examples \dontrun{
 #' get_shalla_data()
 #' }
-get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
-  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
-  checkmate::assert_flag(overwrite)
-  # Normalize and create output directory path
-  outdir <- normalizePath(outdir, mustWork = FALSE)
-  if (!dir.exists(outdir)) {
-    tryCatch(
-      {
-        dir.create(outdir, recursive = TRUE)
-      },
-      error = function(e) {
-        stop(
-          "Cannot create output directory: ", outdir, "\n",
-          "Error: ", e$message, "\n",
-          "Please check directory permissions."
-        )
-      }
-    )
-  }
-
-  # Use proper file path construction
-  output_file <- file.path(outdir, "shalla_domain_category.csv")
-
-  # Check if file already exists
-  if (!overwrite && file.exists(output_file)) {
-    stop(
-      "File already exists: ", output_file, "\n",
-      "Set overwrite=TRUE to replace it or choose a different location."
-    )
-  }
-
-  # Create temporary file in a writable location
-  tmp_dir <- tempdir()
-  tmp <- tempfile(tmpdir = tmp_dir, fileext = ".gz")
-
-  tryCatch(
-    {
-      # Download file
-      cat("Downloading Shallalist data...\n")
-      metadata <- download_source(
-        # Kept on one line: splitting a URL across string literals leaves the
-        # link checker matching only the first fragment, which always 404s.
-        "https://raw.githubusercontent.com/themains/rdomains/master/data-raw/shallalist/accomplist/shallalist.gz", # nolint: line_length_linter.
-        tmp
-      )
-
-      # Extract to destination with proper error handling
-      R.utils::gunzip(tmp, destname = output_file, overwrite = overwrite)
-
-      metadata$source_last_published <- "2022-01"
-      save_source_metadata(output_file, metadata)
-
-      # Verify the file was created successfully
-      if (!file.exists(output_file)) {
-        stop("Failed to create output file. Please check write permissions for: ", outdir)
-      }
-
-      cat("Shallalist data saved to:", output_file, "\n")
-    },
-    error = function(e) {
-      # Clean up temp file on error
-      if (file.exists(tmp)) unlink(tmp, force = TRUE)
-
-      if (grepl("permission", e$message, ignore.case = TRUE)) {
-        stop(
-          "Permission denied. Please ensure you have write access to: ", outdir, "\n",
-          "On Windows, try running R as administrator or choose a different output directory."
-        )
-      } else {
-        stop("Error downloading or extracting Shallalist data: ", e$message)
-      }
-    }
-  )
-
-  # Clean up temp file
-  if (file.exists(tmp)) unlink(tmp, force = TRUE)
-
-  invisible(output_file)
+get_shalla_data <- function(outdir = ".", overwrite = FALSE) {
+  output <- source_destination(outdir, "shalla_domain_category.csv", overwrite)
+  tmp <- tempfile(fileext = ".gz")
+  on.exit(unlink(tmp), add = TRUE)
+  metadata <- download_source(SOURCE_VINTAGE$shalla$url, tmp)
+  R.utils::gunzip(tmp, destname = output, overwrite = overwrite)
+  metadata$source_last_published <- SOURCE_VINTAGE$shalla$last_published
+  save_source_metadata(output, metadata)
+  invisible(output)
 }

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "piedomains_version": "0.15.0",
+  "upstream_commit": "33fe0e8e0cf90aa1916f46abdceb07d93d09a7bd",
+  "python_codes": [
+    "invalid_domain",
+    "dns_error",
+    "private_address",
+    "connection_error",
+    "timeout",
+    "http_error",
+    "robots_blocked",
+    "content_type_rejected",
+    "content_too_large",
+    "no_archive_snapshot",
+    "archive_rate_limited",
+    "empty_text",
+    "missing_input_path",
+    "missing_screenshot",
+    "model_load_error",
+    "model_error",
+    "llm_error",
+    "bot_blocked",
+    "thin_content",
+    "cannot_classify",
+    "unknown"
+  ],
+  "python_retryable": [
+    "archive_rate_limited",
+    "bot_blocked",
+    "connection_error",
+    "dns_error",
+    "http_error",
+    "timeout"
+  ],
+  "unsupported_in_r": [
+    "missing_screenshot",
+    "llm_error",
+    "cannot_classify"
+  ],
+  "retryability_exceptions": {
+    "http_error": "R separates transient statuses into http_unavailable; ordinary HTTP failures are not automatically retried.",
+    "bot_blocked": "R requires an explicit archive fallback; a direct retry of the same bot challenge is not advised. Archive failures retain their own retryable code."
+  }
+}

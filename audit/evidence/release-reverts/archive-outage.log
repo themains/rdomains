@@ -1,0 +1,23 @@
+release-correctness: ......12..........................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-release-correctness.R:45:3'): archive outages retain a tran
+Expected `result$error_code` to be identical to "archive_unavailable".
+Differences:
+`actual`:   "no_archive_snapshot"
+`expected`: "archive_unavailable"
+
+
+── 2. Failure ('test-release-correctness.R:46:3'): archive outages retain a tran
+Expected `result$retryable` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+Don't worry, you'll get it.
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

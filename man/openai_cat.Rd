@@ -5,11 +5,11 @@
 \title{Get Category from OpenAI}
 \usage{
 openai_cat(
-  domains = NULL,
+  domains,
   api_key = NULL,
   categories = NULL,
   model = "gpt-6-luna",
-  rate_limit = 0.5
+  delay = 0.5
 )
 }
 \arguments{
@@ -21,10 +21,11 @@ openai_cat(
 
 \item{model}{OpenAI model to use (default: "gpt-6-luna" for cost efficiency)}
 
-\item{rate_limit}{delay in seconds between API calls (default: 0.5)}
+\item{delay}{delay in seconds between API calls (default: 0.5)}
 }
 \value{
-data.frame with original list and content category of the domain
+A tibble following \link{classification_results}, including provider failures and model
+identity.
 }
 \description{
 Infers a category from the domain name using OpenAI's chat completion API.

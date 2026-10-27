@@ -1,4 +1,36 @@
-# rdomains 0.5.0.9000 (development)
+# rdomains 0.6.0
+
+## Result contracts and migration
+
+- Classifiers now return a common result with `input_id`, original `input`, provider,
+  evidence type, structured outcomes, typed `labels`, and source-specific `details`.
+  Provider-specific category columns become `category`; `pie_confidence` becomes
+  `confidence`. Vendor labels and multiple list memberships are retained in `labels`.
+  University records, UT1 usage, and piedomains fetch/model metadata move into `details`.
+- Empty domain vectors return typed empty results without I/O. `no_match` distinguishes
+  absent memberships from execution failures. All download helpers return a path invisibly.
+- `rate_limit` is renamed `delay`, measured in seconds. `web_categories()` exposes the
+  shared default LLM vocabulary. API failures retain status, reason and model identity.
+- `not_news()` is replaced by `news_url_signals()` with independent `soft_news` and
+  `hard_news` flags. `adult_ml1_cat()` is replaced by `adult_name_probability()`; its
+  fitted model and training-era feature encoding are unchanged. No compatibility aliases
+  are retained.
+- Steven Black results describe membership only: `blocked` or `no_match`. Hostname
+  fragments no longer imply advertising or malware. UT1 retains every category membership.
+- `uni_cat()` accepts a saved JSON file and caches its automatic download for the session.
+- Current-content collection defaults to `archive_fallback = FALSE`. Historical and fallback
+  requests preserve the full URL. Archive outages and robots transport failures have
+  distinct retryable outcomes; not-found pages and unresolved redirects do not report success.
+- Corrupt cache records are misses. Substantive articles mentioning parking marketplaces
+  are not classified as parked by that mention alone. Acquired pages share one processing path.
+- `pie_cat(model = ...)` selects a checkpoint explicitly. The pinned default is reused
+  within a session; custom checkpoints are loaded afresh. Saved results support inference-only retry.
+- R 4.5 is the tested minimum. A dedicated R/Python job exercises the bridge and verifies
+  pinned-weight parity both online and offline. The unused XML dependency is removed.
+
+This is an API and correctness release, not a newly trained classifier. The pinned
+piedomains checkpoint's drugs/retail limitations and the historical adult model's lack
+of current calibration remain documented. No new model-quality claim is made.
 
 ## October 2026 audit repairs
 
@@ -18,7 +50,7 @@
   output to `domain_name`. VirusTotal credentials now use `api_key`.
 - Separate publication dates from retrieval times using checksum-bound metadata.
   Unverified caller files have unknown dates. Correct the DMOZ snapshot year to 2015.
-  Steven Black absence now returns `not_listed`; it is not a safety assessment.
+  Steven Black absence returns `no_match`; it is not a safety assessment.
 - Document the bundled 2017 adult model and the piedomains checkpoint's known label
   contamination. These repairs do not retrain either model.
 

@@ -1,0 +1,22 @@
+result-contract: ....................1............
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Error ('test-result-contract.R:83:3'): saved university JSON preserves all
+<rdomains_invalid_lookup/rlang_error/error/condition>
+Error in `validate_lookup(data, c(key, label))`: The lookup file must contain columns "hostname" and "category".
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_equal(...) at test-result-contract.R:83:3
+ 2. │ └─testthat::quasi_label(enquo(object), label)
+ 3. │   └─rlang::eval_bare(expr, quo_get_env(quo))
+ 4. └─rdomains::uni_cat("a.edu", use_file = path)
+ 5.   └─rdomains:::lookup_result(...) at rdomains/R/uni_cat.R:32:3
+ 6.     └─rdomains:::validate_lookup(data, c(key, label)) at rdomains/R/results.R:67:3
+ 7.       └─cli::cli_abort(...) at rdomains/R/source_metadata.R:62:5
+ 8.         └─rlang::abort(...)
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

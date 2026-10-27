@@ -4,7 +4,7 @@
 \alias{stevenblack_cat}
 \title{Get Category from Steven Black's Host List}
 \usage{
-stevenblack_cat(domains = NULL, use_file = NULL)
+stevenblack_cat(domains, use_file = NULL)
 }
 \arguments{
 \item{domains}{domain names as character vector}
@@ -13,8 +13,8 @@ stevenblack_cat(domains = NULL, use_file = NULL)
 once per session and reuses it}
 }
 \value{
-data.frame with the normalized domain_name, the category, and the date of the
-list that supplied it
+A tibble following \link{classification_results}. Source-specific data are
+retained in \code{details}; all source labels are retained in \code{labels}.
 }
 \description{
 Classifies domains based on Steven Black's unified host list which blocks
@@ -25,8 +25,8 @@ in the blocklist and categorizes it accordingly.
 Steven Black's host list is a consolidated list from multiple sources including
 adaway.org, mvps.org, malwaredomainlist.com, and someonewhocares.org.
 
-Absence from the list is \code{not_listed}, not a safety assessment. Subcategories
-such as \code{ads} are domain-name heuristics applied only to listed hosts.
+Listed hosts receive \code{blocked}; absent hosts have \code{status = "no_match"}.
+Neither outcome determines safety or a content subclass.
 
 Publication dates come from the \code{.metadata.json} sidecar written by the downloader,
 checked against the file contents. \code{source_fetched_at} is the download time.

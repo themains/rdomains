@@ -23,18 +23,16 @@ clean_domains <- function(domains) {
 #' @noRd
 validate_domains <- function(domains, arg_name = "domains") {
   if (is.null(domains)) {
-    cli_abort("{.arg {arg_name}} must not be NULL")
+    cli_abort("{.arg {arg_name}} must not be NULL", class = "rdomains_invalid_input")
   }
 
-  assert_character(
-    domains,
-    min.len = 1,
-    any.missing = FALSE,
-    .var.name = arg_name
-  )
+  if (!is.character(domains) || anyNA(domains)) {
+    cli_abort("{.arg {arg_name}} must be a character vector without missing values.",
+              class = "rdomains_invalid_input")
+  }
 
   if (any(str_trim(domains) == "")) {
-    cli_abort("{.arg {arg_name}} contains empty strings")
+    cli_abort("{.arg {arg_name}} contains empty strings", class = "rdomains_invalid_input")
   }
 
   invisible(domains)
@@ -88,7 +86,7 @@ get_api_key <- function(api_key = NULL, env_vars, service_name) {
 
   for (var in env_vars) {
     key <- Sys.getenv(var)
-    if (!identical(key, "")) {
+    if (nzchar(trimws(key))) {
       return(key)
     }
   }
@@ -143,14 +141,14 @@ validate_number <- function(x, name, lower = 0, upper = Inf, integer = FALSE) {
 #' Validate a requested category vocabulary and request controls
 #' @keywords internal
 #' @noRd
-validate_llm_options <- function(categories, model, rate_limit) {
+validate_llm_options <- function(categories, model, delay) {
   assert_character(categories, min.len = 1, any.missing = FALSE, min.chars = 1)
   if (any(!nzchar(trimws(categories))) || anyDuplicated(categories)) {
     cli_abort("{.arg categories} must contain distinct nonblank names.")
   }
   assert_character(model, len = 1, any.missing = FALSE, min.chars = 1)
   if (!nzchar(trimws(model))) cli_abort("{.arg model} must not be blank.")
-  validate_number(rate_limit, "rate_limit")
+  validate_number(delay, "delay")
 }
 
 #' Reject a provider response that is not a requested category

@@ -11,16 +11,23 @@
 #'
 #' @param domains required; string; vector of domain names
 #'
-#' @return data.frame with original list and content category of the domains
+#' @return A tibble with input identity, `p_adult`, model identity and artifact date.
 #'
 #' @export
 #' @examples \dontrun{
-#' adult_ml1_cat("http://www.google.com")
+#' adult_name_probability("http://www.google.com")
 #' }
-adult_ml1_cat <- function(domains = NULL) {
+adult_name_probability <- function(domains) {
   validate_domains(domains)
   c_domains <- clean_domains(domains)
 
+  if (!length(domains)) {
+    return(tibble(
+      input_id = integer(), input = character(),
+      domain_name = character(
+      ), p_adult = numeric(), model_id = character(), model_last_updated = character()
+    ))
+  }
   coefs <- dimnames(glm_shalla$glmnet.fit$beta)[[1]]
 
   features <- spMatrix(length(c_domains), length(coefs))
@@ -47,7 +54,7 @@ adult_ml1_cat <- function(domains = NULL) {
   )[, 1]
 
   tibble(
-    domain_name = c_domains,
+    input_id = seq_along(domains), input = domains, domain_name = c_domains,
     p_adult = p_adult,
     model_id = "rdomains/glm_shalla",
     model_last_updated = "2017-11-10"

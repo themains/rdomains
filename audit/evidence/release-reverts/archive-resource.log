@@ -1,0 +1,22 @@
+release-correctness: ..1.............2.................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-release-correctness.R:21:3'): archive requests preserve the
+Expected `requested` to be identical to `input`.
+Differences:
+`actual`:   "example.com"
+`expected`: "https://example.com/News/story?id=7"
+
+
+── 2. Failure ('test-release-correctness.R:111:3'): archive fallback reports cap
+Expected `requested` to be identical to `input`.
+Differences:
+`actual`:   "example.com"
+`expected`: "https://example.com/story?id=7"
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

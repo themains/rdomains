@@ -10,7 +10,7 @@ fetch_report(x)
 \item{x}{A tibble from \code{\link[=collect_content]{collect_content()}} or \code{\link[=pie_cat]{pie_cat()}}.}
 }
 \value{
-A one-row tibble: \code{n}, \code{ok}, \code{failed}, \code{retryable}, and list-columns
+A one-row tibble: \code{n}, \code{ok}, \code{failed}, \code{no_match}, \code{retryable}, and list-columns
 \code{by_stage}, \code{by_reason} and \code{missing} (the domains that produced nothing).
 }
 \description{

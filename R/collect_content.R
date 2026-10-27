@@ -135,14 +135,24 @@ classify_condition <- function(cnd) {
   if (grepl("maximum file size exceeded|filesize exceeded", msg)) {
     return("content_too_large")
   }
-  if (any(grepl("timeout", classes)) || grepl("timed? ?out", msg)) return("timeout")
+  if (any(grepl("timeout", classes)) || grepl("timed? ?out", msg)) {
+    return("timeout")
+  }
   if (any(grepl("httr2_failure", classes))) {
-    if (grepl("could not resolve|name or service|nodename", msg)) return("dns_error")
-    if (grepl("ssl|certificate|tls", msg)) return("connection_error")
+    if (grepl("could not resolve|name or service|nodename", msg)) {
+      return("dns_error")
+    }
+    if (grepl("ssl|certificate|tls", msg)) {
+      return("connection_error")
+    }
     return("connection_error")
   }
-  if (grepl("could not resolve|name or service|nodename", msg)) return("dns_error")
-  if (grepl("refused|reset|unreachable", msg)) return("connection_error")
+  if (grepl("could not resolve|name or service|nodename", msg)) {
+    return("dns_error")
+  }
+  if (grepl("refused|reset|unreachable", msg)) {
+    return("connection_error")
+  }
   "unknown"
 }
 
@@ -182,13 +192,15 @@ classify_condition <- function(cnd) {
 #'   *used to be* -- and, set against a live run, how you measure whether a label has gone
 #'   stale. Rows carry `source = "archive"` and the realised `snapshot_timestamp`, which
 #'   is the latest capture on or before the requested day.
-#' @param archive_fallback When a host serves an anti-bot interstitial, try the
+#' @param archive_fallback Opt in to archived content (default `FALSE`). When a host serves an
+#' anti-bot interstitial, try the
 #'   Internet Archive's most recent capture. Rows recovered this way carry
 #'   `source = "archive"` and a `snapshot_timestamp`, so the vintage is never
 #'   hidden. Dead domains and explicitly exempted hosts are not recovered this way.
 #' @param user_agent Override the identifying user-agent.
 #'
-#' @return A tibble with one row per input: `domain_name`, `status`, `stage`, `error_code`,
+#' @return A tibble with one row per input: `input_id`, `input`, `domain_name`,
+#'   `archive_error_code`, `status`, `stage`, `error_code`,
 #'   `retryable`, `http_status`, `final_url`, `fetched_at`, `content_bytes`, `title`,
 #'   `description`, `lang`, `text`, `html`, `n_tokens`, `page_state`, `block_vendor`,
 #'   `robots_allowed`, `from_cache`, `source`, `snapshot_timestamp`, `source_last_published`.
@@ -202,7 +214,7 @@ classify_condition <- function(cnd) {
 #' fetch_report(res)
 #'
 #' # retry only what is worth retrying
-#' again <- collect_content(res$domain_name[res$retryable])
+#' again <- collect_content(res$input[res$retryable])
 #' }
 collect_content <- function(domains = NULL,
                             delay = 1,
@@ -215,7 +227,7 @@ collect_content <- function(domains = NULL,
                             cache_ttl = 7 * 86400,
                             cache_max_size = 1024^3,
                             allow_hosts = character(),
-                            archive_fallback = TRUE,
+                            archive_fallback = FALSE,
                             archive_date = NULL,
                             user_agent = rdomains_user_agent()) {
   cache_dir <- cache_dir %||% default_cache_dir()
@@ -235,6 +247,9 @@ collect_content <- function(domains = NULL,
   if (!is.null(archive_date)) validate_archive_date(archive_date)
   clean <- clean_domains(domains)
 
+  if (!length(clean)) {
+    return(fetch_row("", "", Sys.time())[FALSE, ])
+  }
   rows <- lapply(seq_along(clean), function(i) {
     fetch_one(
       clean[i], domains[i],
@@ -246,7 +261,9 @@ collect_content <- function(domains = NULL,
       archive_date = archive_date, user_agent = user_agent
     )
   })
-  dplyr::bind_rows(rows)
+  result <- dplyr::bind_rows(rows)
+  result$input_id <- seq_along(domains)
+  result
 }
 
 #' Build one result row with a fixed schema and fixed column types
@@ -283,8 +300,10 @@ fetch_row <- function(domain, input, started,
                       robots_allowed = NA, from_cache = FALSE,
                       source = "live", snapshot_timestamp = NA_character_, html = NA_character_) {
   tibble(
+    input_id = 1L,
     domain_name = as.character(domain),
     input = as.character(input),
+    archive_error_code = NA_character_,
     status = as.character(status),
     stage = as.character(stage),
     error_code = as.character(error_code),
@@ -340,62 +359,39 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   }
 
   if (!is.null(archive_date)) {
-    recovered <- archive_fetch(domain,
+    recovered <- archive_fetch(url,
       timeout = timeout, max_bytes = max_bytes,
       user_agent = user_agent, target = archive_date
     )
-    if (is.null(recovered)) {
-      return(blank("no_archive_snapshot", "fetch", source = "archive"))
+    if (is.null(recovered) || !is.null(recovered$error_code)) {
+      return(blank(recovered$error_code %||% "no_archive_snapshot", "fetch",
+        http_status = recovered$http_status %||% NA_integer_, source = "archive"
+      ))
     }
-    a_parsed <- html_text_content(recovered$html)
-    a_signals <- page_signals(recovered$html, text = a_parsed$text, domain = domain)
-    return(fetch_row(
-      domain, input, started,
-      status = if (a_signals$blocked || a_signals$page_state == "thin") "failed" else "ok",
-      stage = "process",
-      error_code = if (a_signals$blocked) {
-        "bot_blocked"
-      } else if (a_signals$page_state == "thin") {
-        "thin_content"
-      } else {
-        NA_character_
-      },
-      http_status = 200L, final_url = recovered$url,
-      content_bytes = nchar(recovered$html, type = "bytes"),
-      parsed = a_parsed, signals = a_signals,
-      source = "archive", snapshot_timestamp = recovered$timestamp, html = recovered$html
+    return(acquired_row(domain, input, started, recovered$html, 200L, recovered$url,
+      source = "archive", snapshot_timestamp = recovered$timestamp
     ))
   }
 
   # Cache hits retain the original collection time and outcome.
   hit <- cache_get(cache_dir, url, cache_ttl)
   if (!is.null(hit)) {
-    parsed <- html_text_content(hit$html)
-    signals <- page_signals(hit$html,
-      text = parsed$text, domain = domain,
-      status = hit$meta$http_status
-    )
-    row <- fetch_row(
-      domain, input, hit$fetched_at,
-      status = hit$meta$status %||% "ok",
-      stage = hit$meta$stage %||% "process",
-      error_code = hit$meta$error_code %||% NA_character_,
-      http_status = hit$meta$http_status,
-      final_url = hit$meta$final_url,
-      content_bytes = hit$meta$content_bytes,
-      parsed = parsed, signals = signals,
+    return(acquired_row(domain, input, hit$fetched_at, hit$html, hit$meta$http_status,
+      hit$meta$final_url,
       robots_allowed = hit$meta$robots_allowed %||% NA,
-      from_cache = TRUE, html = hit$html
-    )
-    return(row)
+      from_cache = TRUE
+    ))
   }
 
-  fetched <- guarded_get(url, timeout, max_bytes, user_agent, allow_hosts,
-                         max_redirects, obey_robots, delay, max_crawl_delay)
+  fetched <- guarded_get(
+    url, timeout, max_bytes, user_agent, allow_hosts,
+    max_redirects, obey_robots, delay, max_crawl_delay
+  )
   resp <- fetched$response
   if (is.null(resp)) {
     return(blank(fetched$error_code, fetched$stage,
-                 robots_allowed = fetched$robots_allowed))
+      http_status = fetched$http_status %||% NA_integer_, robots_allowed = fetched$robots_allowed
+    ))
   }
 
   # Named `http_code`, not `status`. tibble() evaluates its arguments sequentially and
@@ -420,40 +416,21 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     ))
   }
 
-  parsed <- html_text_content(body)
-  signals <- page_signals(body, text = parsed$text, domain = domain, status = http_code)
-
-  code <- NA_character_
-  state_status <- "ok"
-  stage <- "process"
-  if (signals$blocked) {
-    code <- "bot_blocked"
-    state_status <- "failed"
-    stage <- "fetch"
-  } else if (http_code >= 400) {
-    code <- "http_error"
-    state_status <- "failed"
-    stage <- "fetch"
-  } else if (!nzchar(parsed$text)) {
-    code <- "empty_text"
-    state_status <- "failed"
-  } else if (signals$thin && signals$page_state == "thin") {
-    code <- "thin_content"
-    state_status <- "failed"
-  }
-
   final <- tryCatch(resp_url(resp), error = function(e) url)
+  row <- acquired_row(domain, input, started, body, http_code, final,
+    robots_allowed = fetched$robots_allowed
+  )
 
   # Failures are not cached: they are the rows worth retrying, and caching them would
   # defeat the retry.
-  if (identical(state_status, "ok")) {
+  if (identical(row$status, "ok")) {
     tryCatch(
       cache_put(
         cache_dir, url, body,
         meta = list(
           requested_url = url, final_url = final, http_status = http_code,
-          content_bytes = bytes, status = state_status, stage = "process",
-          error_code = code, robots_allowed = fetched$robots_allowed,
+          content_bytes = bytes, status = row$status, stage = "process",
+          error_code = row$error_code, robots_allowed = fetched$robots_allowed,
           fetched_at = format(started, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
         ),
         max_size = cache_max_size
@@ -466,38 +443,58 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
   # A block means the site is alive and would not serve *us*. Asking an archive that was
   # allowed in is the honest response. A dead domain is deliberately not recovered this
   # way -- see R/archive.R.
-  if (archive_fallback && identical(code, "bot_blocked") &&
+  if (archive_fallback && identical(row$error_code, "bot_blocked") &&
         !tolower(url_parse(url)$hostname) %in% tolower(allow_hosts)) {
-    recovered <- archive_fetch(domain,
+    recovered <- archive_fetch(url,
       timeout = timeout, max_bytes = max_bytes,
       user_agent = user_agent
     )
-    if (!is.null(recovered)) {
-      a_parsed <- html_text_content(recovered$html)
-      a_signals <- page_signals(recovered$html, text = a_parsed$text, domain = domain)
-      if (!a_signals$blocked && nzchar(a_parsed$text) && !a_signals$thin) {
-        return(fetch_row(
-          domain, input, started,
-          status = "ok", stage = "process", error_code = NA_character_,
-          http_status = 200L, final_url = recovered$url,
-          content_bytes = nchar(recovered$html, type = "bytes"),
-          parsed = a_parsed, signals = a_signals, robots_allowed = fetched$robots_allowed,
-          source = "archive", snapshot_timestamp = recovered$timestamp, html = recovered$html
-        ))
-      }
+    if (!is.null(recovered) && is.null(recovered$error_code)) {
+      archived <- acquired_row(domain, input, started, recovered$html, 200L, recovered$url,
+        source = "archive", snapshot_timestamp = recovered$timestamp,
+        robots_allowed = fetched$robots_allowed
+      )
+      archived$archive_error_code <- archived$error_code
+      return(archived)
     }
+    row <- blank(recovered$error_code %||% "no_archive_snapshot", "fetch",
+      http_status = recovered$http_status %||% NA_integer_, source = "archive"
+    )
+    row$archive_error_code <- row$error_code
   }
+  row
+}
 
-  fetch_row(
-    domain, input, started,
-    status = state_status,
-    stage = if (identical(state_status, "ok")) "process" else stage,
-    error_code = code,
-    http_status = http_code,
-    final_url = final,
-    content_bytes = bytes,
-    parsed = parsed, html = body,
-    signals = signals,
-    robots_allowed = fetched$robots_allowed
+#' Process acquired HTML consistently across live, cached and archived pages
+#' @keywords internal
+#' @noRd
+acquired_row <- function(domain, input, started, html, http_status, final_url,
+                         robots_allowed = NA, from_cache = FALSE,
+                         source = "live", snapshot_timestamp = NA_character_) {
+  parsed <- html_text_content(html)
+  signals <- page_signals(html, text = parsed$text, domain = domain, status = http_status)
+  code <- if (http_status %in% c(404L, 410L)) {
+    "http_not_found"
+  } else if (http_status >= 300L && http_status < 400L) {
+    "redirect_error"
+  } else if (signals$blocked) {
+    "bot_blocked"
+  } else if (http_status %in% c(408L, 425L, 429L) || http_status >= 500L) {
+    "http_unavailable"
+  } else if (http_status < 200L || http_status >= 400L) {
+    "http_error"
+  } else if (!nzchar(parsed$text)) {
+    "empty_text"
+  } else if (signals$page_state == "thin") {
+    "thin_content"
+  } else {
+    NA_character_
+  }
+  stage <- if (is.na(code) || code %in% c("empty_text", "thin_content")) "process" else "fetch"
+  fetch_row(domain, input, started,
+    status = if (is.na(code)) "ok" else "failed", stage = stage, error_code = code,
+    http_status = http_status, final_url = final_url, content_bytes = nchar(html, type = "bytes"),
+    parsed = parsed, signals = signals, robots_allowed = robots_allowed,
+    from_cache = from_cache, source = source, snapshot_timestamp = snapshot_timestamp, html = html
   )
 }

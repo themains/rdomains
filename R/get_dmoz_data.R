@@ -7,6 +7,7 @@
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
 #' @param overwrite Optional; default is FALSE. If TRUE, the file is overwritten.
 #'
+#' @return Invisibly, the absolute path to the downloaded file.
 #' @export
 #'
 #' @references \url{https://archive.org/details/dmoz-rdf-20150327}
@@ -15,35 +16,12 @@
 #' get_dmoz_data()
 #' }
 get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
-  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
-  checkmate::assert_flag(overwrite)
-  # file.path, not paste0: with the documented default of outdir = "." the old form
-  # produced ".dmoz_domain_category.csv" -- a hidden file that the matching dmoz_cat()
-  # lookup would then fail to find. get_shalla_data() and get_stevenblack_data() were
-  # already correct.
-  dmoz_file <- file.path(outdir, "dmoz_domain_category.csv")
-
-  if (file.exists(dmoz_file) && overwrite == FALSE) {
-    stop(paste0(
-      "There already exists a file with the same name.\n
-                The file was last updated on ",
-      file.info(dmoz_file)$mtime,
-      ".\n If you want to update the file, set overwrite to TRUE"
-    ))
-  }
-
-  tmp <- tempfile()
+  output <- source_destination(outdir, "dmoz_domain_category.csv", overwrite)
+  tmp <- tempfile(fileext = ".zip")
   on.exit(unlink(tmp), add = TRUE)
-  metadata <- download_source(
-    paste0(
-      "https://github.com/themains/rdomains/blob/master/data-raw/dmoz/",
-      "dmoz_domain_category.zip?raw=TRUE"
-    ),
-    tmp
-  )
-  unzip(tmp, exdir = outdir, overwrite = overwrite)
-  metadata$source_last_published <- "2015"
-  save_source_metadata(dmoz_file, metadata)
-
-  cat("DMOZ Data saved to the following destination:", outdir, "\n")
+  metadata <- download_source(SOURCE_VINTAGE$dmoz$url, tmp)
+  unzip(tmp, exdir = dirname(output), overwrite = overwrite)
+  metadata$source_last_published <- SOURCE_VINTAGE$dmoz$last_published
+  save_source_metadata(output, metadata)
+  invisible(output)
 }

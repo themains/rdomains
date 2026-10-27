@@ -1,146 +1,74 @@
 ---
-title: "Using rdomains"
+title: "Classify, compare, and resume"
 author: "Gaurav Sood"
-date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Illustrating use of rdomains}
+  %\VignetteIndexEntry{Classify, compare, and resume}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-### rdomains: Get the category of content hosted by a domain
-
-
-#### Install and Load the package
-
-The latest development version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:
-
-```{r, eval=FALSE, install}
-remotes::install_github("themains/rdomains")
-```
-
-To install the package from CRAN, type in:
-
-```{r, eval=FALSE, cran_install}
-install.packages("rdomains")
-```
-
-Next, load the package:
-
-```{r, eval=FALSE, load_pkg}
+```{r setup, include=FALSE}
 library(rdomains)
 ```
 
-#### Classify fetched content
+A domain-list lookup answers a different question from inspecting a page. Choose
+an evidence source first, then retain its identity with the result. The examples
+below use local fixtures so the vignette can run without network access or keys.
 
-Install `reticulate` and Python `piedomains>=0.15.0` in a Python 3.12+ environment.
-The bridge passes raw HTML to the Python text classifier and reports its checkpoint
-revision. It preserves fetch outcomes separately from classification outcomes.
+## Preserve every membership
 
-```{r, eval=FALSE, content}
-reticulate::py_install("piedomains>=0.15.0", pip = TRUE)
-pages <- collect_content(c("cnn.com", "wikipedia.org"))
+```{r lookup}
+path <- tempfile(fileext = ".csv")
+write.csv(data.frame(
+  domain = c("example.com", "example.com", "university.example"),
+  category = c("news", "shopping", "education"),
+  usage = c("black", "black", "white")
+), path, row.names = FALSE)
+results <- ut1_cat(c("https://example.com/article", "missing.example"), use_file = path)
+results[c("input_id", "input", "provider", "status", "category")]
+results$labels[[1]]
+fetch_report(results)
+```
+
+The first domain has two memberships, so no single category is selected. The
+second has no match, which is different from a failed download. UT1 usage and raw
+records remain in `details`. The fixture has no verified metadata, so its dates
+are unknown.
+
+## Preserve identifiers when resuming
+
+```{r empty-retry}
+pending <- which(results$retryable)
+retried <- ut1_cat(results$input[pending], use_file = path)
+retried$input_id <- results$input_id[pending]
+results[pending, ] <- retried
+stopifnot(nrow(results) == 2L, nrow(retried) == 0L)
+unlink(path)
+```
+
+For a paid provider, save completed chunks with `saveRDS()` and retry only failed
+inputs using the same provider, model, and vocabulary. Keep original identifiers
+when combining chunks. A result's `no_match` state does not call for a retry.
+
+## Distinguish page state from content classification
+
+```{r page-state}
+page_signals("<html><body>This domain is for sale. Inquire now.</body></html>")
+news_url_signals(c("https://example.com/sport", "https://example.com/politics"))
+```
+
+Page-state detection is heuristic. URL keyword flags are neither mutually
+exclusive nor a substitute for reading the page. The content classifier uses
+Python's own HTML extraction and its pinned model weights. Its documented
+quality limitations still apply.
+
+```{r content, eval=FALSE}
+reticulate::py_require("piedomains==0.15.0", python_version = ">=3.12")
+pages <- collect_content("https://example.com/article")
 classified <- pie_cat(pages = pages)
-fetch_report(classified)
-classified[c("domain_name", "pie_category", "status", "model_repo", "model_revision")]
+classified$details[[1]][c("fetched_at", "source", "snapshot_timestamp", "fetch_status")]
 ```
 
-The checkpoint has known retail/drugs confusion; see its
-[model card](https://huggingface.co/gojiberries/piedomains-text).
-Thresholded alternatives are not independently validated labels.
-
-#### Source dates
-
-```{r, vintage}
-library(rdomains)
-source_vintage()
-```
-
-Publication dates and download times are separate. Download helpers write metadata
-sidecars bound to the data file's checksum. Caller files without matching metadata
-have unknown dates. The archived DMOZ snapshot dates to 2015 and Shallalist to January
-2022. A domain can change owners after a label was assigned.
-
-#### Shalla
-
-To get category of the content from Shallalist (service discontinued - using archived data), first download the archived data using:
-
-```{r, eval=FALSE, down_shalla}
-get_shalla_data()
-```
-
-And then, get the category using:
-
-```{r, eval=FALSE, shalla}
-shalla_cat("http://www.google.com")
-```
-
-
-#### DMOZ
-
-To get category of the content from DMOZ, first download the archived parsed CSV file using:
-
-```{r, eval=FALSE, down_dmoz}
-get_dmoz_data()
-```
-
-And then, get the category using:
-
-```{r, eval=FALSE, dmoz}
-dmoz_cat("http://www.google.com")
-```
-
-#### ML
-
-The bundled adult model uses the domain name and suffix alone. Its artifact dates
-to 2017; its probabilities have not been calibrated on current domains:
-
-```{r, eval=FALSE, ml}
-adult_ml1_cat("http://www.google.com")
-```
-
-
-#### VirusTotal
-
-Start by getting the API key from [VirusTotal](https://www.virustotal.com/).
-
-The package uses the VirusTotal API v3 for comprehensive domain analysis:
-
-```{r, eval=FALSE, virustotal}
-virustotal_cat("http://www.google.com")
-```
-
-#### OpenAI GPT Models
-
-OpenAI infers categories from domain names without fetching the page. You need an
-OpenAI API key. Failed, truncated or invalid answers return `NA` with a warning:
-
-```{r, eval=FALSE, openai}
-# Set your API key
-Sys.setenv("OPENAI_API_KEY", "your-api-key-here")
-
-# Classify domains
-openai_cat("google.com")
-```
-
-
-You can also specify custom categories:
-
-```{r, eval=FALSE, openai_custom}
-openai_cat(c("amazon.com", "github.com"),
-  categories = c("ecommerce", "technology", "social", "other")
-)
-```
-
-#### Anthropic Claude
-
-Claude also infers categories from domain names without fetching the page. You need
-an Anthropic API key:
-
-```{r, eval=FALSE, claude}
-# Set your API key
-Sys.setenv("ANTHROPIC_API_KEY", "your-api-key-here")
-
-# Classify domains
-claude_cat("facebook.com")
-```
+Historical collection uses the exact URL and the most recent capture on or before
+`archive_date`. Current collection does not use archived fallback unless requested.

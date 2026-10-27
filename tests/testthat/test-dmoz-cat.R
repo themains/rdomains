@@ -67,11 +67,11 @@ test_that("a www-prefixed table entry is reachable", {
 
   # Both spellings name the same host, so both must find the same row.
   expect_equal(
-    suppressWarnings(dmoz_cat("http://www.232analyzer.com", use_file = f))$dmoz_category,
+    suppressWarnings(dmoz_cat("http://www.232analyzer.com", use_file = f))$category,
     expected
   )
   expect_equal(
-    suppressWarnings(dmoz_cat("232analyzer.com", use_file = f))$dmoz_category,
+    suppressWarnings(dmoz_cat("232analyzer.com", use_file = f))$category,
     expected
   )
 })
@@ -81,7 +81,7 @@ test_that("a bare table entry is still reachable", {
   on.exit(unlink(f), add = TRUE)
   reset_vintage_warnings()
   expect_equal(
-    suppressWarnings(dmoz_cat("sdcastroverde.com", use_file = f))$dmoz_category,
+    suppressWarnings(dmoz_cat("sdcastroverde.com", use_file = f))$category,
     "Top/World/Galego/regional/Galicia/Lugo"
   )
 })
@@ -90,7 +90,7 @@ test_that("the file's header row is not a lookup key", {
   f <- dmoz_fixture()
   on.exit(unlink(f), add = TRUE)
   reset_vintage_warnings()
-  expect_true(is.na(suppressWarnings(dmoz_cat("domain", use_file = f))$dmoz_category))
+  expect_true(is.na(suppressWarnings(dmoz_cat("domain", use_file = f))$category))
 })
 
 test_that("host lookup is case-insensitive, as DNS is", {
@@ -98,11 +98,11 @@ test_that("host lookup is case-insensitive, as DNS is", {
   on.exit(unlink(f), add = TRUE)
   reset_vintage_warnings()
   expect_equal(
-    suppressWarnings(dmoz_cat("SDCastroVerde.COM", use_file = f))$dmoz_category,
+    suppressWarnings(dmoz_cat("SDCastroVerde.COM", use_file = f))$category,
     "Top/World/Galego/regional/Galicia/Lugo"
   )
   expect_equal(
-    suppressWarnings(dmoz_cat("HTTP://WWW.232Analyzer.com", use_file = f))$dmoz_category,
+    suppressWarnings(dmoz_cat("HTTP://WWW.232Analyzer.com", use_file = f))$category,
     "Top/Computers/Hardware/Test_Equipment/Analyzers"
   )
 })

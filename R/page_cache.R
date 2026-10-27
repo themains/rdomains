@@ -80,7 +80,9 @@ cache_paths <- function(dir, key) {
 #' @noRd
 cache_get <- function(dir, url, ttl) {
   key <- tryCatch(cache_key(url), error = function(e) NULL)
-  if (is.null(key)) return(NULL)
+  if (is.null(key)) {
+    return(NULL)
+  }
   paths <- cache_paths(dir, key)
   if (!file.exists(paths$meta) || !file.exists(paths$html)) {
     return(NULL)
@@ -93,6 +95,17 @@ cache_get <- function(dir, url, ttl) {
   # fails.
   if (!is.list(meta) || !is.character(meta$fetched_at) ||
         length(meta$fetched_at) != 1L || is.na(meta$fetched_at)) {
+    return(NULL)
+  }
+  scalar <- function(x, type) typeof(x) %in% type && length(x) == 1L && !is.na(x)
+  valid <- scalar(meta$http_status, c("integer", "double")) &&
+    meta$http_status %in% 200:299 && identical(meta$status, "ok") &&
+    identical(meta$stage, "process") && scalar(meta$final_url, "character") &&
+    nzchar(meta$final_url) && scalar(meta$content_bytes, c("integer", "double")) &&
+    is.finite(meta$content_bytes) && meta$content_bytes >= 0 &&
+    (is.null(meta$robots_allowed) ||
+       (is.logical(meta$robots_allowed) && length(meta$robots_allowed) == 1L))
+  if (!valid) {
     return(NULL)
   }
   fetched <- tryCatch(

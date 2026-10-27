@@ -1,0 +1,8 @@
+Synthetic fixture: 100,000 hosts; 1,000 inputs; all expected memberships identical.
+$current_function_seconds
+[1] 0.865
+
+$vectorized_membership_only_seconds
+[1] 0.002
+
+Not an end-to-end speedup comparison: the vector expression omits parsing, metadata, heuristic subclassing and row construction.

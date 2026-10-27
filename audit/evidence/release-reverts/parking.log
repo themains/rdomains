@@ -1,0 +1,15 @@
+release-correctness: 1.................................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-release-correctness.R:9:3'): substantive articles about par
+Expected `page_signals(html)$page_state` to be identical to "content".
+Differences:
+`actual`:   "parked"
+`expected`: "content"
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

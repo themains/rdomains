@@ -15,16 +15,15 @@
 #' @importFrom methods as
 #' @importFrom glmnet predict.glmnet
 #' @importFrom utils read.table URLencode untar unzip read.csv write.csv packageVersion
-#' @importFrom curl curl_download nslookup
+#' @importFrom curl nslookup
 #' @importFrom httr2 req_url_query req_headers req_headers_redacted
 #' @importFrom httr2 req_body_json req_error req_perform resp_status resp_body_string
 #' @importFrom httr2 request req_user_agent req_timeout req_throttle req_retry
 #' @importFrom httr2 req_options resp_content_type
 #' @importFrom httr2 resp_url url_parse resp_header
-#' @importFrom xml2 read_xml as_list read_html xml_find_all xml_find_first xml_remove
+#' @importFrom xml2 read_html xml_find_all xml_find_first xml_remove
 #' @importFrom xml2 xml_text xml_attr url_absolute
-#' @importFrom XML readHTMLTable
-#' @importFrom virustotal set_key domain_report
+#' @importFrom virustotal domain_report
 #' @importFrom R.utils gunzip
 #' @importFrom dplyr mutate bind_rows
 #' @importFrom purrr map_chr map_df

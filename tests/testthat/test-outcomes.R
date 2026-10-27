@@ -23,9 +23,7 @@ test_that("the codes match piedomains verbatim", {
 })
 
 test_that("bot_blocked is not retryable here, unlike piedomains", {
-  # piedomains retries it because it has an archive.org fallback to retry *into*.
-  # rdomains has none, so a retry from the same address is rudeness with a guaranteed
-  # identical outcome.
+  # Direct bot-wall retries are not advised; archive failures have their own codes.
   expect_false(is_retryable("bot_blocked"))
   expect_true(is_retryable("timeout"))
   expect_true(is_retryable("dns_error"))
@@ -68,4 +66,25 @@ test_that("fetch_report is a pure function, so it survives filtering", {
 test_that("fetch_report rejects something that is not a run", {
   expect_error(fetch_report("nope"), "must be a data frame")
   expect_error(fetch_report(tibble::tibble(a = 1)), "missing column")
+})
+
+test_that("the versioned Python outcome contract has explicit policy exceptions", {
+  path <- system.file("contracts", "piedomains-0.15.0.json", package = "rdomains")
+  contract <- jsonlite::fromJSON(path)
+  shared <- setdiff(contract$python_codes, contract$unsupported_in_r)
+  codes <- fetch_error_codes()
+  expect_true(all(shared %in% codes$code))
+  comparable <- setdiff(shared, names(contract$retryability_exceptions))
+  expect_equal(codes$retryable[match(comparable, codes$code)],
+               comparable %in% contract$python_retryable)
+  python <- Sys.getenv("RDOMAINS_TEST_PYTHON")
+  skip_if(!nzchar(python), "Python contract integration requires RDOMAINS_TEST_PYTHON")
+  reticulate::use_python(python, required = TRUE)
+  reticulate::py_run_string(paste(
+    "from piedomains.outcomes import ErrorCode, RETRYABLE",
+    "rd_codes = [x.value for x in ErrorCode]",
+    "rd_retryable = sorted(x.value for x in RETRYABLE)", sep = "\n"
+  ))
+  expect_setequal(reticulate::py$rd_codes, contract$python_codes)
+  expect_setequal(reticulate::py$rd_retryable, contract$python_retryable)
 })

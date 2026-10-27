@@ -1,0 +1,32 @@
+result-contract: ...............12................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-result-contract.R:70:3'): DMOZ downloads return a reusable
+Expected `path` to be identical to `normalizePath(file.path(directory, "dmoz_domain_category.csv"))`.
+Differences:
+`actual` is NULL
+`expected` is a character vector ('/private/var/folders/ks/1g8bn5m566n_w4l5hwwjv4180000gn/T/Rtmp8L4fLu/file1253f5dc44ba2/dmoz_domain_category.csv')
+
+
+── 2. Error ('test-result-contract.R:71:3'): DMOZ downloads return a reusable pa
+Error in `validate_data_file(use_file, "dmoz_domain_category.csv", "get_dmoz_data")`: Data file not found: 'dmoz_domain_category.csv'
+i Download data using `get_dmoz_data()`
+i Or specify custom path with `use_file`
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_equal(...) at test-result-contract.R:71:3
+ 2. │ └─testthat::quasi_label(enquo(object), label)
+ 3. │   └─rlang::eval_bare(expr, quo_get_env(quo))
+ 4. ├─base::suppressWarnings(dmoz_cat("example.com", use_file = path))
+ 5. │ └─base::withCallingHandlers(...)
+ 6. └─rdomains::dmoz_cat("example.com", use_file = path)
+ 7.   └─rdomains:::validate_data_file(use_file, "dmoz_domain_category.csv", "get_dmoz_data") at rdomains/R/dmoz_cat.R:36:3
+ 8.     └─cli::cli_abort(...) at rdomains/R/utils.R:63:5
+ 9.       └─rlang::abort(...)
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+No one is perfect!
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

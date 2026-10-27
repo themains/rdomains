@@ -1,0 +1,44 @@
+result-contract: .....1..............23
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Error ('test-result-contract.R:18:3'): empty inputs are typed results and
+<rdomains_invalid_input/rlang_error/error/condition>
+Error in `validate_domains(domains)`: `domains` must not be NULL
+Backtrace:
+    ▆
+ 1. └─rdomains::openai_cat(character()) at test-result-contract.R:18:3
+ 2.   └─rdomains:::llm_cat(...) at rdomains/R/openai_cat.R:51:3
+ 3.     └─rdomains:::validate_domains(domains) at rdomains/R/llm.R:70:3
+ 4.       └─cli::cli_abort("{.arg {arg_name}} must not be NULL", class = "rdomains_invalid_input") at rdomains/R/utils.R:26:5
+ 5.         └─rlang::abort(...)
+
+── 2. Error ('test-result-contract.R:88:3'): empty classifiers share the complet
+<rdomains_invalid_input/rlang_error/error/condition>
+Error in `validate_domains(domains)`: `domains` must not be NULL
+Backtrace:
+    ▆
+ 1. └─rdomains::pie_cat(character()) at test-result-contract.R:88:3
+ 2.   └─rdomains:::infer_pages(domains, pages, threshold, ...) at rdomains/R/pie_cat.R:55:3
+ 3.     └─rdomains::collect_content(domains, ...) at rdomains/R/pie_cat.R:91:3
+ 4.       └─rdomains:::validate_domains(domains) at rdomains/R/collect_content.R:234:3
+ 5.         └─cli::cli_abort("{.arg {arg_name}} must not be NULL", class = "rdomains_invalid_input") at rdomains/R/utils.R:26:5
+ 6.           └─rlang::abort(...)
+
+── 3. Error ('test-result-contract.R:98:3'): model overrides are scoped and unus
+<rdomains_invalid_input/rlang_error/error/condition>
+Error in `validate_domains(domains)`: `domains` must not be NULL
+Backtrace:
+    ▆
+ 1. └─rdomains::pie_cat(character(), model = "override") at test-result-contract.R:98:3
+ 2.   └─rdomains:::infer_pages(domains, pages, threshold, ...) at rdomains/R/pie_cat.R:55:3
+ 3.     └─rdomains::collect_content(domains, ...) at rdomains/R/pie_cat.R:91:3
+ 4.       └─rdomains:::validate_domains(domains) at rdomains/R/collect_content.R:234:3
+ 5.         └─cli::cli_abort("{.arg {arg_name}} must not be NULL", class = "rdomains_invalid_input") at rdomains/R/utils.R:26:5
+ 6.           └─rlang::abort(...)
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+Keep trying!
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

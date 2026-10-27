@@ -50,7 +50,7 @@ test_that("shalla_cat reports the vintage of the label it returns", {
 
   save_source_metadata(tmp, list(source_last_published = "2022-01"))
   res <- suppressWarnings(shalla_cat("http://www.example.com", use_file = tmp))
-  expect_equal(res$shalla_category, "shopping")
+  expect_equal(res$category, "shopping")
   expect_equal(res$source_last_published, "2022-01")
 })
 
@@ -71,7 +71,7 @@ test_that("dmoz_cat reports its 2015 snapshot vintage", {
 
   save_source_metadata(tmp, list(source_last_published = "2015"))
   res <- suppressWarnings(dmoz_cat("http://www.example.com", use_file = tmp))
-  expect_equal(res$dmoz_category, "Shopping")
+  expect_equal(res$category, "Shopping")
   expect_equal(res$source_last_published, "2015")
 })
 
@@ -84,7 +84,7 @@ test_that("an unmatched domain still carries the source vintage", {
   )
   save_source_metadata(tmp, list(source_last_published = "2022-01"))
   res <- suppressWarnings(shalla_cat("nowhere-at-all.invalid", use_file = tmp))
-  expect_true(is.na(res$shalla_category))
+  expect_true(is.na(res$category))
   # The label is missing; the provenance of the list that failed to supply it is not.
   expect_equal(res$source_last_published, "2022-01")
 })

@@ -1,15 +1,7 @@
-#' Why a domain produced no category
+#' Structured classification outcomes
 #'
-#' Ported from the sibling Python package piedomains (`src/piedomains/outcomes.py`), and
-#' the strings are **copied verbatim** so results from either package aggregate together.
-#' They are part of the public output contract: safe to group on, and they will not change
-#' meaning between releases.
-#'
-#' The problem this solves in rdomains: every failure used to collapse to `NA` plus a
-#' warning, so "the host does not resolve", "we were rate-limited" and "this domain has no
-#' category" were indistinguishable. Only the second is worth retrying, and a caller had no
-#' way to tell which rows those were.
-#'
+#' Common error strings are checked against the versioned piedomains contract in
+#' inst/contracts. R-specific acquisition codes and retry policies are explicit.
 #' @keywords internal
 #' @noRd
 NULL
@@ -17,7 +9,7 @@ NULL
 #' Pipeline stage a domain reached
 #' @keywords internal
 #' @noRd
-RD_STAGES <- c("validate", "fetch", "process", "infer")
+RD_STAGES <- c("validate", "fetch", "process", "infer", "lookup")
 
 #' The closed set of failure reasons
 #'
@@ -34,7 +26,14 @@ RD_ERROR_CODES <- tribble(
   "dns_error", "fetch", TRUE, "Host did not resolve.",
   "connection_error", "fetch", TRUE, "Connection refused or reset.",
   "timeout", "fetch", TRUE, "Request exceeded the timeout.",
-  "http_error", "fetch", TRUE, "Non-2xx status.",
+  "http_error", "fetch", FALSE, "A non-successful HTTP response requiring intervention.",
+  "http_not_found", "fetch", FALSE, "The requested resource was not found or is gone.",
+  "http_unavailable", "fetch", TRUE, "Transient HTTP failure or rate limit.",
+  "redirect_error", "fetch", FALSE, "A redirect did not provide a usable destination.",
+  "robots_unavailable", "fetch", TRUE, "Robots rules could not be retrieved.",
+  "archive_unavailable", "fetch", TRUE, "The archive service could not complete the request.",
+  "archive_rate_limited", "fetch", TRUE, "The archive rate-limited the request.",
+  "archive_invalid_response", "fetch", FALSE, "The archive returned an invalid capture response.",
   "content_type_rejected", "fetch", FALSE, "Response was not HTML.",
   "content_too_large", "fetch", FALSE, "Body exceeded the byte cap.",
   "bot_blocked", "fetch", FALSE, "An anti-bot interstitial was served.",
@@ -48,6 +47,9 @@ RD_ERROR_CODES <- tribble(
   "model_load_error", "infer", FALSE, "The classifier could not be loaded.",
   "model_error", "infer", FALSE, "The classifier returned no valid prediction.",
   "missing_input_path", "process", FALSE, "Raw HTML is unavailable.",
+  "authentication_error", "infer", FALSE, "Provider credentials were rejected.",
+  "provider_error", "infer", FALSE, "Provider rejected the request.",
+  "invalid_response", "infer", FALSE, "Provider returned an incomplete or invalid label.",
   "unknown", NA, FALSE, "Unclassified failure."
 )
 
@@ -56,8 +58,8 @@ RD_ERROR_CODES <- tribble(
 #' The closed set of `error_code` values that [collect_content()] and [pie_cat()] can
 #' return, with the pipeline stage each belongs to and whether it is worth retrying.
 #'
-#' These strings are shared verbatim with the Python package `piedomains`, so results from
-#' the two can be aggregated together.
+#' Shared strings retain their meaning in `piedomains`. R-specific acquisition
+#' failures and retry-policy exceptions are recorded in the versioned contract.
 #'
 #' @return A tibble with columns `code`, `stage`, `retryable` and `description`.
 #'
@@ -81,7 +83,7 @@ fetch_error_codes <- function() {
 #'
 #' @param x A tibble from [collect_content()] or [pie_cat()].
 #'
-#' @return A one-row tibble: `n`, `ok`, `failed`, `retryable`, and list-columns
+#' @return A one-row tibble: `n`, `ok`, `failed`, `no_match`, `retryable`, and list-columns
 #'   `by_stage`, `by_reason` and `missing` (the domains that produced nothing).
 #'
 #' @export
@@ -107,11 +109,15 @@ fetch_report <- function(x) {
   # Named `is_failed`, not `failed`: tibble() evaluates its arguments sequentially and
   # later ones see earlier ones, so a `failed = sum(failed)` column would shadow the mask
   # and every subsequent subset would index with the count instead.
+  if (anyNA(x$status) || !all(x$status %in% c("ok", "no_match", "failed"))) {
+    cli_abort("Unknown result status.", class = "rdomains_invalid_result")
+  }
   is_failed <- x$status %in% "failed"
   tibble(
     n = nrow(x),
     ok = sum(x$status %in% "ok"),
     failed = sum(is_failed),
+    no_match = sum(x$status %in% "no_match"),
     retryable = if ("retryable" %in% names(x)) sum(x$retryable %in% TRUE) else NA_integer_,
     by_stage = list(count_values(x$stage[is_failed])),
     by_reason = list(count_values(x$error_code[is_failed])),

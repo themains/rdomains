@@ -3,36 +3,31 @@
 #' Fetches university domain json from:
 #' \url{https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json} # nolint: line_length_linter.
 #'
-#' @param domains vector of domain names
+#' @param domains Vector of domain names.
+#' @param use_file Optional saved Hipo JSON file. Otherwise downloaded once per session.
 #'
-#' @return data.frame with original list and all the other columns from the university json
+#' @return A tibble following [classification_results]. Source-specific data are
+#'   retained in `details`; all source labels are retained in `labels`.
 #'
 #' @export
 #' @importFrom dplyr bind_cols
 #' @examples \dontrun{
 #' uni_cat(domains = "http://www.google.com")
 #' }
-uni_cat <- function(domains = NULL) {
+uni_cat <- function(domains, use_file = NULL) {
   validate_domains(domains)
-  c_domains <- clean_domains(domains)
-
-  # One line on purpose: split across literals, the link checker only ever
-  # sees the first fragment, which 404s.
-  uni_list <- fromJSON(
-    "https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json" # nolint: line_length_linter.
-  )
-
-  # `domains` is a list column -- 281 of the list's 10,256 universities give more than
-  # one host. match() would coerce it with as.character(), turning a two-element entry
-  # into the string 'c("student.wab.edu.pl", "wab.edu.pl")', which nothing can match.
-  # Flattening first, and carrying each host's row number with it, matches every host.
-  hosts <- tolower(unlist(uni_list$domains, use.names = FALSE))
-  owner <- rep(seq_len(nrow(uni_list)), lengths(uni_list$domains))
-
-  tibble(
-    domain_name = c_domains
-  ) |>
-    bind_cols(
-      uni_list[owner[match(c_domains, hosts)], ]
-    )
+  if (!length(domains)) {
+    return(classification_result(domains, "uni", "list_membership", "lookup"))
+  }
+  path <- lookup_source_file("uni", use_file)
+  data <- fromJSON(path)
+  if (!is.data.frame(data) || !all(c("domains", "name") %in% names(data)) ||
+        !is.list(data$domains)) {
+    cli_abort("University data must contain names and domain lists.")
+  }
+  owner <- rep(seq_len(nrow(data)), lengths(data$domains))
+  records <- data[owner, , drop = FALSE]
+  records$hostname <- as.character(unlist(data$domains, use.names = FALSE))
+  records$category <- rep("university", nrow(records))
+  lookup_result(domains, records, "hostname", "category", "uni", load_source_metadata(path))
 }

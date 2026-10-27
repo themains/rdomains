@@ -34,7 +34,10 @@ save_source_metadata <- function(path, metadata) {
 #' @keywords internal
 #' @noRd
 load_source_metadata <- function(path) {
-  empty <- list(source_last_published = NA_character_, source_fetched_at = NA_character_)
+  empty <- list(
+    source_last_published = NA_character_, source_fetched_at = NA_character_,
+    source_url = NA_character_, checksum = NA_character_
+  )
   sidecar <- paste0(path, ".metadata.json")
   if (!file.exists(sidecar)) {
     return(empty)
@@ -54,8 +57,60 @@ load_source_metadata <- function(path) {
 #' Check a downloaded lookup table before matching its rows
 #' @keywords internal
 #' @noRd
-validate_lookup <- function(data, columns) {
+validate_lookup <- function(data, columns, allow_missing = character()) {
   if (!all(columns %in% names(data))) {
-    cli_abort("The lookup file must contain columns {.val {columns}}.")
+    cli_abort(
+      "The lookup file must contain columns {.val {columns}}.", class = "rdomains_invalid_lookup"
+    )
   }
+  for (name in columns) {
+    value <- data[[name]]
+    if (!is.character(value) || (anyNA(value) && !name %in% allow_missing) ||
+          any(!nzchar(trimws(value[!is.na(value)])))) {
+      cli_abort("Lookup column {.field {name}} must contain nonblank text.",
+        class = "rdomains_invalid_lookup"
+      )
+    }
+  }
+}
+
+#' Prepare an explicit download destination
+#' @keywords internal
+#' @noRd
+source_destination <- function(outdir, filename, overwrite) {
+  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
+  checkmate::assert_flag(overwrite)
+  if (!dir.exists(outdir) && !dir.create(outdir, recursive = TRUE)) {
+    cli_abort("Could not create {.file {outdir}}.", class = "rdomains_file_error")
+  }
+  path <- file.path(normalizePath(outdir, mustWork = TRUE), filename)
+  if (file.exists(path) && !overwrite) {
+    cli_abort(
+      c("File already exists: {.file {path}}", "i" = "Set {.code overwrite = TRUE} to replace it."),
+      class = "rdomains_file_exists"
+    )
+  }
+  path
+}
+
+#' Resolve an explicit file or a session-cached downloaded source
+#' @keywords internal
+#' @noRd
+lookup_source_file <- function(provider, use_file = NULL) {
+  if (!is.null(use_file)) {
+    assert_file_exists(use_file)
+    return(use_file)
+  }
+  key <- paste0(provider, "_file")
+  cached <- .rdomains_env[[key]]
+  if (!is.null(cached) && file.exists(cached)) {
+    return(cached)
+  }
+  path <- tempfile()
+  url <- SOURCE_VINTAGE[[provider]]$url
+  if (provider == "stevenblack") url <- paste0(url, "hosts")
+  metadata <- download_source(url, path)
+  save_source_metadata(path, metadata)
+  .rdomains_env[[key]] <- path
+  path
 }
