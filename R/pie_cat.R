@@ -44,7 +44,6 @@ pie_cat <- function(domains = NULL, pages = NULL, threshold = 0.10, model = NULL
   }
   if (!is.null(model)) {
     assert_character(model, len = 1, any.missing = FALSE, min.chars = 1)
-    withr::local_envvar(c(PIEDOMAINS_TEXT_MODEL = model))
   }
   if (!is.null(pages) && "provider" %in% names(pages)) {
     if (!all(pages$provider == "piedomains")) {
@@ -54,7 +53,7 @@ pie_cat <- function(domains = NULL, pages = NULL, threshold = 0.10, model = NULL
     pages <- if (nrow(pages)) bind_rows(pages$details) else fetch_row("", "", Sys.time())[FALSE, ]
     pages$input_id <- input_id
   }
-  rows <- infer_pages(domains, pages, threshold, ...)
+  rows <- infer_pages(domains, pages, threshold, model = model, ...)
   input <- rows$input %||% rows$domain_name
   result <- classification_result(input, "piedomains", "page_content")
   for (i in seq_len(nrow(rows))) {
@@ -88,7 +87,7 @@ pie_cat <- function(domains = NULL, pages = NULL, threshold = 0.10, model = NULL
 #' Classify and retain acquired-page metadata
 #' @keywords internal
 #' @noRd
-infer_pages <- function(domains = NULL, pages = NULL, threshold = 0.10, ...) {
+infer_pages <- function(domains = NULL, pages = NULL, threshold = 0.10, model = NULL, ...) {
   validate_number(threshold, "threshold", upper = 1)
   if (is.null(pages)) pages <- collect_content(domains, ...)
   needed <- c("domain_name", "html", "page_state", "status", "stage", "error_code", "retryable")
@@ -140,7 +139,7 @@ infer_pages <- function(domains = NULL, pages = NULL, threshold = 0.10, ...) {
   if (!length(send)) {
     return(pages)
   }
-  classifier <- tryCatch(pie_backend(), error = function(e) e)
+  classifier <- tryCatch(pie_backend(model = model), error = function(e) e)
   load_failed <- inherits(classifier, "condition")
   scored <- if (load_failed) {
     classifier
@@ -177,7 +176,7 @@ infer_pages <- function(domains = NULL, pages = NULL, threshold = 0.10, ...) {
 #' Construct the Python bridge in the selected environment
 #' @keywords internal
 #' @noRd
-pie_backend <- function() {
+pie_backend <- function(model = NULL) {
   if (!requireNamespace("reticulate", quietly = TRUE) ||
         !reticulate::py_module_available("piedomains")) {
     cli_abort("Install {.pkg reticulate} and Python {.pkg piedomains} >= 0.15.0.")
@@ -188,6 +187,27 @@ pie_backend <- function() {
   }
   text_mod <- reticulate::import("piedomains.text")
   config <- reticulate::import("piedomains.config")$get_config()
+  python_env <- reticulate::import("os")$environ
+  previous_python <- python_env$get("PIEDOMAINS_TEXT_MODEL")
+  previous_r <- Sys.getenv("PIEDOMAINS_TEXT_MODEL", unset = NA_character_)
+  on.exit({
+    if (is.null(previous_python)) {
+      python_env$pop("PIEDOMAINS_TEXT_MODEL", NULL)
+    } else {
+      python_env$`__setitem__`("PIEDOMAINS_TEXT_MODEL", previous_python)
+    }
+    if (is.na(previous_r)) {
+      Sys.unsetenv("PIEDOMAINS_TEXT_MODEL")
+    } else {
+      Sys.setenv(PIEDOMAINS_TEXT_MODEL = previous_r)
+    }
+  }, add = TRUE)
+  selected <- model %||% previous_r
+  if (is.na(selected)) {
+    python_env$pop("PIEDOMAINS_TEXT_MODEL", NULL)
+  } else {
+    python_env$`__setitem__`("PIEDOMAINS_TEXT_MODEL", selected)
+  }
   source <- text_mod$resolve_text_model()
   key <- hash(list(
     version, source, config$get("text_max_length"), config$get("extractor"),
@@ -204,6 +224,7 @@ pie_backend <- function() {
     model_dir <- tempfile("rdomains-model-")
     dir.create(model_dir)
     classifier <- text_mod$TextClassifier(cache_dir = model_dir)
+    classifier$load_models()
     if (identical(source, text_mod$DEFAULT_TEXT_MODEL)) {
       .rdomains_env$pie_model <- list(key = key, classifier = classifier)
     }

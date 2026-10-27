@@ -1,0 +1,128 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | pie-cat
+⠦ |          7 | pie-cat
+⠏ |         30 | pie-cat
+⠹ |         33 | pie-cat
+⠏ |         40 | pie-cat
+⠼ | 2       43 | pie-cat
+✖ | 8       50 | pie-cat
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:185:5'): successive model choices reach Python and restore both environments
+Expected `result$model_id` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/alpha"
+
+
+Failure ('test-pie-cat.R:186:5'): successive model choices reach Python and restore both environments
+Expected `result$model_revision` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/alpha"
+
+
+Failure ('test-pie-cat.R:185:5'): successive model choices reach Python and restore both environments
+Expected `result$model_id` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/beta"
+
+
+Failure ('test-pie-cat.R:186:5'): successive model choices reach Python and restore both environments
+Expected `result$model_revision` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/beta"
+
+
+Failure ('test-pie-cat.R:190:3'): successive model choices reach Python and restore both environments
+Expected `pie_cat(pages = page)$model_id` to be identical to "r-original".
+Differences:
+`actual`:   "python-original"
+`expected`: "r-original"
+
+
+Failure ('test-pie-cat.R:191:3'): successive model choices reach Python and restore both environments
+Expected `failed <- pie_cat(pages = page, model = "fixture/failure")` to throw a warning.
+
+Failure ('test-pie-cat.R:194:3'): successive model choices reach Python and restore both environments
+Expected `failed$error_code` to be identical to "model_load_error".
+Differences:
+`actual`:   NA
+`expected`: "model_load_error"
+
+
+Failure ('test-pie-cat.R:197:3'): successive model choices reach Python and restore both environments
+Expected `reticulate::py_eval("_rd_selected_models")` to equal `c("fixture/alpha", "fixture/beta", "r-original", "fixture/failure")`.
+Differences:
+    actual            | expected
+[1] "python-original" - "fixture/alpha"   [1]
+[2] "python-original" - "fixture/beta"    [2]
+[3] "python-original" - "r-original"      [3]
+[4] "python-original" - "fixture/failure" [4]
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-pie-cat.R:185:5'): successive model choices reach Python and restore both environments
+Expected `result$model_id` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/alpha"
+
+
+Failure ('test-pie-cat.R:186:5'): successive model choices reach Python and restore both environments
+Expected `result$model_revision` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/alpha"
+
+
+Failure ('test-pie-cat.R:185:5'): successive model choices reach Python and restore both environments
+Expected `result$model_id` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/beta"
+
+
+Failure ('test-pie-cat.R:186:5'): successive model choices reach Python and restore both environments
+Expected `result$model_revision` to be identical to `choice`.
+Differences:
+`actual`:   "python-original"
+`expected`: "fixture/beta"
+
+
+Failure ('test-pie-cat.R:190:3'): successive model choices reach Python and restore both environments
+Expected `pie_cat(pages = page)$model_id` to be identical to "r-original".
+Differences:
+`actual`:   "python-original"
+`expected`: "r-original"
+
+
+Failure ('test-pie-cat.R:191:3'): successive model choices reach Python and restore both environments
+Expected `failed <- pie_cat(pages = page, model = "fixture/failure")` to throw a warning.
+
+Failure ('test-pie-cat.R:194:3'): successive model choices reach Python and restore both environments
+Expected `failed$error_code` to be identical to "model_load_error".
+Differences:
+`actual`:   NA
+`expected`: "model_load_error"
+
+
+Failure ('test-pie-cat.R:197:3'): successive model choices reach Python and restore both environments
+Expected `reticulate::py_eval("_rd_selected_models")` to equal `c("fixture/alpha", "fixture/beta", "r-original", "fixture/failure")`.
+Differences:
+    actual            | expected
+[1] "python-original" - "fixture/alpha"   [1]
+[2] "python-original" - "fixture/beta"    [2]
+[3] "python-original" - "r-original"      [3]
+[4] "python-original" - "fixture/failure" [4]
+
+
+[ FAIL 8 | WARN 0 | SKIP 0 | PASS 50 ]
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted
