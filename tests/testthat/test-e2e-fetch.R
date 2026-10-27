@@ -140,7 +140,7 @@ test_that("a server error is reported as retryable", {
   srv <- local_server()
   res <- fetch(srv, "/boom")
   expect_equal(res$status, "failed")
-  expect_equal(res$error_code, "http_error")
+  expect_equal(res$error_code, "http_unavailable")
   expect_true(res$retryable)
 })
 

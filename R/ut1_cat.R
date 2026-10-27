@@ -17,9 +17,8 @@
 #' @param use_file Path to the file written by [get_ut1_data()]. If `NULL`, looks for
 #'   `ut1_domain_category.csv` in the working directory.
 #'
-#' @return A tibble with `domain_name`, `ut1_category`, `ut1_usage` (`"black"` where UT1
-#'   maintains the list for blocking, `"white"` where it maintains it for allowing — both
-#'   describe content) and `source_last_published`, the date the list was published.
+#' @return A tibble following [classification_results]. Source-specific data are
+#'   retained in `details`; all source labels are retained in `labels`.
 #'
 #' @export
 #' @seealso [get_ut1_data()] to download the data, [source_vintage()] for how this source
@@ -31,25 +30,15 @@
 #' # what a maintained list says versus one that stopped in 2022
 #' merge(ut1_cat("example.com"), shalla_cat("example.com"), by = "domain_name")
 #' }
-ut1_cat <- function(domains = NULL, use_file = NULL) {
+ut1_cat <- function(domains, use_file = NULL) {
   validate_domains(domains)
-  c_domains <- clean_domains(domains)
-
-  data_file <- validate_data_file(
-    use_file,
-    "ut1_domain_category.csv",
-    "get_ut1_data"
+  if (!length(domains)) {
+    return(classification_result(domains, "ut1", "list_membership", "lookup"))
+  }
+  data_file <- validate_data_file(use_file, "ut1_domain_category.csv", "get_ut1_data")
+  data <- read_csv(
+    data_file, show_col_types = FALSE, col_types = readr::cols(.default = readr::col_character())
   )
-
-  ut1 <- read_csv(data_file, show_col_types = FALSE)
-  validate_lookup(ut1, c("domain", "category", "usage"))
-  metadata <- load_source_metadata(data_file)
-
-  tibble(
-    domain_name = c_domains,
-    ut1_category = ut1$category[match(c_domains, ut1$domain)],
-    ut1_usage = ut1$usage[match(c_domains, ut1$domain)],
-    source_last_published = metadata$source_last_published,
-    source_fetched_at = metadata$source_fetched_at
-  )
+  validate_lookup(data, c("domain", "category", "usage"), allow_missing = "usage")
+  lookup_result(domains, data, "domain", "category", "ut1", load_source_metadata(data_file))
 }

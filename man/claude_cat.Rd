@@ -5,11 +5,11 @@
 \title{Get Category from Anthropic Claude}
 \usage{
 claude_cat(
-  domains = NULL,
+  domains,
   api_key = NULL,
   categories = NULL,
   model = "claude-haiku-5-5",
-  rate_limit = 0.5
+  delay = 0.5
 )
 }
 \arguments{
@@ -22,10 +22,11 @@ ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable}
 
 \item{model}{Claude model to use (default: "claude-haiku-5-5" for cost efficiency)}
 
-\item{rate_limit}{delay in seconds between API calls (default: 0.5)}
+\item{delay}{delay in seconds between API calls (default: 0.5)}
 }
 \value{
-data.frame with original list and content category of the domain
+A tibble following \link{classification_results}, including provider failures and model
+identity.
 }
 \description{
 Infers a category from the domain name using Anthropic's Claude API.

@@ -1,0 +1,15 @@
+result-contract: ..1.................................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-result-contract.R:8:3'): provider outcomes preserve input i
+Expected `result$error_code` to equal `rep("rate_limited", 2)`.
+Differences:
+`actual`:   NA             NA
+`expected`: "rate_limited" "rate_limited"
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

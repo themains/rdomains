@@ -26,7 +26,7 @@ test_that("local lookup files do not invent source publication dates", {
   hosts <- withr::local_tempfile()
   writeLines("0.0.0.0 example.com", hosts)
   expect_true(is.na(stevenblack_cat("example.com", hosts)$source_last_published))
-  expect_equal(stevenblack_cat("notlisted.com", hosts)$stevenblack, "not_listed")
+  expect_equal(stevenblack_cat("notlisted.com", hosts)$status, "no_match")
 })
 
 test_that("CDX headers alone are not captures and historical selection looks backward", {
@@ -35,8 +35,11 @@ test_that("CDX headers alone are not captures and historical selection looks bac
     queries[[length(queries) + 1L]] <<- httr2::url_parse(req$url)$query
     httr2::response(status_code = 200, body = charToRaw('[["timestamp","original"]]'))
   })
-  expect_null(archive_snapshot("example.com"))
-  expect_null(archive_snapshot("example.com", target = "20200102"))
+  expect_true(archive_snapshot("example.com")$error_code %in%
+                c("no_archive_snapshot", "archive_invalid_response"))
+  expect_equal(
+    archive_snapshot("example.com", target = "20200102")$error_code, "no_archive_snapshot"
+  )
   expect_equal(queries[[2]]$to, "20200102")
   expect_equal(queries[[2]]$limit, "-1")
   expect_null(queries[[2]]$from)
@@ -50,7 +53,7 @@ test_that("explicit VirusTotal credentials override and restore session credenti
     list(data = list(attributes = list(categories = list(vendor = "news"))))
   })
   res <- virustotal_cat("example.com", api_key = "new-key")
-  expect_equal(res$vendor, "news")
+  expect_equal(res$labels[[1]]$category, "news")
   expect_equal(used, "new-key")
   expect_equal(Sys.getenv("VirustotalToken"), "old-key")
   expect_equal(Sys.getenv("VIRUSTOTAL_API_KEY"), "old-key")
@@ -65,10 +68,12 @@ test_that("LLMs reject responses outside the requested vocabulary", {
     }
     httr2::response(status_code = 200, body = charToRaw(body))
   })
-  expect_warning(a <- openai_cat("a.com", "fixture", c("news", "sports")), "categor")
-  expect_warning(b <- claude_cat("a.com", "fixture", c("news", "sports")), "categor")
-  expect_true(is.na(a$openai_category))
-  expect_true(is.na(b$claude_category))
+  a <- openai_cat("a.com", "fixture", c("news", "sports"))
+  expect_equal(a$error_code, "invalid_response")
+  b <- claude_cat("a.com", "fixture", c("news", "sports"))
+  expect_equal(b$error_code, "invalid_response")
+  expect_true(is.na(a$category))
+  expect_true(is.na(b$category))
 })
 
 
@@ -80,15 +85,20 @@ test_that("CDX returns only valid captures no later than the requested day", {
   capture <- archive_snapshot("example.com", target = "20200102")
   expect_equal(capture$timestamp, "20200101120000")
   expect_match(capture$url, "20200101120000id_/https://example.com/", fixed = TRUE)
-  expect_null(archive_snapshot("example.com", target = "20190101"))
+  expect_equal(
+    archive_snapshot("example.com", target = "20190101")$error_code, "archive_invalid_response"
+  )
   reply <- '[["timestamp","original"],["invalid","https://example.com/"]]'
-  expect_null(archive_snapshot("example.com"))
+  expect_true(archive_snapshot("example.com")$error_code %in%
+                c("no_archive_snapshot", "archive_invalid_response"))
 })
 
 test_that("malformed URLs remain failed rows rather than aborting the batch", {
   inputs <- c("%", "https://%", "[", "https://[")
-  result <- collect_content(inputs, obey_robots = FALSE, archive_fallback = FALSE,
-                            cache_dir = withr::local_tempdir())
+  result <- collect_content(inputs,
+    obey_robots = FALSE, archive_fallback = FALSE,
+    cache_dir = withr::local_tempdir()
+  )
   expect_equal(result$input, inputs)
   expect_equal(result$status, rep("failed", length(inputs)))
   expect_equal(result$stage, rep("validate", length(inputs)))

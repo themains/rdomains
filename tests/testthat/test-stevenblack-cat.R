@@ -19,16 +19,16 @@ test_that("stevenblack_cat returns expected data structure", {
   unlink(temp_hosts)
 
   expect_s3_class(result, "data.frame")
-  expect_equal(ncol(result), 4)
-  expect_equal(
-    names(result),
-    c("domain_name", "stevenblack", "source_last_published", "source_fetched_at")
-  )
+  expect_equal(ncol(result), 18)
+  expect_true(all(c(
+    "domain_name", "category", "status", "source_last_published",
+    "source_fetched_at", "labels"
+  ) %in% names(result)))
   expect_equal(nrow(result), 2)
 
   # Check classifications
-  expect_equal(result$stevenblack[1], "not_listed") # google.com not in blocklist
-  expect_equal(result$stevenblack[2], "ads") # doubleclick.net classified as ads
+  expect_equal(result$status[1], "no_match")
+  expect_equal(result$category[2], "blocked")
 })
 
 test_that("stevenblack_cat handles domain cleaning", {
@@ -47,7 +47,7 @@ test_that("stevenblack_cat handles domain cleaning", {
   unlink(temp_hosts)
 
   # All should be classified as blocked since they resolve to example.com
-  expect_equal(sum(result$stevenblack == "blocked"), 3)
+  expect_equal(sum(result$category == "blocked"), 3)
 })
 
 test_that("stevenblack_cat handles errors appropriately", {
@@ -85,7 +85,7 @@ test_that("get_stevenblack_data creates file", {
 test_that("get_stevenblack_data validates variants", {
   expect_error(
     get_stevenblack_data(variant = "invalid"),
-    "Invalid variant"
+    "Unknown.*variant"
   )
 })
 
@@ -107,9 +107,9 @@ test_that("get_stevenblack_data respects overwrite parameter", {
 })
 # The category is derived from keywords in the domain name, and "ad" is a substring of
 # "trade", "download", "gadget", "espadrilles" and "nokiadns". Against the live list
-# (99,278 blocked hosts) an unanchored "ad" labels 13,423 hosts "ads", of which 10,581
+# (99,278 blocked hosts) an unanchored "ad" labels 13,423 hosts "blocked", of which 10,581
 # (78.8%) contain no ad token at all.
-test_that("the ads label needs an ad token, not an inner substring", {
+test_that("membership labels do not invent content subclasses", {
   mock_hosts <- c(
     "0.0.0.0 downloaduj.pl",
     "0.0.0.0 gadgetproof.net",
@@ -131,8 +131,8 @@ test_that("the ads label needs an ad token, not an inner substring", {
   )
 
   expect_equal(
-    res$stevenblack,
-    c("blocked", "blocked", "blocked", "ads", "ads", "ads")
+    res$category,
+    c("blocked", "blocked", "blocked", "blocked", "blocked", "blocked")
   )
 })
 
@@ -141,8 +141,8 @@ test_that("blocklist lookup is case-insensitive, as DNS is", {
   writeLines("0.0.0.0 doubleclick.net", temp_hosts)
   on.exit(unlink(temp_hosts), add = TRUE)
   expect_equal(
-    stevenblack_cat("DoubleClick.NET", use_file = temp_hosts)$stevenblack,
-    "ads"
+    stevenblack_cat("DoubleClick.NET", use_file = temp_hosts)$category,
+    "blocked"
   )
 })
 
@@ -159,5 +159,5 @@ test_that("a host blocked only in its www. form is not reported safe", {
     c("www.ads.example.com", "ads.example.com", "bare-example.net", "not-listed.org"),
     use_file = temp_hosts
   )
-  expect_equal(res$stevenblack, c("ads", "ads", "blocked", "not_listed"))
+  expect_equal(res$category, c("blocked", "blocked", "blocked", NA_character_))
 })

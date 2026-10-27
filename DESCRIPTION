@@ -1,6 +1,6 @@
 Package: rdomains
 Title: Get the Category of Content Hosted by a Domain
-Version: 0.5.0.9000
+Version: 0.6.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
 Description: Fetch website content and classify it through the Python 'piedomains'
     text model. Look up domains in UT-Capitole, Steven Black, university, archived
@@ -10,18 +10,17 @@ Description: Fetch website content and classify it through the Python 'piedomain
 URL: https://themains.github.io/rdomains/, https://github.com/themains/rdomains
 BugReports: https://github.com/themains/rdomains/issues
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.5.0)
 Imports:
     Matrix,
     urltools,
     glmnet,
     stats,
     methods,
-    XML,
     httr2,
     xml2,
     curl,
-    virustotal,
+    virustotal (>= 0.7.0),
     jsonlite,
     R.utils,
     dplyr (>= 1.1.0),
@@ -41,7 +40,7 @@ Suggests:
     rmarkdown,
     knitr (>= 1.11),
     webfakes,
-    reticulate
+    reticulate (>= 1.41.0)
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8

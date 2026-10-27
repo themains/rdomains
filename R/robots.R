@@ -91,7 +91,8 @@ robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
     sep = ":"
   )
   hit <- .rdomains_env[[key]]
-  if (!is.null(hit) && difftime(Sys.time(), hit$fetched_at, units = "secs") < ttl) {
+  age <- if (is.null(hit)) Inf else as.numeric(difftime(Sys.time(), hit$fetched_at, units = "secs"))
+  if (!is.null(hit) && age < min(ttl, hit$ttl %||% ttl)) {
     return(hit)
   }
 
@@ -103,17 +104,26 @@ robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
       )
       resp <- fetched$response
       if (is.null(resp)) {
-        list(rules = FALSE, crawl_delay = NA_real_, status = NA_integer_)
+        list(
+          rules = FALSE, crawl_delay = NA_real_, status = NA_integer_,
+          error_code = "robots_unavailable"
+        )
       } else {
         status <- resp_status(resp)
         if (status >= 500) {
-          list(rules = FALSE, crawl_delay = NA_real_, status = status)
+          list(
+            rules = FALSE, crawl_delay = NA_real_, status = status,
+            error_code = "robots_unavailable"
+          )
         } else if (status >= 400) {
           list(rules = NULL, crawl_delay = NA_real_, status = status)
         } else {
           body <- resp_body_string(resp)
           if (nchar(body, type = "bytes") > RD_ROBOTS_MAX_BYTES) {
-            list(rules = FALSE, crawl_delay = NA_real_, status = status)
+            list(
+              rules = FALSE, crawl_delay = NA_real_, status = status,
+              error_code = "robots_unavailable"
+            )
           } else {
             parsed <- parse_robots(body, agent)
             list(rules = parsed$rules, crawl_delay = parsed$crawl_delay, status = status)
@@ -122,10 +132,14 @@ robots_for_origin <- function(scheme_host, agent = "rdomains", timeout = 10,
       }
     },
     error = function(e) {
-      list(rules = FALSE, crawl_delay = NA_real_, status = NA_integer_)
+      list(
+        rules = FALSE, crawl_delay = NA_real_, status = NA_integer_,
+        error_code = "robots_unavailable"
+      )
     }
   )
 
+  result$ttl <- if (is.null(result$error_code)) ttl else min(ttl, 60)
   result$fetched_at <- Sys.time()
   .rdomains_env[[key]] <- result
   result

@@ -1,22 +1,7 @@
-#' Turn HTML into the text a classifier sees
+#' Extract visible text for collection diagnostics
 #'
-#' Mirrors the sibling Python package piedomains
-#' (`src/piedomains/text_processor.py::clean_and_normalize_text`), whose contract as of
-#' 0.12.0 is: **collapse runs of whitespace, trim, lowercase. Nothing else.**
-#'
-#' Two things it deliberately does *not* do, both of which were measured:
-#'
-#' * **Punctuation is kept.** Table pipes and layout dashes are 4.8% of tokens. Dropping
-#'   them looked obviously right and measured worse -- held-out macro-F1 fell 0.7267 to
-#'   0.7134 and Curlie agreement 0.543 to 0.523. Structural punctuation evidently says
-#'   something about what kind of page this is.
-#' * **No deduplication, sorting or stopword removal.** The pre-0.12.0 cleaner did all
-#'   three; a transformer wants sentences, not a bag of sorted unique words.
-#'
-#' Do not "improve" this without retraining. The model is fitted to whichever form it was
-#' shown, and a serving-side change silently degrades it -- which is a mistake this
-#' project has already shipped once.
-#'
+#' This extractor supplies metadata and page-state heuristics. The piedomains model
+#' receives original HTML and applies its own extractor; these texts are not its input.
 #' @keywords internal
 #' @noRd
 NULL
@@ -78,8 +63,7 @@ html_text_content <- function(html) {
   # Collect text nodes individually and join with a space. Calling xml_text() on the body
   # concatenates across element boundaries, so "<h1>Example Domain</h1><p>This domain..."
   # came out as "example domainthis domain" -- two words fused into a token that appears
-  # in no vocabulary. Python's extractor separates blocks, so this is also what parity
-  # with the model's training input requires.
+  # in no vocabulary.
   pieces <- xml_text(xml_find_all(node, ".//text()"))
   raw_text <- paste(pieces[nzchar(str_trim(pieces))], collapse = " ")
 

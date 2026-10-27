@@ -1,40 +1,28 @@
-## Submission
+## Submission candidate
 
-rdomains 0.5.0. This release adds page fetching so a domain can be classified
-on its current content, and surfaces the vintage of the static label sources.
+rdomains 0.6.0 standardizes classifier results, preserves source memberships and
+input identity, and corrects archive, cache and retry behavior. NEWS documents the
+breaking API changes. This candidate has not been submitted to CRAN.
 
-Two of the package's four lookup sources are no longer published (DMOZ closed
-March 2017, Shallalist January 2022). Lookups against them now return a
-`source_last_published` column and warn once per session, so a decade-old label
-is no longer presented identically to one from a maintained list.
+## Local verification
 
-New `collect_content()` fetches homepage HTML and text. It identifies itself as
-`rdomains/<version>` with a contact URL, obeys robots.txt including Crawl-delay,
-throttles per host, caps the response body, follows redirects one hop at a time
-so each is re-validated, and refuses hosts resolving to private or link-local
-addresses.
+* macOS arm64, R 4.6.0
+* R CMD check: 0 errors, 0 warnings, 0 notes
+* Full tests with real weights: 581 passed, 18 skipped, 0 warnings or failures
+* Python 3.13.2 / piedomains 0.15.0: real-model assertions passed offline
+* Independent gpt-6-astra review: all findings fixed, matching tests and clean package check
+* lintr and actionlint passed; pkgdown and the executed vignette built successfully
 
-## Test environments
-
-* local macOS, R 4.5.x
-* GitHub Actions: ubuntu release/devel/oldrel-1, macOS release, windows release
-
-## R CMD check results
-
-0 errors | 0 warnings | 0 notes
+The skipped tests require live services or explicit opt-in. Paid providers are
+covered with mocks. No paid API calls run during routine checks. The Python model
+is optional; its weights are not bundled. The dedicated integration workflow tests
+R 4.5 with Python 3.12. Candidate CI is tracked in PR #17; independent review passed on code commit a6d6fe0.
 
 ## Notes for the reviewer
 
-* Functions that access the network (`collect_content()`, `get_shalla_data()`,
-  `get_dmoz_data()`, `get_stevenblack_data()`, `uni_cat()`, `openai_cat()`,
-  `claude_cat()`, `virustotal_cat()`) are wrapped in `\dontrun{}` in examples.
-  Tests touching the network are guarded with `skip_on_cran()` and
-  `skip_if_offline()`, and the package installs, loads and passes its offline
-  tests with no network.
-* No file is written outside `tempdir()` unless the caller supplies a path.
-* `openai_cat()`, `claude_cat()` and `virustotal_cat()` require API keys; their
-  tests skip when the relevant environment variable is unset.
+Network examples use `\dontrun{}`. Tests that access public services use
+`skip_on_cran()`. File writes default to temporary locations; callers explicitly
+choose any persistent download or cache destination.
 
-## Reverse dependencies
-
-None.
+The default model weights are unchanged. Their known category-confusion limits
+and the historical name model's lack of current validation are documented.

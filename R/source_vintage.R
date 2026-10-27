@@ -24,6 +24,7 @@
 SOURCE_VINTAGE <- list(
   shalla = list(
     # get_shalla_data() preserves the final release, dated 2022-01-14.
+    url = "https://raw.githubusercontent.com/themains/rdomains/master/data-raw/shallalist/accomplist/shallalist.gz", # nolint: line_length_linter.
     source = "Shallalist",
     last_published = "2022-01",
     status = "discontinued",
@@ -35,6 +36,7 @@ SOURCE_VINTAGE <- list(
     successor = "UT-Capitole blacklists -- see get_ut1_data() and ut1_cat()"
   ),
   dmoz = list(
+    url = "https://github.com/themains/rdomains/blob/master/data-raw/dmoz/dmoz_domain_category.zip?raw=TRUE", # nolint: line_length_linter.
     source = "DMOZ / Open Directory Project",
     last_published = "2015",
     status = "discontinued",
@@ -45,6 +47,7 @@ SOURCE_VINTAGE <- list(
     successor = "Curlie (https://curlie.org)"
   ),
   ut1 = list(
+    url = "https://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz",
     source = "UT-Capitole blacklists",
     last_published = NA_character_,
     status = "maintained",
@@ -55,6 +58,7 @@ SOURCE_VINTAGE <- list(
     successor = NA_character_
   ),
   stevenblack = list(
+    url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
     source = "Steven Black unified hosts",
     last_published = NA_character_,
     status = "maintained",
@@ -62,6 +66,7 @@ SOURCE_VINTAGE <- list(
     successor = NA_character_
   ),
   uni = list(
+    url = "https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json", # nolint: line_length_linter.
     source = "Hipo university-domains-list",
     last_published = NA_character_,
     status = "maintained",

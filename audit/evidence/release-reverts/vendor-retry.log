@@ -1,0 +1,33 @@
+result-contract: ....................................123...
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-result-contract.R:137:3'): VirusTotal retries transient con
+Expected `result$error_code` to equal `c(...)`.
+Differences:
+    actual          | expected
+[1] "service_error" - "authentication_error" [1]
+[2] "service_error" - "rate_limited"         [2]
+[3] "service_error" - "http_not_found"       [3]
+[4] "service_error" - "rate_limited"         [4]
+[5] "service_error" - "service_unavailable"  [5]
+
+
+── 2. Failure ('test-result-contract.R:140:3'): VirusTotal retries transient con
+Expected `result$retryable` to equal `c(FALSE, TRUE, FALSE, TRUE, TRUE)`.
+Differences:
+`actual`:   TRUE  TRUE TRUE  TRUE TRUE
+`expected`: FALSE TRUE FALSE TRUE TRUE
+
+
+── 3. Failure ('test-result-contract.R:141:3'): VirusTotal retries transient con
+Expected `result$http_status` to be identical to `c(NA_integer_, NA_integer_, 404L, 429L, 503L)`.
+Differences:
+  `actual`: NA NA  NA  NA  NA
+`expected`: NA NA 404 429 503
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

@@ -1,0 +1,74 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | pie-cat
+⠦ |          7 | pie-cat
+⠇ |         29 | pie-cat
+⠹ |         33 | pie-cat
+⠙ |         42 | pie-cat
+✔ |         42 | pie-cat
+
+⠏ |          0 | real-model                                                     2026-10-26 21:22:17,414 - piedomains - ERROR - Text prediction failed: 'NoneType' object is not callable
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 5610.18it/s]
+2026-10-26 21:22:21,364 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on mps: 44 classes, temperature 1.248
+
+⠋ | 1        0 | real-model                                                     2026-10-26 21:22:22,288 - piedomains - ERROR - Text prediction failed: 'NoneType' object is not callable
+2026-10-26 21:22:22,289 - piedomains - ERROR - Text prediction failed: 'NoneType' object is not callable
+
+✖ | 3        3 | real-model [5.4s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-real-model.R:20:3'): R and Python agree on the pinned checkpoint and repeated inputs
+Expected `actual$status` to be identical to "ok".
+Differences:
+`actual`:   "failed"
+`expected`: "ok"
+
+
+Failure ('test-real-model.R:21:3'): R and Python agree on the pinned checkpoint and repeated inputs
+Expected `actual$category` to be identical to `reference[[1]]$category`.
+Differences:
+`actual`:   NA
+`expected`: "news"
+
+
+Failure ('test-real-model.R:22:3'): R and Python agree on the pinned checkpoint and repeated inputs
+Expected `actual$confidence` to equal `reference[[1]]$confidence`.
+Differences:
+  `actual`:  NA
+`expected`: 0.9
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 6.1 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-real-model.R:20:3'): R and Python agree on the pinned checkpoint and repeated inputs
+Expected `actual$status` to be identical to "ok".
+Differences:
+`actual`:   "failed"
+`expected`: "ok"
+
+
+Failure ('test-real-model.R:21:3'): R and Python agree on the pinned checkpoint and repeated inputs
+Expected `actual$category` to be identical to `reference[[1]]$category`.
+Differences:
+`actual`:   NA
+`expected`: "news"
+
+
+Failure ('test-real-model.R:22:3'): R and Python agree on the pinned checkpoint and repeated inputs
+Expected `actual$confidence` to equal `reference[[1]]$confidence`.
+Differences:
+  `actual`:  NA
+`expected`: 0.9
+
+
+[ FAIL 3 | WARN 0 | SKIP 0 | PASS 45 ]
+Error:
+! Test failures.
+Execution halted
+/Users/soodoku/.local/share/uv/python/cpython-3.13.2-macos-aarch64-none/lib/python3.13/multiprocessing/resource_tracker.py:277: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-lt6rilbr'}
+  warnings.warn(

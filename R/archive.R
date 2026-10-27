@@ -29,7 +29,7 @@ NULL
 #' @param target Optional `YYYYMMDD` date. When given, the latest capture on or before that day is
 #'   returned rather than the most recent one.
 #'
-#' @return A list with `url` and `timestamp`, or `NULL` when there is no capture.
+#' @return A list with `url` and `timestamp`, or `error_code` and `http_status` on failure.
 #' @keywords internal
 #' @noRd
 archive_snapshot <- function(domain, timeout = 30, target = NULL) {
@@ -54,19 +54,29 @@ archive_snapshot <- function(domain, timeout = 30, target = NULL) {
         req_perform()
 
       if (resp_status(resp) != 200L) {
-        return(NULL)
+        return(archive_failure(if (resp_status(resp) == 429L) {
+          "archive_rate_limited"
+        } else {
+          "archive_unavailable"
+        }, resp_status(resp)))
       }
-      rows <- fromJSON(resp_body_string(resp))
-      if (!is.matrix(rows) || ncol(rows) != 2L || nrow(rows) < 2L) {
-        return(NULL)
+      rows <- tryCatch(fromJSON(resp_body_string(resp)), error = function(e) NULL)
+      if (is.null(rows)) return(archive_failure("archive_invalid_response", 200L))
+      if (!length(rows)) {
+        return(archive_failure("no_archive_snapshot", 200L))
       }
+      if (!is.matrix(rows) || ncol(rows) != 2L ||
+            !identical(as.character(rows[1, ]), c("timestamp", "original"))) {
+        return(archive_failure("archive_invalid_response", 200L))
+      }
+      if (nrow(rows) == 1L) return(archive_failure("no_archive_snapshot", 200L))
       last <- rows[nrow(rows), ]
       timestamp <- as.character(last[[1]])
       original <- as.character(last[[2]])
       if (!grepl("^[0-9]{14}$", timestamp) ||
             !grepl("^https?://", original) ||
             (!is.null(target) && substr(timestamp, 1, 8) > target)) {
-        return(NULL)
+        return(archive_failure("archive_invalid_response", 200L))
       }
       list(
         # `id_` returns the raw capture without the Wayback toolbar, which would otherwise
@@ -75,7 +85,7 @@ archive_snapshot <- function(domain, timeout = 30, target = NULL) {
         timestamp = timestamp
       )
     },
-    error = function(e) NULL
+    error = function(e) archive_failure("archive_unavailable")
   )
 }
 
@@ -87,32 +97,38 @@ archive_snapshot <- function(domain, timeout = 30, target = NULL) {
 #' @param user_agent Identifying user-agent.
 #' @param target Optional `YYYYMMDD` date to fetch as of.
 #'
-#' @return A list with `html`, `timestamp` and `url`, or `NULL`.
+#' @return A list with `html`, `timestamp` and `url`, or a structured failure.
 #' @keywords internal
 #' @noRd
 archive_fetch <- function(domain, timeout = 45, max_bytes = 10 * 1024^2,
                           user_agent = rdomains_user_agent(), target = NULL) {
   snapshot <- archive_snapshot(domain, timeout = timeout, target = target)
-  if (is.null(snapshot)) {
-    return(NULL)
+  if (!is.null(snapshot$error_code)) {
+    return(snapshot)
   }
   tryCatch(
     {
       fetched <- guarded_get(snapshot$url, timeout, max_bytes, user_agent)
       resp <- fetched$response
       if (is.null(resp)) {
-        return(NULL)
+        return(archive_failure(fetched$error_code %||% "archive_unavailable",
+          fetched$http_status %||% NA_integer_
+        ))
       }
       if (resp_status(resp) != 200L) {
-        return(NULL)
+        return(archive_failure(if (resp_status(resp) == 429L) {
+          "archive_rate_limited"
+        } else {
+          "archive_unavailable"
+        }, resp_status(resp)))
       }
       body <- resp_body_string(resp)
       if (!nzchar(body)) {
-        return(NULL)
+        return(archive_failure("archive_invalid_response", 200L))
       }
-      list(html = body, timestamp = snapshot$timestamp, url = snapshot$url)
+      list(html = body, timestamp = snapshot$timestamp, url = snapshot$url, http_status = 200L)
     },
-    error = function(e) NULL
+    error = function(e) archive_failure("archive_unavailable")
   )
 }
 
@@ -140,4 +156,11 @@ validate_archive_date <- function(value) {
   if (!grepl("^[0-9]{8}$", value) || is.na(date) || format(date, "%Y%m%d") != value) {
     cli_abort("{.arg archive_date} must be a valid date in YYYYMMDD format.")
   }
+}
+
+#' Describe a failed archive request without losing its cause
+#' @keywords internal
+#' @noRd
+archive_failure <- function(code, status = NA_integer_) {
+  list(error_code = code, http_status = as.integer(status))
 }

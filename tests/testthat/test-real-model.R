@@ -1,0 +1,27 @@
+test_that("R and Python agree on the pinned checkpoint and repeated inputs", {
+  skip_if(Sys.getenv("RDOMAINS_REAL_MODEL_TESTS") != "true", "Real model tests are opt-in")
+  python <- Sys.getenv("RDOMAINS_TEST_PYTHON")
+  skip_if(!nzchar(python), "Set RDOMAINS_TEST_PYTHON")
+  skip_if_not_installed("reticulate")
+  reticulate::use_python(python, required = TRUE)
+  fixture <- jsonlite::fromJSON(test_path("fixtures", "model-page.json"))
+  pages <- fetch_row("audit.example", "https://audit.example/article", Sys.time(),
+    status = "ok", stage = "process", html = fixture$html,
+    parsed = html_text_content(fixture$html), signals = page_signals(fixture$html)
+  )
+  actual <- pie_cat(pages = pages)
+  text <- reticulate::import("piedomains.text")
+  directory <- withr::local_tempdir()
+  path <- file.path(directory, "input.html")
+  writeLines(enc2utf8(fixture$html), path, useBytes = TRUE)
+  reference <- text$TextClassifier(cache_dir = directory)$classify_from_paths(
+    list(list(domain = "audit.example", text_path = path))
+  )
+  expect_identical(actual$status, "ok")
+  expect_identical(actual$category, reference[[1]]$category)
+  expect_equal(actual$confidence, reference[[1]]$confidence, tolerance = 1e-6)
+  expect_identical(actual$model_revision, "38d7e6403f911902f47b9218ce5c645a06dd02fe")
+  repeated <- pie_cat(pages = rbind(pages, pages))
+  expect_equal(repeated$category, rep(actual$category, 2))
+  expect_equal(repeated$confidence, rep(actual$confidence, 2), tolerance = 1e-6)
+})

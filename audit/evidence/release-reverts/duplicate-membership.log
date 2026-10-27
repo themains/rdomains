@@ -1,0 +1,35 @@
+result-contract: .......123..........................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-result-contract.R:33:3'): lookup memberships are independen
+Expected `a$labels` to be identical to `b$labels`.
+Differences:
+actual[[1]] vs expected[[1]]
+                     category
+- actual[[1]][1, ]   news
++ expected[[1]][1, ] shopping
+
+`actual[[1]]$category`:   "news"
+`expected[[1]]$category`: "shopping"
+
+
+── 2. Failure ('test-result-contract.R:34:3'): lookup memberships are independen
+Expected `a$labels[[1]]$category` to equal `c("news", "shopping")`.
+Differences:
+`actual`:   "news"
+`expected`: "news" "shopping"
+
+
+── 3. Failure ('test-result-contract.R:35:3'): lookup memberships are independen
+Expected `is.na(a$category)` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+No one gets it right on their first try
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

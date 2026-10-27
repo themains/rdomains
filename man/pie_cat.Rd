@@ -4,26 +4,27 @@
 \alias{pie_cat}
 \title{Classify fetched HTML with piedomains}
 \usage{
-pie_cat(domains = NULL, pages = NULL, threshold = 0.1, ...)
+pie_cat(domains = NULL, pages = NULL, threshold = 0.1, model = NULL, ...)
 }
 \arguments{
-\item{domains}{Character vector of domains or URLs. Ignored when \code{pages} is supplied.}
+\item{domains}{Character vector of domains or URLs. Supply either \code{domains} or \code{pages}.}
 
-\item{pages}{Data frame from \code{\link[=collect_content]{collect_content()}}, including its retained \code{html} column.
+\item{pages}{Data frame from \code{\link[=collect_content]{collect_content()}}, including its retained \code{html} column, or
+previous piedomains results.
 Previously extracted text alone is insufficient to reproduce model preprocessing.
 Failed fetches are retained. Failed inference can be retried on the same pages.}
 
 \item{threshold}{Finite probability in \verb{[0,1]}. Include every category at or above this
 value from the full model distribution, always retaining the predicted category.}
 
+\item{model}{Optional Hugging Face model ID or local checkpoint directory. Overrides
+\code{PIEDOMAINS_TEXT_MODEL} for this call. The pinned default model is reused within a session.}
+
 \item{...}{Passed to \code{\link[=collect_content]{collect_content()}} when \code{pages} is absent.}
 }
 \value{
-The collection data plus \code{fetch_status}, \code{fetch_stage}, \code{fetch_error_code},
-\code{fetch_retryable}, \code{pie_category}, \code{pie_confidence}, \code{pie_categories} (list of tibbles),
-\code{label_source}, \code{model_repo}, \code{model_revision}, \code{piedomains_version}, \code{model_extractor},
-\code{model_cleaning}, \code{model_temperature} and \code{inference_error}. Terminal outcomes include
-inference failures; \code{\link[=fetch_report]{fetch_report()}} therefore counts missing classifications.
+A tibble following \link{classification_results}. Source-specific data are
+retained in \code{details}; all source labels are retained in \code{labels}.
 }
 \description{
 Fetches pages with \code{\link[=collect_content]{collect_content()}} and passes their original HTML to piedomains
@@ -33,13 +34,14 @@ be version 0.15.0 or newer. This uses its text classifier, not its image or fusi
 \details{
 A current fetch does not guarantee a correct current label. The shipped checkpoint
 has known retail/drugs confusion; see its model card. Archive and cached content retain
-their collection dates. \verb{fetch_*} columns preserve collection outcomes separately from
+their collection dates. \code{details} preserves the page and its \verb{fetch_*} collection outcomes
+separately from
 the terminal classification \code{status}, \code{stage}, \code{error_code} and \code{retryable} columns.
 }
 \section{Setup}{
 
-Install \code{reticulate} and Python 3.12 or newer, then run
-\code{reticulate::py_install("piedomains>=0.15.0", pip = TRUE)}.
+Install \code{reticulate} and declare Python requirements before initializing Python:
+\code{reticulate::py_require("piedomains==0.15.0", python_version = ">=3.12")}.
 Set \code{RETICULATE_PYTHON} to select an existing Python environment.
 Model weights download from Hugging Face on first use. The Python package pins its
 default checkpoint; \code{PIEDOMAINS_TEXT_MODEL} can select another checkpoint or local path.

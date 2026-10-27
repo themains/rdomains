@@ -36,9 +36,9 @@ test_that("classification failures preserve fetch provenance and remain retryabl
   })
   res <- pie_cat(pages = pie_page())
   expect_equal(res$status, "failed")
-  expect_equal(res$fetch_status, "ok")
+  expect_equal(res$details[[1]]$fetch_status, "ok")
   expect_equal(res$error_code, "thin_content")
-  expect_true(is.na(res$label_source))
+  expect_true(is.na(res$details[[1]]$label_source))
   expect_equal(fetch_report(res)$failed, 1L)
   local_mocked_bindings(pie_backend = function() {
     function(domains, html, threshold) {
@@ -48,8 +48,8 @@ test_that("classification failures preserve fetch provenance and remain retryabl
   retried <- pie_cat(pages = res)
   expect_equal(retried$status, "ok")
   expect_equal(retried$stage, "infer")
-  expect_equal(retried$model_repo, "fixture/model")
-  expect_equal(retried$fetch_status, "ok")
+  expect_equal(retried$model_id, "fixture/model")
+  expect_equal(retried$details[[1]]$fetch_status, "ok")
   expect_true(is.na(retried$error_code))
 })
 
@@ -58,7 +58,7 @@ test_that("an unavailable model is never reported as a successful classification
   expect_warning(res <- pie_cat(pages = pie_page()), "classification failed")
   expect_equal(res$error_code, "model_load_error")
   expect_equal(res$status, "failed")
-  expect_true(is.na(res$label_source))
+  expect_true(is.na(res$details[[1]]$label_source))
 })
 
 test_that("pie requires raw HTML and page state and handles empty frames", {
@@ -75,15 +75,18 @@ test_that("pie requires raw HTML and page state and handles empty frames", {
 test_that("failed fetches are not relabeled by page heuristics", {
   p <- pie_page()
   p$page_state <- "parked"
-  expect_equal(pie_cat(pages = p)$label_source, "heuristic")
+  expect_equal(pie_cat(pages = p)$details[[1]]$label_source, "heuristic")
   p$status <- "failed"
-  expect_true(is.na(pie_cat(pages = p)$pie_category))
+  expect_true(is.na(pie_cat(pages = p)$category))
 })
 
 test_that("Python bridge preserves HTML, duplicate rows, threshold and checkpoint identity", {
   python <- Sys.getenv("RDOMAINS_TEST_PYTHON")
   skip_if(!nzchar(python), "Set RDOMAINS_TEST_PYTHON to exercise installed piedomains")
   skip_if_not_installed("reticulate")
+  cached_model <- .rdomains_env$pie_model
+  .rdomains_env$pie_model <- NULL
+  withr::defer(.rdomains_env$pie_model <- cached_model)
   reticulate::use_python(python, required = TRUE)
   reticulate::py_run_string(paste(
     "from piedomains.text import TextClassifier",
@@ -106,18 +109,20 @@ test_that("Python bridge preserves HTML, duplicate rows, threshold and checkpoin
     sep = "\n"
   )))
   a <- pie_page(paste(rep("election journalism government news", 20), collapse = " "))
-  a$html <- paste0("<html><body><nav>", paste(rep("football", 50), collapse = " "),
-                   "</nav><main><article><p>", a$text,
-                   "</p></article></main></body></html>")
+  a$html <- paste0(
+    "<html><body><nav>", paste(rep("football", 50), collapse = " "),
+    "</nav><main><article><p>", a$text,
+    "</p></article></main></body></html>"
+  )
   b <- pie_page(paste(rep("football game match results", 20), collapse = " "))
   out <- pie_cat(pages = rbind(a, b), threshold = 0.9)
-  expect_equal(out$pie_category, c("news", "sports"))
-  expect_equal(lengths(out$pie_categories), c(2L, 2L))
-  expect_equal(vapply(out$pie_categories, nrow, integer(1)), c(1L, 1L))
-  expect_equal(out$model_repo, rep("gojiberries/piedomains-text", 2))
+  expect_equal(out$category, c("news", "sports"))
+  expect_equal(lengths(out$labels), c(3L, 3L))
+  expect_equal(vapply(out$labels, nrow, integer(1)), c(1L, 1L))
+  expect_equal(out$model_id, rep("gojiberries/piedomains-text", 2))
   expect_equal(out$model_revision, rep("38d7e6403f911902f47b9218ce5c645a06dd02fe", 2))
   reverse <- pie_cat(pages = rbind(b, a))
-  expect_equal(reverse$pie_category, rev(out$pie_category))
+  expect_equal(reverse$category, rev(out$category))
   expect_equal(pie_cat(pages = pie_page("short"))$error_code, "thin_content")
 })
 

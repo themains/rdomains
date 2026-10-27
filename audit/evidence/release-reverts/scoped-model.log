@@ -1,0 +1,15 @@
+result-contract: ..............................1.....
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-result-contract.R:99:3'): model overrides are scoped and un
+Expected `Sys.getenv("PIEDOMAINS_TEXT_MODEL")` to equal "original".
+Differences:
+`actual`:   "override"
+`expected`: "original"
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

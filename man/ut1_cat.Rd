@@ -4,7 +4,7 @@
 \alias{ut1_cat}
 \title{Get category from the UT-Capitole blacklists}
 \usage{
-ut1_cat(domains = NULL, use_file = NULL)
+ut1_cat(domains, use_file = NULL)
 }
 \arguments{
 \item{domains}{Vector of domain names.}
@@ -13,9 +13,8 @@ ut1_cat(domains = NULL, use_file = NULL)
 \code{ut1_domain_category.csv} in the working directory.}
 }
 \value{
-A tibble with \code{domain_name}, \code{ut1_category}, \code{ut1_usage} (\code{"black"} where UT1
-maintains the list for blocking, \code{"white"} where it maintains it for allowing — both
-describe content) and \code{source_last_published}, the date the list was published.
+A tibble following \link{classification_results}. Source-specific data are
+retained in \code{details}; all source labels are retained in \code{labels}.
 }
 \description{
 Looks a domain up in the University of Toulouse (UT1) blacklists, the maintained

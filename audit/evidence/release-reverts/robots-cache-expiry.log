@@ -1,0 +1,30 @@
+release-correctness: .......................12.3.......
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-release-correctness.R:134:3'): robots outages expire quickl
+Expected `failed$ttl` to equal 60.
+Differences:
+  `actual`: 86400.0
+`expected`:    60.0
+
+
+── 2. Failure ('test-release-correctness.R:146:3'): robots outages expire quickl
+Expected `calls` to equal 2L.
+Differences:
+  `actual`: 1
+`expected`: 2
+
+
+── 3. Failure ('test-release-correctness.R:150:3'): robots outages expire quickl
+Expected `calls` to equal 2L.
+Differences:
+  `actual`: 1
+`expected`: 2
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+Keep trying!
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

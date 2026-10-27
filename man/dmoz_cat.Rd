@@ -4,7 +4,7 @@
 \alias{dmoz_cat}
 \title{Get Category from DMOZ}
 \usage{
-dmoz_cat(domains = NULL, use_file = NULL)
+dmoz_cat(domains, use_file = NULL)
 }
 \arguments{
 \item{domains}{vector of domain names}
@@ -12,8 +12,8 @@ dmoz_cat(domains = NULL, use_file = NULL)
 \item{use_file}{path to the dmoz file, which can be downloaded using \code{\link{get_dmoz_data}}}
 }
 \value{
-data.frame with the original list, the content category of the domain, and the
-vintage of the list that supplied it
+A tibble following \link{classification_results}. Source-specific data are
+retained in \code{details}; all source labels are retained in \code{labels}.
 }
 \description{
 Fetches category (or categories) of content hosted by a domain according to DMOZ.

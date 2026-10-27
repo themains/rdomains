@@ -16,7 +16,7 @@ Invisibly, the path to the written CSV.
 }
 \description{
 Downloads and flattens the University of Toulouse (UT1) blacklists into a single
-\verb{domain,category} CSV. These are the \strong{maintained successor} to Shallalist: where
+\verb{domain,category,usage} CSV. These are the \strong{maintained successor} to Shallalist: where
 Shallalist last published in January 2022, UT1 is updated continuously.
 }
 \details{
@@ -25,9 +25,8 @@ The archive carries ~69 categories under its own French-influenced vocabulary
 \code{\link[=ut1_cat]{ut1_cat()}} therefore reports UT1's category verbatim rather than mapping it onto
 another taxonomy and losing the distinction.
 
-A domain may appear in more than one category; the smallest category is kept
-(ties by category name),
-and the number of extra memberships is reported, rather than the collision being silent.
+A domain may appear in more than one category. Every membership is retained;
+duplicate identical records are removed and rows are sorted by domain and category.
 }
 \examples{
 \dontrun{

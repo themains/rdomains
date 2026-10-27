@@ -16,7 +16,7 @@ collect_content(
   cache_ttl = 7 * 86400,
   cache_max_size = 1024^3,
   allow_hosts = character(),
-  archive_fallback = TRUE,
+  archive_fallback = FALSE,
   archive_date = NULL,
   user_agent = rdomains_user_agent()
 )
@@ -55,7 +55,8 @@ into a cache that does.}
 the hosts named are exempt, so a redirect elsewhere is still refused. Intended for
 testing against a local server.}
 
-\item{archive_fallback}{When a host serves an anti-bot interstitial, try the
+\item{archive_fallback}{Opt in to archived content (default \code{FALSE}). When a host serves an
+anti-bot interstitial, try the
 Internet Archive's most recent capture. Rows recovered this way carry
 \code{source = "archive"} and a \code{snapshot_timestamp}, so the vintage is never
 hidden. Dead domains and explicitly exempted hosts are not recovered this way.}
@@ -69,7 +70,8 @@ is the latest capture on or before the requested day.}
 \item{user_agent}{Override the identifying user-agent.}
 }
 \value{
-A tibble with one row per input: \code{domain_name}, \code{status}, \code{stage}, \code{error_code},
+A tibble with one row per input: \code{input_id}, \code{input}, \code{domain_name},
+\code{archive_error_code}, \code{status}, \code{stage}, \code{error_code},
 \code{retryable}, \code{http_status}, \code{final_url}, \code{fetched_at}, \code{content_bytes}, \code{title},
 \code{description}, \code{lang}, \code{text}, \code{html}, \code{n_tokens}, \code{page_state}, \code{block_vendor},
 \code{robots_allowed}, \code{from_cache}, \code{source}, \code{snapshot_timestamp}, \code{source_last_published}.
@@ -90,7 +92,7 @@ res <- collect_content(c("example.com", "wikipedia.org"))
 fetch_report(res)
 
 # retry only what is worth retrying
-again <- collect_content(res$domain_name[res$retryable])
+again <- collect_content(res$input[res$retryable])
 }
 }
 \seealso{

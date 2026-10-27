@@ -1,0 +1,54 @@
+name: Python integration and R floor
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NOT_CRAN: "false"
+      RDOMAINS_REAL_MODEL_TESTS: "true"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
+        with:
+          r-version: "4.5"
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
+        with:
+          extra-packages: any::devtools, any::reticulate
+      - name: Install Python runtime
+        run: |
+          python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install 'piedomains==0.15.0'
+          echo "RDOMAINS_TEST_PYTHON=$(command -v python)" >> "$GITHUB_ENV"
+          echo "RETICULATE_PYTHON=$(command -v python)" >> "$GITHUB_ENV"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/huggingface/hub
+          key: piedomains-text-38d7e6403f911902f47b9218ce5c645a06dd02fe
+      - name: Test R floor, bridge and pinned model
+        shell: Rscript {0}
+        run: |
+          Sys.unsetenv(c("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "CLAUDE_API_KEY"))
+          devtools::test(stop_on_failure = TRUE)
+      - name: Verify cached model offline
+        shell: Rscript {0}
+        env:
+          HF_HUB_OFFLINE: "1"
+          TRANSFORMERS_OFFLINE: "1"
+        run: devtools::test(filter = "real-model", stop_on_failure = TRUE)

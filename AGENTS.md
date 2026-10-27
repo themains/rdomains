@@ -13,10 +13,10 @@ Two of the lookup sources are no longer published (DMOZ closed March 2017, Shall
 ### Testing
 ```bash
 # Run all tests
-R -e "library(testthat); test_dir('tests/testthat')"
+R -e "devtools::test(stop_on_failure = TRUE)"
 
 # Run specific test
-R -e "library(testthat); test_file('tests/testthat/test-dmoz-cat.R')"
+R -e "devtools::test(filter = 'dmoz-cat', stop_on_failure = TRUE)"
 
 # Run tests with devtools
 R -e "devtools::test()"
@@ -62,7 +62,7 @@ The package is organized into several main functional areas:
   - `dmoz_cat()`: Categories from DMOZ
   - `virustotal_cat()`: Categories from VirusTotal API
   - `uni_cat()`: University domain classification
-  - `adult_ml1_cat()`: ML-based adult content classification
+  - `adult_name_probability()`: Historical domain-name probability model
   - `openai_cat()`: Categories from OpenAI GPT models
   - `claude_cat()`: Categories from Anthropic Claude models
   
@@ -72,7 +72,7 @@ The package is organized into several main functional areas:
   - `get_stevenblack_data()`: Downloads Steven Black's hosts list
 
 - **Utility Functions**:
-  - `not_news()`: Predicts if domain content is not news-related
+  - `news_url_signals()`: Independent URL keyword flags
   - `source_vintage()`: Provenance and staleness of every category source
 
 ### Data (data-raw/)
@@ -84,7 +84,7 @@ The package is organized into several main functional areas:
 - **glmnet**: Machine learning model implementation
 - **virustotal**: VirusTotal API access
 - **httr/curl**: HTTP requests and API calls
-- **XML/xml2**: XML parsing
+- **xml2**: XML parsing
 - **jsonlite**: JSON parsing for LLM APIs
 
 ## Common Patterns
@@ -106,7 +106,7 @@ Functions validate file existence and provide informative error messages directi
 - Unit tests are in `tests/testthat/`
 - Tests verify data frame structure and basic functionality
 - Some tests require downloading external data files
-- LLM function tests require API keys set as environment variables:
+- Live LLM tests require `RDOMAINS_LIVE_API_TESTS=true` and API keys. Mocked tests run without keys:
   - `OPENAI_API_KEY` for OpenAI tests
   - `ANTHROPIC_API_KEY` or `CLAUDE_API_KEY` for Claude tests
 
@@ -124,7 +124,7 @@ openai_cat(c("google.com", "facebook.com", "github.com"))
 openai_cat("domain.com", categories = c("technology", "social", "ecommerce", "other"))
 
 # With specific model and rate limiting
-openai_cat("domain.com", model = "gpt-4", rate_limit = 1.0)
+openai_cat("domain.com", model = "gpt-6-luna", delay = 1.0)
 ```
 
 ### Claude Classification

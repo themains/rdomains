@@ -13,13 +13,19 @@ fake_uni_list <- function() {
 }
 
 test_that("uni_cat matches universities that list more than one domain", {
-  local_mocked_bindings(fromJSON = function(...) fake_uni_list())
-  expect_equal(uni_cat("http://wab.edu.pl")$name, "Wroclaw Akademia Biznesu")
-  expect_equal(uni_cat("student.wab.edu.pl")$name, "Wroclaw Akademia Biznesu")
+  local_mocked_bindings(
+    fromJSON = function(...) fake_uni_list(),
+    lookup_source_file = function(...) "fixture"
+  )
+  expect_equal(uni_cat("http://wab.edu.pl")$details[[1]]$records$name, "Wroclaw Akademia Biznesu")
+  expect_equal(uni_cat("student.wab.edu.pl")$details[[1]]$records$name, "Wroclaw Akademia Biznesu")
 })
 
 test_that("uni_cat still matches single-domain universities and misses non-matches", {
-  local_mocked_bindings(fromJSON = function(...) fake_uni_list())
-  expect_equal(uni_cat("http://www.a.edu")$name, "A Uni")
-  expect_true(is.na(uni_cat("google.com")$name))
+  local_mocked_bindings(
+    fromJSON = function(...) fake_uni_list(),
+    lookup_source_file = function(...) "fixture"
+  )
+  expect_equal(uni_cat("http://www.a.edu")$details[[1]]$records$name, "A Uni")
+  expect_equal(uni_cat("google.com")$status, "no_match")
 })

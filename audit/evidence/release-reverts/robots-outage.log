@@ -1,0 +1,22 @@
+release-correctness: .........12.......................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-release-correctness.R:55:3'): robots transport failures are
+Expected `result$error_code` to be identical to "robots_unavailable".
+Differences:
+`actual`:   "robots_blocked"
+`expected`: "robots_unavailable"
+
+
+── 2. Failure ('test-release-correctness.R:56:3'): robots transport failures are
+Expected `result$retryable` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE
+
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted

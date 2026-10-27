@@ -7,50 +7,25 @@
 #' @keywords internal
 #' @noRd
 classify_domain_claude <- function(domain, categories, model, api_key) {
-  prompt <- build_categorization_prompt(domain, categories)
-
-  request_body <- list(
-    model = model,
-    max_tokens = 256,
-    messages = list(
-      list(role = "user", content = prompt)
+  req <- request("https://api.anthropic.com/v1/messages") |>
+    req_headers_redacted(`x-api-key` = api_key) |>
+    req_headers(`anthropic-version` = "2023-06-01") |>
+    req_body_json(
+      list(
+        model = model, max_tokens = 256,
+        messages = list(
+          list(role = "user", content = build_categorization_prompt(domain, categories))
+        )
+      ),
+      auto_unbox = TRUE
     )
-  )
-
-  result <- tryCatch(
-    {
-      response <- request("https://api.anthropic.com/v1/messages") |>
-        req_headers_redacted(`x-api-key` = api_key) |>
-        req_headers(`anthropic-version` = "2023-06-01") |>
-        req_body_json(request_body, auto_unbox = TRUE) |>
-        req_error(is_error = function(resp) FALSE) |>
-        req_timeout(30) |>
-        req_perform()
-
-      if (resp_status(response) == 200) {
-        result <- fromJSON(resp_body_string(response), simplifyVector = FALSE)
-        if (!identical(result$stop_reason, "end_turn")) {
-          cli_warn("The provider did not complete the category response.")
-          return(tibble(domain_name = domain, claude_category = NA_character_))
-        }
-        blocks <- Filter(function(x) identical(x$type, "text"), result$content)
-        value <- paste(vapply(blocks, function(x) x$text, character(1)), collapse = "")
-        checked_category(value, categories)
-      } else {
-        cli_warn("API call failed for domain {domain} - Status: {resp_status(response)}")
-        NA_character_
-      }
-    },
-    error = function(e) {
-      cli_warn(c(
-        "Error processing domain: {domain}",
-        "x" = e$message
-      ))
-      NA_character_
+  llm_response(req, categories, function(body) {
+    if (!identical(body$stop_reason, "end_turn")) {
+      return(NA_character_)
     }
-  )
-
-  tibble(domain_name = domain, claude_category = result)
+    blocks <- Filter(function(x) identical(x$type, "text"), body$content)
+    paste(vapply(blocks, function(x) x$text, character(1)), collapse = "")
+  }, model)
 }
 
 #' Get Category from Anthropic Claude
@@ -64,9 +39,10 @@ classify_domain_claude <- function(domain, categories, model, api_key) {
 #'   ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable
 #' @param categories vector of categories to classify into. If NULL, uses default web categories
 #' @param model Claude model to use (default: "claude-haiku-5-5" for cost efficiency)
-#' @param rate_limit delay in seconds between API calls (default: 0.5)
+#' @param delay delay in seconds between API calls (default: 0.5)
 #'
-#' @return data.frame with original list and content category of the domain
+#' @return A tibble following [classification_results], including provider failures and model
+#' identity.
 #'
 #' @export
 #' @examples \dontrun{
@@ -74,27 +50,10 @@ classify_domain_claude <- function(domain, categories, model, api_key) {
 #' claude_cat(c("google.com", "facebook.com"))
 #' claude_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
 #' }
-claude_cat <- function(domains = NULL, api_key = NULL, categories = NULL,
-                       model = "claude-haiku-5-5", rate_limit = 0.5) {
-  validate_domains(domains)
-  c_domains <- clean_domains(domains)
-
-  if (is.null(categories)) {
-    categories <- c(
-      "news", "shopping", "social", "adult", "gambling", "technology",
-      "finance", "education", "entertainment", "business", "other"
-    )
-  }
-
-  validate_llm_options(categories, model, rate_limit)
-  api_key <- get_api_key(api_key, c("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"), "Anthropic")
-
-  map_df(
-    seq_along(c_domains),
-    function(i) {
-      result <- classify_domain_claude(c_domains[i], categories, model, api_key)
-      apply_rate_limit(i, length(c_domains), rate_limit)
-      result
-    }
+claude_cat <- function(domains, api_key = NULL, categories = NULL,
+                       model = "claude-haiku-5-5", delay = 0.5) {
+  llm_cat(
+    domains, api_key, categories, model, delay, "claude",
+    c("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"), classify_domain_claude
   )
 }

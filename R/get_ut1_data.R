@@ -1,7 +1,7 @@
 #' Download the UT-Capitole blacklists
 #'
 #' Downloads and flattens the University of Toulouse (UT1) blacklists into a single
-#' `domain,category` CSV. These are the **maintained successor** to Shallalist: where
+#' `domain,category,usage` CSV. These are the **maintained successor** to Shallalist: where
 #' Shallalist last published in January 2022, UT1 is updated continuously.
 #'
 #' The archive carries ~69 categories under its own French-influenced vocabulary
@@ -9,9 +9,8 @@
 #' [ut1_cat()] therefore reports UT1's category verbatim rather than mapping it onto
 #' another taxonomy and losing the distinction.
 #'
-#' A domain may appear in more than one category; the smallest category is kept
-#' (ties by category name),
-#' and the number of extra memberships is reported, rather than the collision being silent.
+#' A domain may appear in more than one category. Every membership is retained;
+#' duplicate identical records are removed and rows are sorted by domain and category.
 #'
 #' @param outdir Optional; folder to save the file in. Default is the working directory.
 #' @param overwrite Optional; default `FALSE`. If `TRUE`, an existing file is replaced.
@@ -28,21 +27,7 @@
 #' ut1_cat("example.com")
 #' }
 get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
-  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
-  checkmate::assert_flag(overwrite)
-  outdir <- normalizePath(outdir, mustWork = FALSE)
-  if (!dir.exists(outdir)) {
-    dir.create(outdir, recursive = TRUE)
-  }
-  output_file <- file.path(outdir, "ut1_domain_category.csv")
-
-  if (!overwrite && file.exists(output_file)) {
-    cli_abort(c(
-      "File already exists: {.file {output_file}}",
-      "i" = "Set {.code overwrite = TRUE} to replace it."
-    ))
-  }
-
+  output_file <- source_destination(outdir, "ut1_domain_category.csv", overwrite)
   tmp <- tempfile(fileext = ".tar.gz")
   exdir <- tempfile()
   on.exit(unlink(c(tmp, exdir), recursive = TRUE), add = TRUE)
@@ -50,7 +35,7 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
   cli_inform("Downloading UT-Capitole blacklists (~25 MB)...")
   metadata <- tryCatch(
     download_source(
-      "https://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz", tmp
+      SOURCE_VINTAGE$ut1$url, tmp
     ),
     error = function(e) {
       cli_abort(c("Failed to download UT1 blacklists", "x" = conditionMessage(e)))
@@ -105,15 +90,9 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
     tibble(domain = domains, category = category, usage = unname(usages[i]))
   })
 
-  # A domain in several categories keeps the **smallest** one, which is deterministic and
-  # informative: `adult` alone is 4.6M domains, so a domain also listed in `shopping`
-  # (37k) is better described by shopping. Keeping "the first" made millions of
-  # order-dependent choices silently.
-  sizes <- table(rows$category)
-  rows <- rows[order(as.integer(sizes[rows$category]), rows$category), ]
+  rows <- unique(rows)
+  rows <- rows[order(rows$domain, rows$category, rows$usage), ]
   multi <- sum(duplicated(rows$domain))
-  rows <- rows[!duplicated(rows$domain), ]
-  rows <- rows[order(rows$domain), ]
 
   utils::write.csv(rows, output_file, row.names = FALSE)
   save_source_metadata(output_file, metadata)
@@ -129,7 +108,7 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
       ))
     },
     if (multi > 0) {
-      c("i" = "{multi} domain{?s} were in more than one category; kept the most specific")
+      c("i" = "{multi} domain{?s} have additional category memberships; all are retained")
     }
   ))
   invisible(output_file)

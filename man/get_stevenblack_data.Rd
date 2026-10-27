@@ -4,7 +4,7 @@
 \alias{get_stevenblack_data}
 \title{Get Steven Black's Host List Data}
 \usage{
-get_stevenblack_data(outdir = "./", variant = "base", overwrite = FALSE)
+get_stevenblack_data(outdir = ".", variant = "base", overwrite = FALSE)
 }
 \arguments{
 \item{outdir}{Optional; folder to save the file in. Default is the
@@ -14,6 +14,9 @@ current directory}
 "porn", "social", "gambling", "all"}
 
 \item{overwrite}{Optional; default is FALSE. If TRUE, the file is overwritten.}
+}
+\value{
+Invisibly, the absolute path to the downloaded file.
 }
 \description{
 Downloads the latest version of Steven Black's unified hosts file.

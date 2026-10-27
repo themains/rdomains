@@ -1,5 +1,5 @@
 test_that("openai cat validates input", {
-  expect_error(openai_cat(), "must not be NULL")
+  expect_error(openai_cat(), "missing")
 
   # Temporarily unset API key to test error handling
   old_key <- Sys.getenv("OPENAI_API_KEY")
@@ -16,7 +16,7 @@ test_that("openai cat returns correct structure", {
 
   result <- openai_cat("google.com")
   expect_s3_class(result, "data.frame")
-  expect_named(result, c("domain_name", "openai_category"))
+  expect_true(all(c("domain_name", "category", "error_code", "model_id") %in% names(result)))
   expect_equal(nrow(result), 1)
   expect_equal(result$domain_name[1], "google.com")
 })
@@ -51,5 +51,5 @@ test_that("openai cat accepts custom categories", {
   result <- openai_cat("google.com", categories = custom_cats)
   expect_s3_class(result, "data.frame")
   # Category should be one of the custom categories or NA
-  expect_true(is.na(result$openai_category[1]) || result$openai_category[1] %in% custom_cats)
+  expect_true(is.na(result$category[1]) || result$category[1] %in% custom_cats)
 })

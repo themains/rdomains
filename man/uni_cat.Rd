@@ -4,13 +4,16 @@
 \alias{uni_cat}
 \title{Get Category from University Domain List}
 \usage{
-uni_cat(domains = NULL)
+uni_cat(domains, use_file = NULL)
 }
 \arguments{
-\item{domains}{vector of domain names}
+\item{domains}{Vector of domain names.}
+
+\item{use_file}{Optional saved Hipo JSON file. Otherwise downloaded once per session.}
 }
 \value{
-data.frame with original list and all the other columns from the university json
+A tibble following \link{classification_results}. Source-specific data are
+retained in \code{details}; all source labels are retained in \code{labels}.
 }
 \description{
 Fetches university domain json from:

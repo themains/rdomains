@@ -1,0 +1,19 @@
+result-contract: ...............1.........................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Error ('test-result-contract.R:71:3'): DMOZ downloads return a reusable pa
+Error in `path.expand(path)`: invalid 'path' argument
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_identical(normalizePath(path), expected) at test-result-contract.R:71:3
+ 2. │ └─testthat::quasi_label(enquo(object), label)
+ 3. │   └─rlang::eval_bare(expr, quo_get_env(quo))
+ 4. └─base::normalizePath(path)
+ 5.   └─base::path.expand(path)
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+Frustration is a natural part of programming :)
+ℹ Testing rdomains
+Error:
+! Test failures.
+Execution halted
