@@ -2,77 +2,54 @@
 % Please edit documentation in R/pie_cat.R
 \name{pie_cat}
 \alias{pie_cat}
-\title{Classify domains with the piedomains model}
+\title{Classify fetched HTML with piedomains}
 \usage{
 pie_cat(domains = NULL, pages = NULL, threshold = 0.1, ...)
 }
 \arguments{
-\item{domains}{Character vector of domains. Ignored when `pages` is supplied.}
+\item{domains}{Character vector of domains or URLs. Ignored when \code{pages} is supplied.}
 
-\item{pages}{A tibble from [collect_content()], to classify pages you have already
-fetched. Rows that failed to fetch are returned untouched, so a partial run can be
-completed without refetching what already worked.}
+\item{pages}{Data frame from \code{\link[=collect_content]{collect_content()}}, including its retained \code{html} column.
+Previously extracted text alone is insufficient to reproduce model preprocessing.
+Failed fetches are retained. Failed inference can be retried on the same pages.}
 
-\item{threshold}{Probability floor for the `pie_categories` list. The argmax is always
-included even when it falls below this. Applied to whatever piedomains returns; the
-model's own multi-label threshold is a piedomains setting.}
+\item{threshold}{Finite probability in \verb{[0,1]}. Include every category at or above this
+value from the full model distribution, always retaining the predicted category.}
 
-\item{...}{Passed to [collect_content()] when `pages` is not supplied.}
+\item{...}{Passed to \code{\link[=collect_content]{collect_content()}} when \code{pages} is absent.}
 }
 \value{
-The [collect_content()] tibble plus `pie_category`, `pie_confidence`,
-  `pie_categories` (a list-column of category/probability tibbles), `label_source`
-  (`"model"` or `"heuristic"`) and `model_repo`.
+The collection data plus \code{fetch_status}, \code{fetch_stage}, \code{fetch_error_code},
+\code{fetch_retryable}, \code{pie_category}, \code{pie_confidence}, \code{pie_categories} (list of tibbles),
+\code{label_source}, \code{model_repo}, \code{model_revision}, \code{piedomains_version}, \code{model_extractor},
+\code{model_cleaning}, \code{model_temperature} and \code{inference_error}. Terminal outcomes include
+inference failures; \code{\link[=fetch_report]{fetch_report()}} therefore counts missing classifications.
 }
 \description{
-Fetches each domain's homepage and classifies its **current** content, rather than
-looking the domain up in a list written years ago. This is the answer to the problem
-[source_vintage()] documents: `shalla_cat()` reports what a domain was in January 2022,
-`pie_cat()` reports what it is today.
+Fetches pages with \code{\link[=collect_content]{collect_content()}} and passes their original HTML to piedomains
+for extraction, tokenization, calibration and classification. The Python package must
+be version 0.15.0 or newer. This uses its text classifier, not its image or fusion models.
 }
-\section{How it reaches the model}{
-
-
-Through the Python package `piedomains`, via `reticulate`. That is deliberate rather
-than convenient. The model input has four pieces that are easy to get subtly wrong and
-impossible to notice when you do:
-
-* the text is prefixed with the domain minus its TLD -- training fed
-  `domain + " " + text`, and a serving path once omitted it;
-* probabilities are `softmax(logits / temperature)` with a temperature read from the
-  checkpoint, not 1.0;
-* merged classes have their probabilities **summed**, not overwritten;
-* the text cleaner collapses whitespace and lowercases, and does *not* deduplicate or
-  sort, which it used to.
-
-Reimplementing those in R would make this package a second place they can drift.
-Calling the Python package means parity is structural: the weights come from the same
-Hugging Face checkpoint and the input contract upgrades with a `pip` bump.
+\details{
+A current fetch does not guarantee a correct current label. The shipped checkpoint
+has known retail/drugs confusion; see its model card. Archive and cached content retain
+their collection dates. \verb{fetch_*} columns preserve collection outcomes separately from
+the terminal classification \code{status}, \code{stage}, \code{error_code} and \code{retryable} columns.
 }
-
 \section{Setup}{
 
-
-```r
-install.packages("reticulate")
-reticulate::py_install("piedomains", pip = TRUE)
-```
-
-The model weights (~1.2 GB) download from Hugging Face on first use and are cached by
-`transformers` afterwards. Set `RETICULATE_PYTHON` to point at an existing environment
-if you already have `piedomains` installed somewhere.
+Install \code{reticulate} and Python 3.12 or newer, then run
+\code{reticulate::py_install("piedomains>=0.15.0", pip = TRUE)}.
+Set \code{RETICULATE_PYTHON} to select an existing Python environment.
+Model weights download from Hugging Face on first use. The Python package pins its
+default checkpoint; \code{PIEDOMAINS_TEXT_MODEL} can select another checkpoint or local path.
+Results report the resolved model, revision when available, Python package version,
+extractor, cleaning mode and calibration temperature.
 }
 
 \examples{
 \dontrun{
-pie_cat(c("cnn.com", "wikipedia.org"))
-
-# fetch once, classify later, without refetching
 pages <- collect_content(c("cnn.com", "wikipedia.org"))
 pie_cat(pages = pages)
 }
-}
-\seealso{
-[collect_content()] for the fetch, [source_vintage()] for how a live answer
-  compares with the static lists.
 }

@@ -7,14 +7,14 @@
 fetch_error_codes()
 }
 \value{
-A tibble with columns `code`, `stage`, `retryable` and `description`.
+A tibble with columns \code{code}, \code{stage}, \code{retryable} and \code{description}.
 }
 \description{
-The closed set of `error_code` values that [collect_content()] and [pie_cat()] can
+The closed set of \code{error_code} values that \code{\link[=collect_content]{collect_content()}} and \code{\link[=pie_cat]{pie_cat()}} can
 return, with the pipeline stage each belongs to and whether it is worth retrying.
 }
 \details{
-These strings are shared verbatim with the Python package `piedomains`, so results from
+These strings are shared verbatim with the Python package \code{piedomains}, so results from
 the two can be aggregated together.
 }
 \examples{
@@ -24,6 +24,6 @@ fetch_error_codes()
 subset(fetch_error_codes(), retryable)
 }
 \seealso{
-[fetch_report()] to summarise an actual run, [source_vintage()] for the
-  provenance of the static label sources.
+\code{\link[=fetch_report]{fetch_report()}} to summarise an actual run, \code{\link[=source_vintage]{source_vintage()}} for the
+provenance of the static label sources.
 }

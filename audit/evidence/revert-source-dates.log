@@ -1,0 +1,26 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-correctness
+⠴ | 1        5 | audit-correctness
+⠸ | 1       13 | audit-correctness
+✖ | 1       24 | audit-correctness
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:25:3'): local lookup files do not invent source publication dates
+Expected `is.na(ut1_cat("example.com", path)$source_last_published)` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:25:3'): local lookup files do not invent source publication dates
+Expected `is.na(ut1_cat("example.com", path)$source_last_published)` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 24 ]

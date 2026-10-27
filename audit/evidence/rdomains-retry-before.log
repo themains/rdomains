@@ -1,0 +1,103 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-http
+⠋ |          1 | audit-http
+⠴ |          6 | audit-http
+⠼ |         15 | audit-http
+⠧ |         28 | audit-http
+⠙ |         42 | audit-http
+⠦ | 1       56 | audit-http
+⠏ | 4       56 | audit-http
+✖ | 6       56 | audit-http [3.9s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:111:5'): transient failures are retried for content and robots requests
+Expected `result$status` to equal "ok".
+Differences:
+`actual`:   "failed"
+`expected`: "ok"
+
+
+Failure ('test-audit-http.R:112:5'): transient failures are retried for content and robots requests
+Expected `result$http_status` to equal 200L.
+Differences:
+  `actual`:  NA
+`expected`: 200
+
+
+Failure ('test-audit-http.R:116:5'): transient failures are retried for content and robots requests
+Expected `counts` to equal `if (retry_path == "robots") "2 1" else "1 2"`.
+Differences:
+`actual`:   "1 0"
+`expected`: "2 1"
+
+
+Failure ('test-audit-http.R:111:5'): transient failures are retried for content and robots requests
+Expected `result$status` to equal "ok".
+Differences:
+`actual`:   "failed"
+`expected`: "ok"
+
+
+Failure ('test-audit-http.R:112:5'): transient failures are retried for content and robots requests
+Expected `result$http_status` to equal 200L.
+Differences:
+  `actual`: 503
+`expected`: 200
+
+
+Failure ('test-audit-http.R:116:5'): transient failures are retried for content and robots requests
+Expected `counts` to equal `if (retry_path == "robots") "2 1" else "1 2"`.
+Differences:
+`actual`:   "1 1"
+`expected`: "1 2"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 3.9 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:111:5'): transient failures are retried for content and robots requests
+Expected `result$status` to equal "ok".
+Differences:
+`actual`:   "failed"
+`expected`: "ok"
+
+
+Failure ('test-audit-http.R:112:5'): transient failures are retried for content and robots requests
+Expected `result$http_status` to equal 200L.
+Differences:
+  `actual`:  NA
+`expected`: 200
+
+
+Failure ('test-audit-http.R:116:5'): transient failures are retried for content and robots requests
+Expected `counts` to equal `if (retry_path == "robots") "2 1" else "1 2"`.
+Differences:
+`actual`:   "1 0"
+`expected`: "2 1"
+
+
+Failure ('test-audit-http.R:111:5'): transient failures are retried for content and robots requests
+Expected `result$status` to equal "ok".
+Differences:
+`actual`:   "failed"
+`expected`: "ok"
+
+
+Failure ('test-audit-http.R:112:5'): transient failures are retried for content and robots requests
+Expected `result$http_status` to equal 200L.
+Differences:
+  `actual`: 503
+`expected`: 200
+
+
+Failure ('test-audit-http.R:116:5'): transient failures are retried for content and robots requests
+Expected `counts` to equal `if (retry_path == "robots") "2 1" else "1 2"`.
+Differences:
+`actual`:   "1 1"
+`expected`: "1 2"
+
+
+[ FAIL 6 | WARN 0 | SKIP 0 | PASS 56 ]

@@ -1,0 +1,63 @@
+ℹ Testing rdomains
+claude-cat: ..SSSS
+collect-content: ....................................................SS........S......
+dmoz-cat: S.......
+e2e-fetch: ........> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+...> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+....> Waiting 1s for throttling delay
+..................SSSS
+extract-text: ....................
+ml-cat: ....
+not-news: ......
+openai-cat: ..SSSS
+outcomes: .......................
+page-cache: .............
+page-signals: ...............................
+shalla-cat: S....
+source-vintage: ......................
+stevenblack-cat: .........S.....
+uni-cat: ....
+utils: ..........................
+
+══ Skipped ═════════════════════════════════════════════════════════════════════
+1. claude cat returns correct structure ('test-claude-cat.R:16:3') - Reason: ANTHROPIC_API_KEY or CLAUDE_API_KEY not set
+
+2. claude cat handles multiple domains ('test-claude-cat.R:29:3') - Reason: ANTHROPIC_API_KEY or CLAUDE_API_KEY not set
+
+3. claude cat preprocesses domains correctly ('test-claude-cat.R:42:3') - Reason: ANTHROPIC_API_KEY or CLAUDE_API_KEY not set
+
+4. claude cat accepts custom categories ('test-claude-cat.R:52:3') - Reason: ANTHROPIC_API_KEY or CLAUDE_API_KEY not set
+
+5. collect_content returns a row per input, even for unfetchable ones ('test-collect-content.R:110:3') - Reason: On CRAN
+
+6. http_status holds the HTTP code, not the row status ('test-collect-content.R:129:3') - Reason: On CRAN
+
+7. redirects are followed and every hop is re-validated ('test-collect-content.R:174:3') - Reason: On CRAN
+
+8. dmoz cat ('test-dmoz-cat.R:3:3') - Reason: On CRAN
+
+9. a blocked page is recovered from the archive, with its vintage visible ('test-e2e-fetch.R:212:3') - Reason: On CRAN
+
+10. a dead domain is not resurrected from the archive ('test-e2e-fetch.R:235:3') - Reason: On CRAN
+
+11. archive_date fetches a domain as it was, not as it is ('test-e2e-fetch.R:250:3') - Reason: On CRAN
+
+12. a date with no capture is reported, not silently fetched live ('test-e2e-fetch.R:273:3') - Reason: On CRAN
+
+13. openai cat returns correct structure ('test-openai-cat.R:13:3') - Reason: OPENAI_API_KEY not set
+
+14. openai cat handles multiple domains ('test-openai-cat.R:23:3') - Reason: OPENAI_API_KEY not set
+
+15. openai cat preprocesses domains correctly ('test-openai-cat.R:33:3') - Reason: OPENAI_API_KEY not set
+
+16. openai cat accepts custom categories ('test-openai-cat.R:40:3') - Reason: OPENAI_API_KEY not set
+
+17. shallalist cat ('test-shalla-cat.R:3:3') - Reason: On CRAN
+
+18. get_stevenblack_data creates file ('test-stevenblack-cat.R:68:3') - Reason: On CRAN
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+MM - funkadelic code.

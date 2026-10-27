@@ -6,8 +6,13 @@
 #'
 #' Shallalist stopped publishing in 2022, so these labels describe the domain as it was
 #' then or earlier, not as it is now. The returned \code{source_last_published} column
-#' carries that vintage, and a warning is issued once per session. See
+#' carries that vintage when the file has verified download metadata.
+#' A warning is issued once per session. See
 #' \code{\link{source_vintage}}.
+#'
+#' Publication dates come from the `.metadata.json` sidecar written by the downloader,
+#' checked against the file contents. `source_fetched_at` is the download time.
+#' Files without matching metadata return `NA` dates; filesystem timestamps are not used.
 #'
 #' @param domains vector of domain names
 #' @param use_file path to the latest shallalist file downloaded using \code{\link{get_shalla_data}}
@@ -32,11 +37,14 @@ shalla_cat <- function(domains = NULL, use_file = NULL) {
 
   shalla <- read_csv(data_file, show_col_types = FALSE)
 
+  validate_lookup(shalla, c("domains", "category"))
+  metadata <- load_source_metadata(data_file)
   warn_source_vintage("shalla")
 
   tibble(
     domain_name = c_domains,
     shalla_category = shalla$category[match(c_domains, shalla$domains)],
-    source_last_published = SOURCE_VINTAGE$shalla$last_published
+    source_last_published = metadata$source_last_published,
+    source_fetched_at = metadata$source_fetched_at
   )
 }

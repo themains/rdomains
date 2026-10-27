@@ -1,0 +1,43 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-correctness
+⠦ |          7 | audit-correctness
+✖ | 1       25 | audit-correctness
+────────────────────────────────────────────────────────────────────────────────
+Error ('test-audit-correctness.R:90:3'): malformed URLs remain failed rows rather than aborting the batch
+Error in `curl::curl_parse_url(url, baseurl = base_url)`: Failed to parse URL: Bad hostname
+Backtrace:
+     ▆
+  1. └─rdomains::collect_content(...) at test-audit-correctness.R:90:3
+  2.   └─base::lapply(...) at rdomains-audit-20261026/R/collect_content.R:238:3
+  3.     └─rdomains (local) FUN(X[[i]], ...)
+  4.       └─rdomains:::fetch_one(...) at rdomains-audit-20261026/R/collect_content.R:239:5
+  5.         └─rdomains:::cache_get(cache_dir, url, cache_ttl) at rdomains-audit-20261026/R/collect_content.R:371:3
+  6.           ├─rdomains:::cache_paths(dir, cache_key(url)) at rdomains-audit-20261026/R/page_cache.R:82:3
+  7.           │ └─base::substr(key, 1, 2) at rdomains-audit-20261026/R/page_cache.R:66:3
+  8.           └─rdomains:::cache_key(url)
+  9.             └─httr2::url_parse(trimws(url)) at rdomains-audit-20261026/R/page_cache.R:49:3
+ 10.               └─curl::curl_parse_url(url, baseurl = base_url)
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Error ('test-audit-correctness.R:90:3'): malformed URLs remain failed rows rather than aborting the batch
+Error in `curl::curl_parse_url(url, baseurl = base_url)`: Failed to parse URL: Bad hostname
+Backtrace:
+     ▆
+  1. └─rdomains::collect_content(...) at test-audit-correctness.R:90:3
+  2.   └─base::lapply(...) at rdomains-audit-20261026/R/collect_content.R:238:3
+  3.     └─rdomains (local) FUN(X[[i]], ...)
+  4.       └─rdomains:::fetch_one(...) at rdomains-audit-20261026/R/collect_content.R:239:5
+  5.         └─rdomains:::cache_get(cache_dir, url, cache_ttl) at rdomains-audit-20261026/R/collect_content.R:371:3
+  6.           ├─rdomains:::cache_paths(dir, cache_key(url)) at rdomains-audit-20261026/R/page_cache.R:82:3
+  7.           │ └─base::substr(key, 1, 2) at rdomains-audit-20261026/R/page_cache.R:66:3
+  8.           └─rdomains:::cache_key(url)
+  9.             └─httr2::url_parse(trimws(url)) at rdomains-audit-20261026/R/page_cache.R:49:3
+ 10.               └─curl::curl_parse_url(url, baseurl = base_url)
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 25 ]
+
+Frustration is a natural part of programming :)
+ℹ Testing rdomains

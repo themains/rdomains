@@ -1,0 +1,48 @@
+PYTHON
+python:         /private/tmp/piedomains-audit-20261026/.venv/bin/python
+libpython:      /Users/soodoku/.local/share/uv/python/cpython-3.13.2-macos-aarch64-none/lib/libpython3.13.dylib
+pythonhome:     /private/tmp/piedomains-audit-20261026/.venv:/private/tmp/piedomains-audit-20261026/.venv
+virtualenv:     /private/tmp/piedomains-audit-20261026/.venv/bin/activate_this.py
+version:        3.13.2 (main, Mar 17 2025, 21:26:38) [Clang 20.1.0 ]
+numpy:          /private/tmp/piedomains-audit-20261026/.venv/lib/python3.13/site-packages/numpy
+numpy_version:  2.5.4
+
+NOTE: Python version was forced by RETICULATE_PYTHON
+MODEL gojiberries/piedomains-text 38d7e6403f911902f47b9218ce5c645a06dd02fe
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 6441.36it/s]
+2026-10-26 08:18:24,206 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on cpu: 44 classes, temperature 1.248
+LOADED 1.248333 44
+THRESHOLD 0
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 27261.40it/s]
+2026-10-26 08:18:25,115 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on cpu: 44 classes, temperature 1.248
+# A tibble: 1 × 7
+  domain_name status stage   pie_category pie_confidence label_source model_repo
+  <chr>       <chr>  <chr>   <chr>                 <dbl> <chr>        <chr>
+1 example.com ok     process news                  0.930 model        soodoku/p…
+[[1]]
+# A tibble: 1 × 2
+  category probability
+  <chr>          <dbl>
+1 news           0.930
+
+THRESHOLD 0.99
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 27900.03it/s]
+2026-10-26 08:18:29,000 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on cpu: 44 classes, temperature 1.248
+# A tibble: 1 × 7
+  domain_name status stage   pie_category pie_confidence label_source model_repo
+  <chr>       <chr>  <chr>   <chr>                 <dbl> <chr>        <chr>
+1 example.com ok     process news                  0.930 model        soodoku/p…
+[[1]]
+# A tibble: 1 × 2
+  category probability
+  <chr>          <dbl>
+1 news           0.930
+
+/Users/soodoku/.local/share/uv/python/cpython-3.13.2-macos-aarch64-none/lib/python3.13/multiprocessing/resource_tracker.py:277: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-rss33n1r'}
+  warnings.warn(

@@ -26,23 +26,22 @@ NULL
 #'
 #' @param domain Domain to look up.
 #' @param timeout Seconds.
-#' @param target Optional `YYYYMMDD` date. When given, the capture closest to it is
+#' @param target Optional `YYYYMMDD` date. When given, the latest capture on or before that day is
 #'   returned rather than the most recent one.
 #'
 #' @return A list with `url` and `timestamp`, or `NULL` when there is no capture.
 #' @keywords internal
 #' @noRd
 archive_snapshot <- function(domain, timeout = 30, target = NULL) {
+  if (!is.null(target)) validate_archive_date(target)
   tryCatch(
     {
       resp <- request("https://web.archive.org/cdx/search/cdx") |>
         req_url_query(
           url = domain, output = "json", filter = "statuscode:200",
           fl = "timestamp,original",
-          # Without a target, -1 asks for the last row: the most recent capture. With one,
-          # take the first capture at or after the date -- CDX has no "closest" operator,
-          # and `from=` plus limit 1 is the cheap equivalent.
-          !!!(if (is.null(target)) list(limit = -1L) else list(from = target, limit = 1L))
+          limit = -1L,
+          !!!(if (is.null(target)) list() else list(to = target))
         ) |>
         req_user_agent(rdomains_user_agent()) |>
         req_timeout(timeout) |>
@@ -58,13 +57,15 @@ archive_snapshot <- function(domain, timeout = 30, target = NULL) {
         return(NULL)
       }
       rows <- fromJSON(resp_body_string(resp))
-      if (is.null(rows) || !length(rows) || nrow(rows) < 1) {
+      if (!is.matrix(rows) || ncol(rows) != 2L || nrow(rows) < 2L) {
         return(NULL)
       }
       last <- rows[nrow(rows), ]
       timestamp <- as.character(last[[1]])
       original <- as.character(last[[2]])
-      if (!nzchar(timestamp) || !nzchar(original)) {
+      if (!grepl("^[0-9]{14}$", timestamp) ||
+            !grepl("^https?://", original) ||
+            (!is.null(target) && substr(timestamp, 1, 8) > target)) {
         return(NULL)
       }
       list(
@@ -97,13 +98,11 @@ archive_fetch <- function(domain, timeout = 45, max_bytes = 10 * 1024^2,
   }
   tryCatch(
     {
-      resp <- request(snapshot$url) |>
-        req_user_agent(user_agent) |>
-        req_timeout(timeout) |>
-        req_retry(max_tries = 3, max_seconds = 60) |>
-        req_error(is_error = function(resp) FALSE) |>
-        req_options(maxfilesize_large = max_bytes) |>
-        req_perform()
+      fetched <- guarded_get(snapshot$url, timeout, max_bytes, user_agent)
+      resp <- fetched$response
+      if (is.null(resp)) {
+        return(NULL)
+      }
       if (resp_status(resp) != 200L) {
         return(NULL)
       }
@@ -130,4 +129,15 @@ archive_date <- function(timestamp) {
   paste(substr(timestamp, 1, 4), substr(timestamp, 5, 6), substr(timestamp, 7, 8),
     sep = "-"
   )
+}
+
+#' Require a calendar date in the archive API format
+#' @keywords internal
+#' @noRd
+validate_archive_date <- function(value) {
+  assert_character(value, len = 1, any.missing = FALSE)
+  date <- suppressWarnings(as.Date(value, format = "%Y%m%d"))
+  if (!grepl("^[0-9]{8}$", value) || is.na(date) || format(date, "%Y%m%d") != value) {
+    cli_abort("{.arg archive_date} must be a valid date in YYYYMMDD format.")
+  }
 }

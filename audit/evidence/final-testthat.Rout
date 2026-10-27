@@ -1,0 +1,46 @@
+
+R version 4.6.0 (2026-04-24) -- "Because it was There"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin23
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> library(rdomains)
+>
+> test_check("rdomains")
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+> Waiting 1s for throttling delay
+[ FAIL 0 | WARN 0 | SKIP 18 | PASS 463 ]
+
+══ Skipped tests (18) ══════════════════════════════════════════════════════════
+• Live API tests are opt-in (8): 'test-claude-cat.R:16:3',
+  'test-claude-cat.R:31:3', 'test-claude-cat.R:46:3', 'test-claude-cat.R:58:3',
+  'test-openai-cat.R:13:3', 'test-openai-cat.R:25:3', 'test-openai-cat.R:37:3',
+  'test-openai-cat.R:46:3'
+• On CRAN (10): 'test-collect-content.R:110:3', 'test-collect-content.R:129:3',
+  'test-collect-content.R:174:3', 'test-dmoz-cat.R:3:3',
+  'test-e2e-fetch.R:212:3', 'test-e2e-fetch.R:235:3', 'test-e2e-fetch.R:250:3',
+  'test-e2e-fetch.R:273:3', 'test-shalla-cat.R:3:3',
+  'test-stevenblack-cat.R:68:3'
+
+[ FAIL 0 | WARN 0 | SKIP 18 | PASS 463 ]
+>
+> proc.time()
+   user  system elapsed
+ 11.180   1.262  20.087

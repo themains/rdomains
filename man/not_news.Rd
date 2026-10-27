@@ -27,7 +27,6 @@ URL containing any of the following words is classified as soft news:
 URL containing any of following words is classified as hard news:
 "politi|usnews|world|national|state|elect|vote|govern|campaign|war|polic|econ|unemploy|racis|energy|abortion|educa|healthcare|immigration" # nolint: line_length_linter.
 
-
 Note that it is based on patterns existing in a small set of domains. See paper for details.
 }
 \examples{

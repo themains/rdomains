@@ -36,7 +36,7 @@ SOURCE_VINTAGE <- list(
   ),
   dmoz = list(
     source = "DMOZ / Open Directory Project",
-    last_published = "2017-03",
+    last_published = "2015",
     status = "discontinued",
     note = paste(
       "DMOZ closed in March 2017. These labels are at least that old, and the",
@@ -50,7 +50,7 @@ SOURCE_VINTAGE <- list(
     status = "maintained",
     note = paste(
       "The maintained successor to Shallalist, updated continuously. The returned",
-      "date is that of the copy you downloaded."
+      "publication date is recorded separately from the download time; unknown dates are NA."
     ),
     successor = NA_character_
   ),
@@ -58,7 +58,7 @@ SOURCE_VINTAGE <- list(
     source = "Steven Black unified hosts",
     last_published = NA_character_,
     status = "maintained",
-    note = "Updated frequently; the returned date is the fetched file's own.",
+    note = "Publication and retrieval dates come from verified download metadata.",
     successor = NA_character_
   ),
   uni = list(
@@ -72,12 +72,12 @@ SOURCE_VINTAGE <- list(
 
 #' Report what each category source is and when it was last published
 #'
-#' Every lookup in this package answers from a static list, and those lists have very
-#' different vintages. Two of them are no longer published at all. Use this to see which
-#' answers can be trusted to describe a domain as it is today.
+#' The sources listed here answer from static lists, and those lists have very
+#' different vintages. Two of them are no longer published at all. Use this to see
+#' publication dates and maintenance status; freshness alone does not establish accuracy.
 #'
 #' @param source Optional; one of \code{"shalla"}, \code{"dmoz"}, \code{"stevenblack"},
-#'   \code{"uni"}. If \code{NULL}, every source is returned.
+#'   \code{"ut1"}, \code{"uni"}. If \code{NULL}, every source is returned.
 #'
 #' @return A tibble with one row per source: \code{key}, \code{source},
 #'   \code{last_published}, \code{status}, \code{successor} and \code{note}.

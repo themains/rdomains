@@ -1,0 +1,28 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | page-cache
+✖ | 1       14 | page-cache
+────────────────────────────────────────────────────────────────────────────────
+Error ('test-page-cache.R:86:5'): valid JSON with an invalid cache timestamp is a cache miss
+Error in `meta$fetched_at`: $ operator is invalid for atomic vectors
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_null(cache_get(dir, url, ttl = 86400)) at test-page-cache.R:86:5
+ 2. │ └─testthat::quasi_label(enquo(object), label)
+ 3. │   └─rlang::eval_bare(expr, quo_get_env(quo))
+ 4. └─rdomains:::cache_get(dir, url, ttl = 86400)
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Error ('test-page-cache.R:86:5'): valid JSON with an invalid cache timestamp is a cache miss
+Error in `meta$fetched_at`: $ operator is invalid for atomic vectors
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_null(cache_get(dir, url, ttl = 86400)) at test-page-cache.R:86:5
+ 2. │ └─testthat::quasi_label(enquo(object), label)
+ 3. │   └─rlang::eval_bare(expr, quo_get_env(quo))
+ 4. └─rdomains:::cache_get(dir, url, ttl = 86400)
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 14 ]
+ℹ Testing rdomains

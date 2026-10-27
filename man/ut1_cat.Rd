@@ -9,24 +9,28 @@ ut1_cat(domains = NULL, use_file = NULL)
 \arguments{
 \item{domains}{Vector of domain names.}
 
-\item{use_file}{Path to the file written by [get_ut1_data()]. If `NULL`, looks for
-`ut1_domain_category.csv` in the working directory.}
+\item{use_file}{Path to the file written by \code{\link[=get_ut1_data]{get_ut1_data()}}. If \code{NULL}, looks for
+\code{ut1_domain_category.csv} in the working directory.}
 }
 \value{
-A tibble with `domain_name`, `ut1_category`, `ut1_usage` (`"black"` where UT1
-  maintains the list for blocking, `"white"` where it maintains it for allowing — both
-  describe content) and `source_last_published`, the date the list was published.
+A tibble with \code{domain_name}, \code{ut1_category}, \code{ut1_usage} (\code{"black"} where UT1
+maintains the list for blocking, \code{"white"} where it maintains it for allowing — both
+describe content) and \code{source_last_published}, the date the list was published.
 }
 \description{
 Looks a domain up in the University of Toulouse (UT1) blacklists, the maintained
-successor to Shallalist. Unlike [shalla_cat()] and [dmoz_cat()], which answer from lists
+successor to Shallalist. Unlike \code{\link[=shalla_cat]{shalla_cat()}} and \code{\link[=dmoz_cat]{dmoz_cat()}}, which answer from lists
 that stopped publishing in 2022 and 2017, this list is updated continuously — so
-`source_last_published` is the date of the copy you downloaded rather than a constant.
+publication and download dates are recorded separately.
 }
 \details{
-The categories are UT1's own (`drogue`, `publicite`, `tricheur`, `agressif`, ...) and are
+The categories are UT1's own (\code{drogue}, \code{publicite}, \code{tricheur}, \code{agressif}, ...) and are
 reported verbatim. They do not share names with Shallalist's, and mapping one onto the
 other would discard exactly the distinctions the two taxonomies disagree about.
+
+Publication dates come from the \code{.metadata.json} sidecar written by the downloader,
+checked against the file contents. \code{source_fetched_at} is the download time.
+Files without matching metadata return \code{NA} dates; filesystem timestamps are not used.
 }
 \examples{
 \dontrun{
@@ -38,6 +42,6 @@ merge(ut1_cat("example.com"), shalla_cat("example.com"), by = "domain_name")
 }
 }
 \seealso{
-[get_ut1_data()] to download the data, [source_vintage()] for how this source
-  compares with the discontinued ones.
+\code{\link[=get_ut1_data]{get_ut1_data()}} to download the data, \code{\link[=source_vintage]{source_vintage()}} for how this source
+compares with the discontinued ones.
 }

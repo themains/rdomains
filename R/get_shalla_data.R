@@ -17,6 +17,8 @@
 #' get_shalla_data()
 #' }
 get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
+  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
+  checkmate::assert_flag(overwrite)
   # Normalize and create output directory path
   outdir <- normalizePath(outdir, mustWork = FALSE)
   if (!dir.exists(outdir)) {
@@ -53,7 +55,7 @@ get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
     {
       # Download file
       cat("Downloading Shallalist data...\n")
-      curl::curl_download(
+      metadata <- download_source(
         # Kept on one line: splitting a URL across string literals leaves the
         # link checker matching only the first fragment, which always 404s.
         "https://raw.githubusercontent.com/themains/rdomains/master/data-raw/shallalist/accomplist/shallalist.gz", # nolint: line_length_linter.
@@ -62,6 +64,9 @@ get_shalla_data <- function(outdir = "./", overwrite = FALSE) {
 
       # Extract to destination with proper error handling
       R.utils::gunzip(tmp, destname = output_file, overwrite = overwrite)
+
+      metadata$source_last_published <- "2022-01"
+      save_source_metadata(output_file, metadata)
 
       # Verify the file was created successfully
       if (!file.exists(output_file)) {

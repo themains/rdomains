@@ -19,4 +19,4 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: gojiplus/r-canon/.github/workflows/reusable-pkgdown.yml@v2
+    uses: gojiplus/r-canon/.github/workflows/reusable-pkgdown.yml@48db3249d3f6e50d9f8e57d53e57f8ffd60182cc

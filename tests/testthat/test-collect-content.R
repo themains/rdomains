@@ -120,7 +120,7 @@ test_that("collect_content returns a row per input, even for unfetchable ones", 
   expect_true(res$retryable[2])
   # Every row carries its own provenance, whatever happened.
   expect_false(any(is.na(res$fetched_at)))
-  expect_false(any(is.na(res$source_last_published)))
+  expect_true(all(is.na(res$source_last_published)))
 })
 
 test_that("http_status holds the HTTP code, not the row status", {

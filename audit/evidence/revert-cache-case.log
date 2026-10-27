@@ -1,0 +1,40 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-correctness
+⠴ | 2        4 | audit-correctness
+⠹ | 2       11 | audit-correctness
+✖ | 2       23 | audit-correctness
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:14:3'): cache keys preserve resource case and query values
+Expected `identical(cache_key("https://a.com/News"), cache_key("https://a.com/news"))` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+Failure ('test-audit-correctness.R:15:3'): cache keys preserve resource case and query values
+Expected `identical(cache_key("https://a.com/?q=A"), cache_key("https://a.com/?q=a"))` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-correctness.R:14:3'): cache keys preserve resource case and query values
+Expected `identical(cache_key("https://a.com/News"), cache_key("https://a.com/news"))` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+Failure ('test-audit-correctness.R:15:3'): cache keys preserve resource case and query values
+Expected `identical(cache_key("https://a.com/?q=A"), cache_key("https://a.com/?q=a"))` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+[ FAIL 2 | WARN 0 | SKIP 0 | PASS 23 ]

@@ -1,0 +1,48 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-http
+⠋ |          1 | audit-http
+⠴ |          6 | audit-http
+⠴ |         16 | audit-http
+⠧ |         28 | audit-http
+⠙ |         42 | audit-http
+⠦ |         57 | audit-http
+⠏ |         60 | audit-http
+⠹ |         63 | audit-http
+✖ | 2       67 | audit-http [4.3s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:155:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 1L.
+Differences:
+  `actual`: 2
+`expected`: 1
+
+
+Failure ('test-audit-http.R:157:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 2L.
+Differences:
+  `actual`: 3
+`expected`: 2
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 4.4 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:155:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 1L.
+Differences:
+  `actual`: 2
+`expected`: 1
+
+
+Failure ('test-audit-http.R:157:3'): guarded robots failures are cached for the configured TTL
+Expected `calls` to equal 2L.
+Differences:
+  `actual`: 3
+`expected`: 2
+
+
+[ FAIL 2 | WARN 0 | SKIP 0 | PASS 67 ]
+ℹ Testing rdomains

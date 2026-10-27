@@ -13,19 +13,24 @@ dmoz_cat(domains = NULL, use_file = NULL)
 }
 \value{
 data.frame with the original list, the content category of the domain, and the
-  vintage of the list that supplied it
+vintage of the list that supplied it
 }
 \description{
 Fetches category (or categories) of content hosted by a domain according to DMOZ.
 The function checks if path to the DMOZ file is provided by the user.
-If not, it looks for \code{dmoz_domain_cateory.csv} in the working directory. It also returns
+If not, it looks for \code{dmoz_domain_category.csv} in the working directory. It also returns
 results for prominent subdomains.
 }
 \details{
 DMOZ closed in March 2017 and the snapshot shipped here is from 2015, so these labels
 describe the domain as it was a decade ago. The returned \code{source_last_published}
-column carries that vintage, and a warning is issued once per session. See
+column carries that vintage when the file has verified download metadata.
+A warning is issued once per session. See
 \code{\link{source_vintage}}.
+
+Publication dates come from the \code{.metadata.json} sidecar written by the downloader,
+checked against the file contents. \code{source_fetched_at} is the download time.
+Files without matching metadata return \code{NA} dates; filesystem timestamps are not used.
 }
 \examples{
 \dontrun{

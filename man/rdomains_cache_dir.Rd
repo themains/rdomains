@@ -11,7 +11,7 @@ Path to the per-user cache directory, as a string.
 }
 \description{
 Returns the conventional per-user cache location for the package. It deliberately does
-**not** create the directory: pass it to [collect_content()] to opt in, and until you do
+\strong{not} create the directory: pass it to \code{\link[=collect_content]{collect_content()}} to opt in, and until you do
 nothing is written outside the session's temporary directory.
 }
 \examples{

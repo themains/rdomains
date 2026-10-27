@@ -7,16 +7,16 @@
 fetch_report(x)
 }
 \arguments{
-\item{x}{A tibble from [collect_content()] or [pie_cat()].}
+\item{x}{A tibble from \code{\link[=collect_content]{collect_content()}} or \code{\link[=pie_cat]{pie_cat()}}.}
 }
 \value{
-A one-row tibble: `n`, `ok`, `failed`, `retryable`, and list-columns
-  `by_stage`, `by_reason` and `missing` (the domains that produced nothing).
+A one-row tibble: \code{n}, \code{ok}, \code{failed}, \code{retryable}, and list-columns
+\code{by_stage}, \code{by_reason} and \code{missing} (the domains that produced nothing).
 }
 \description{
-A pure function over the returned tibble, deliberately **not** a stored summary. A
+A pure function over the returned tibble, deliberately \strong{not} a stored summary. A
 snapshot goes stale the moment you filter the rows; recomputing means
-`fetch_report(subset(x, retryable))` is always correct.
+\code{fetch_report(subset(x, retryable))} is always correct.
 }
 \examples{
 rows <- data.frame(

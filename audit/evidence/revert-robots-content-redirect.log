@@ -1,0 +1,61 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-http
+⠋ |          1 | audit-http
+⠼ | 3        2 | audit-http
+⠴ | 3        3 | audit-http
+⠧ | 3        5 | audit-http
+⠙ | 3       19 | audit-http
+⠦ | 3       34 | audit-http
+⠙ | 3       49 | audit-http
+✖ | 3       51 | audit-http [2.0s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:23:5'): robots restrictions apply to the requested path and redirect destination
+Expected `out$error_code` to equal "robots_blocked".
+Differences:
+`actual`:   "thin_content"
+`expected`: "robots_blocked"
+
+
+Failure ('test-audit-http.R:24:5'): robots restrictions apply to the requested path and redirect destination
+Expected `out$robots_allowed` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+Failure ('test-audit-http.R:29:3'): robots restrictions apply to the requested path and redirect destination
+Expected `hits` to equal "0".
+Differences:
+`actual`:   "1"
+`expected`: "0"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 2.1 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-http.R:23:5'): robots restrictions apply to the requested path and redirect destination
+Expected `out$error_code` to equal "robots_blocked".
+Differences:
+`actual`:   "thin_content"
+`expected`: "robots_blocked"
+
+
+Failure ('test-audit-http.R:24:5'): robots restrictions apply to the requested path and redirect destination
+Expected `out$robots_allowed` to be FALSE.
+Differences:
+`actual`:   TRUE
+`expected`: FALSE
+
+
+Failure ('test-audit-http.R:29:3'): robots restrictions apply to the requested path and redirect destination
+Expected `hits` to equal "0".
+Differences:
+`actual`:   "1"
+`expected`: "0"
+
+
+[ FAIL 3 | WARN 0 | SKIP 0 | PASS 51 ]

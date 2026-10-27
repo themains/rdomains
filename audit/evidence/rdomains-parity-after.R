@@ -1,0 +1,20 @@
+Sys.unsetenv(c("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "CLAUDE_API_KEY"))
+Sys.setenv(RETICULATE_PYTHON="/tmp/piedomains-audit-20261026/.venv/bin/python", HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", TOKENIZERS_PARALLELISM="false", LITELLM_LOCAL_MODEL_COST_MAP="True")
+devtools::load_all("/tmp/rdomains-audit-20261026", quiet=TRUE)
+f <- jsonlite::fromJSON("/tmp/rdomains-extraction-fixture.json")
+pages <- rdomains:::fetch_row("example.com", "example.com", Sys.time(), status="ok", stage="process", parsed=list(text=f$r_text), signals=list(page_state="content"), html=f$html)
+mod <- reticulate::import("piedomains.text")
+c <- mod$TextClassifier(cache_dir=tempdir())
+file <- tempfile(fileext=".html")
+writeLines(f$html,file)
+native <- c$classify_from_paths(list(list(domain="example.com",text_path=file)))$results[[1]]
+for (threshold in c(0,0.99)) {
+  out <- pie_cat(pages=pages, threshold=threshold)
+  stopifnot(out$status=="ok",out$stage=="infer",out$pie_category==native$category)
+  stopifnot(abs(out$pie_confidence-native$confidence)<1e-7)
+  stopifnot(out$model_repo==mod$DEFAULT_TEXT_MODEL,out$model_revision==mod$DEFAULT_TEXT_REVISION)
+  stopifnot(nrow(out$pie_categories[[1]])==if(threshold==0)44L else 1L)
+  cat("threshold",threshold,"category",out$pie_category,"confidence",out$pie_confidence,"labels",nrow(out$pie_categories[[1]]),"\n")
+  print(out[,c("model_repo","model_revision","piedomains_version","model_temperature")])
+}
+cat("PASS: R and native Python predictions match the same raw HTML and checkpoint.\n")

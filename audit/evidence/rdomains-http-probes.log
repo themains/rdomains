@@ -1,0 +1,12 @@
+ROBOTS /private
+# A tibble: 1 × 3
+  status robots_allowed final_url
+  <chr>  <lgl>          <chr>
+1 ok     TRUE           http://127.0.0.1:57859/private
+ROBOTS /start
+# A tibble: 1 × 3
+  status robots_allowed final_url
+  <chr>  <lgl>          <chr>
+1 ok     TRUE           http://127.0.0.1:57859/private
+ROBOTS_REDIRECT_GUARD
+[1] 200

@@ -1,7 +1,7 @@
 #' Get DMOZ Data
 #'
 #' Downloads archived DMOZ (Open Directory Project) data. DMOZ was discontinued in March 2017.
-#' This function downloads our preserved copy of the final DMOZ dataset. For more details, check:
+#' This function downloads our preserved 2015 DMOZ snapshot. For more details, check:
 #' \url{https://github.com/themains/rdomains/tree/master/data-raw/dmoz/}
 #'
 #' @param outdir    Optional; folder to which you want to save the file; Default is same folder
@@ -15,6 +15,8 @@
 #' get_dmoz_data()
 #' }
 get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
+  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
+  checkmate::assert_flag(overwrite)
   # file.path, not paste0: with the documented default of outdir = "." the old form
   # produced ".dmoz_domain_category.csv" -- a hidden file that the matching dmoz_cat()
   # lookup would then fail to find. get_shalla_data() and get_stevenblack_data() were
@@ -31,7 +33,8 @@ get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
   }
 
   tmp <- tempfile()
-  curl_download(
+  on.exit(unlink(tmp), add = TRUE)
+  metadata <- download_source(
     paste0(
       "https://github.com/themains/rdomains/blob/master/data-raw/dmoz/",
       "dmoz_domain_category.zip?raw=TRUE"
@@ -39,7 +42,8 @@ get_dmoz_data <- function(outdir = ".", overwrite = FALSE) {
     tmp
   )
   unzip(tmp, exdir = outdir, overwrite = overwrite)
-  unlink(tmp)
+  metadata$source_last_published <- "2015"
+  save_source_metadata(dmoz_file, metadata)
 
   cat("DMOZ Data saved to the following destination:", outdir, "\n")
 }

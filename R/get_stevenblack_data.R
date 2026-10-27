@@ -18,6 +18,9 @@
 #' get_stevenblack_data(variant = "all")
 #' }
 get_stevenblack_data <- function(outdir = "./", variant = "base", overwrite = FALSE) {
+  assert_character(outdir, len = 1, any.missing = FALSE, min.chars = 1)
+  checkmate::assert_flag(overwrite)
+  assert_character(variant, len = 1, any.missing = FALSE)
   # Define available variants and their URLs
   variants <- list(
     base = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
@@ -51,7 +54,8 @@ get_stevenblack_data <- function(outdir = "./", variant = "base", overwrite = FA
   tryCatch(
     {
       cat("Downloading Steven Black's hosts file (", variant, " variant)...\n")
-      curl::curl_download(variants[[variant]], output_file)
+      metadata <- download_source(variants[[variant]], output_file)
+      save_source_metadata(output_file, metadata)
       cat("Steven Black's hosts data saved to:", output_file, "\n")
 
       # Print some statistics

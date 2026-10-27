@@ -7,15 +7,18 @@
 #' Steven Black's host list is a consolidated list from multiple sources including
 #' adaway.org, mvps.org, malwaredomainlist.com, and someonewhocares.org.
 #'
-#' Unlike the Shallalist and DMOZ lookups, this list is actively maintained, so the
-#' returned \code{source_last_published} is the fetched file's own modification date
-#' rather than a constant. See \code{\link{source_vintage}}.
+#' Absence from the list is `not_listed`, not a safety assessment. Subcategories
+#' such as `ads` are domain-name heuristics applied only to listed hosts.
 #'
-#' @param domain domain names as character vector
+#' Publication dates come from the `.metadata.json` sidecar written by the downloader,
+#' checked against the file contents. `source_fetched_at` is the download time.
+#' Files without matching metadata return `NA` dates; filesystem timestamps are not used.
+#'
+#' @param domains domain names as character vector
 #' @param use_file path to a local Steven Black hosts file. If NULL, downloads from GitHub
 #'   once per session and reuses it
 #'
-#' @return data.frame with the original domain name, the category, and the date of the
+#' @return data.frame with the normalized domain_name, the category, and the date of the
 #'   list that supplied it
 #'
 #' @export
@@ -26,11 +29,10 @@
 #' stevenblack_cat("doubleclick.net")
 #' stevenblack_cat(c("google.com", "googleadservices.com", "malware-example.com"))
 #' }
-stevenblack_cat <- function(domain = NULL, use_file = NULL) {
-  validate_domains(domain, "domain")
-  clean_doms <- clean_domains(domain)
+stevenblack_cat <- function(domains = NULL, use_file = NULL) {
+  validate_domains(domains)
+  clean_doms <- clean_domains(domains)
 
-  downloaded <- FALSE
   if (is.null(use_file)) {
     # Cached for the session. This used to re-download ~4 MB on *every* call, so
     # classifying domains one at a time cost a fresh download each time.
@@ -42,10 +44,11 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
       tryCatch(
         {
           cli_inform("Downloading Steven Black's hosts file...")
-          curl::curl_download(
+          metadata <- download_source(
             "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
             hosts_file
           )
+          save_source_metadata(hosts_file, metadata)
         },
         error = function(e) {
           cli_abort(c(
@@ -55,17 +58,13 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
         }
       )
       .rdomains_env$stevenblack_file <- hosts_file
-      downloaded <- TRUE
     }
   } else {
     assert_file_exists(use_file)
     hosts_file <- use_file
   }
 
-  file_date <- tryCatch(
-    format(as.Date(file.info(hosts_file)$mtime), "%Y-%m-%d"),
-    error = function(e) NA_character_
-  )
+  metadata <- load_source_metadata(hosts_file)
 
   hosts_lines <- tryCatch(
     {
@@ -80,15 +79,13 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
   )
 
   blocked_pattern <- "^(0\\.0\\.0\\.0|127\\.0\\.0\\.1)\\s+"
+  hosts_lines <- sub("#.*$", "", trimws(hosts_lines))
   blocked_lines <- hosts_lines[str_detect(hosts_lines, blocked_pattern)]
 
-  blocked_domains <- blocked_lines |>
-    str_remove(blocked_pattern) |>
-    str_trim() |>
-    (\(x) x[!str_detect(x, "^#")])() |>
-    (\(x) x[x != ""])() |>
-    (\(x) x[x != "localhost"])() |>
-    tolower()
+  blocked_domains <- tolower(unlist(strsplit(
+    trimws(str_remove(blocked_lines, blocked_pattern)), "\\s+"
+  ), use.names = FALSE))
+  blocked_domains <- setdiff(blocked_domains, c("", "localhost"))
 
   # "ad" has to be a label of its own, or the head of one: it is otherwise a substring of
   # trade, download, gadget, espadrilles and nokiadns. Unanchored, it labels 13,423 of the
@@ -121,18 +118,18 @@ stevenblack_cat <- function(domain = NULL, use_file = NULL) {
         "blocked"
       }
     } else {
-      "safe"
+      "not_listed"
     }
     tibble(
-      domain = domain[i],
+      domain_name = clean_doms[i],
       stevenblack = category,
-      source_last_published = file_date
+      source_last_published = metadata$source_last_published,
+      source_fetched_at = metadata$source_fetched_at
     )
   })
 
   # The cached file is deliberately not unlinked -- it is the session cache. R removes the
   # tempdir on exit.
-  invisible(downloaded)
 
   results
 }

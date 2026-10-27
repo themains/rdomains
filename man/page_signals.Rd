@@ -9,7 +9,7 @@ page_signals(html, text = NULL, domain = "", status = NULL)
 \arguments{
 \item{html}{Raw response body.}
 
-\item{text}{Extracted page text. If `NULL`, derived from `html`.}
+\item{text}{Extracted page text. If \code{NULL}, derived from \code{html}.}
 
 \item{domain}{The domain requested, used to spot a page whose only content is its own
 name.}
@@ -17,9 +17,9 @@ name.}
 \item{status}{HTTP status code, if known.}
 }
 \value{
-A one-row tibble: `page_state` (one of `"content"`, `"blocked"`, `"parked"`,
-  `"unavailable"`, `"thin"`), `blocked`, `block_vendor`, `block_reason`, `parked`,
-  `unavailable`, `thin`, `n_tokens`.
+A one-row tibble: \code{page_state} (one of \code{"content"}, \code{"blocked"}, \code{"parked"},
+\code{"unavailable"}, \code{"thin"}), \code{blocked}, \code{block_vendor}, \code{block_reason}, \code{parked},
+\code{unavailable}, \code{thin}, \code{n_tokens}.
 }
 \description{
 Inspects already-fetched HTML for the three things that are not a classifiable site: an
@@ -27,7 +27,7 @@ anti-bot interstitial, a domain-parking placeholder, and a server's "nothing her
 page. No network access.
 }
 \details{
-`parked` and `unavailable` are **answers, not failures** -- they are facts about the
+\code{parked} and \code{unavailable} are \strong{answers, not failures} -- they are facts about the
 domain, plainly stated in the page, that a caller can act on. They are also free: no
 classification service needs to be consulted.
 }
@@ -46,5 +46,5 @@ page_signals(paste0(
 ))
 }
 \seealso{
-[fetch_error_codes()] for how these map onto run outcomes.
+\code{\link[=fetch_error_codes]{fetch_error_codes()}} for how these map onto run outcomes.
 }

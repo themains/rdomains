@@ -16,8 +16,7 @@ vignette: >
 The latest development version of the package will always be on GitHub. To install the package from GitHub and to load the installed package:
 
 ```{r, eval=FALSE, install}
-# library(devtools) # nolint
-install_github("themains/rdomains")
+remotes::install_github("themains/rdomains")
 ```
 
 To install the package from CRAN, type in:
@@ -31,6 +30,36 @@ Next, load the package:
 ```{r, eval=FALSE, load_pkg}
 library(rdomains)
 ```
+
+#### Classify fetched content
+
+Install `reticulate` and Python `piedomains>=0.15.0` in a Python 3.12+ environment.
+The bridge passes raw HTML to the Python text classifier and reports its checkpoint
+revision. It preserves fetch outcomes separately from classification outcomes.
+
+```{r, eval=FALSE, content}
+reticulate::py_install("piedomains>=0.15.0", pip = TRUE)
+pages <- collect_content(c("cnn.com", "wikipedia.org"))
+classified <- pie_cat(pages = pages)
+fetch_report(classified)
+classified[c("domain_name", "pie_category", "status", "model_repo", "model_revision")]
+```
+
+The checkpoint has known retail/drugs confusion; see its
+[model card](https://huggingface.co/gojiberries/piedomains-text).
+Thresholded alternatives are not independently validated labels.
+
+#### Source dates
+
+```{r, vintage}
+library(rdomains)
+source_vintage()
+```
+
+Publication dates and download times are separate. Download helpers write metadata
+sidecars bound to the data file's checksum. Caller files without matching metadata
+have unknown dates. The archived DMOZ snapshot dates to 2015 and Shallalist to January
+2022. A domain can change owners after a label was assigned.
 
 #### Shalla
 
@@ -46,10 +75,6 @@ And then, get the category using:
 shalla_cat("http://www.google.com")
 ```
 
-```
-##   domain_name shalla_category
-## 1  google.com   searchengines
-```
 
 #### DMOZ
 
@@ -67,16 +92,13 @@ dmoz_cat("http://www.google.com")
 
 #### ML
 
-Probability that Domain Hosts Adult Content Based on features of Domain Name and Suffix alone:
+The bundled adult model uses the domain name and suffix alone. Its artifact dates
+to 2017; its probabilities have not been calibrated on current domains:
 
 ```{r, eval=FALSE, ml}
 adult_ml1_cat("http://www.google.com")
 ```
 
-```
-##   domain_name  category
-## 1  google.com 0.3133728
-```
 
 #### VirusTotal
 
@@ -90,7 +112,8 @@ virustotal_cat("http://www.google.com")
 
 #### OpenAI GPT Models
 
-Get domain categorization using OpenAI's GPT models. You'll need an OpenAI API key:
+OpenAI infers categories from domain names without fetching the page. You need an
+OpenAI API key. Failed, truncated or invalid answers return `NA` with a warning:
 
 ```{r, eval=FALSE, openai}
 # Set your API key
@@ -100,10 +123,6 @@ Sys.setenv("OPENAI_API_KEY", "your-api-key-here")
 openai_cat("google.com")
 ```
 
-```
-##   domain_name openai_category
-## 1  google.com      technology
-```
 
 You can also specify custom categories:
 
@@ -115,7 +134,8 @@ openai_cat(c("amazon.com", "github.com"),
 
 #### Anthropic Claude
 
-Get domain categorization using Anthropic's Claude models. You'll need an Anthropic API key:
+Claude also infers categories from domain names without fetching the page. You need
+an Anthropic API key:
 
 ```{r, eval=FALSE, claude}
 # Set your API key
@@ -124,9 +144,3 @@ Sys.setenv("ANTHROPIC_API_KEY", "your-api-key-here")
 # Classify domains
 claude_cat("facebook.com")
 ```
-
-```
-##   domain_name claude_category
-## 1 facebook.com          social
-```
-

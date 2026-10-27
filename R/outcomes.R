@@ -21,11 +21,8 @@ RD_STAGES <- c("validate", "fetch", "process", "infer")
 
 #' The closed set of failure reasons
 #'
-#' `retryable` marks transient conditions. Two deliberate divergences from piedomains,
-#' both because rdomains has no archive.org fallback to retry *into*:
-#'   * `bot_blocked` is not retryable here -- retrying from the same address is rudeness
-#'     with a guaranteed identical outcome.
-#'   * The archive-specific codes are absent.
+#' `retryable` marks transient service or fetch errors. Model/setup failures need
+#' intervention before retrying; missing or insufficient content needs another source.
 #'
 #' @keywords internal
 #' @noRd
@@ -48,6 +45,9 @@ RD_ERROR_CODES <- tribble(
   "service_unavailable", "infer", TRUE, "Classification service asleep or down.",
   "rate_limited", "infer", TRUE, "Classification service rate-limited us.",
   "service_error", "infer", TRUE, "Classification service returned an error.",
+  "model_load_error", "infer", FALSE, "The classifier could not be loaded.",
+  "model_error", "infer", FALSE, "The classifier returned no valid prediction.",
+  "missing_input_path", "process", FALSE, "Raw HTML is unavailable.",
   "unknown", NA, FALSE, "Unclassified failure."
 )
 

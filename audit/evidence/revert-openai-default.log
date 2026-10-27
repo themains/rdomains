@@ -1,0 +1,26 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | audit-providers
+⠼ | 1       14 | audit-providers
+⠼ | 1       24 | audit-providers
+✖ | 1       37 | audit-providers
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-audit-providers.R:14:3'): current provider requests produce validated categories
+Expected `requests[[1]]$model` to equal "gpt-6-luna".
+Differences:
+`actual`:   "gpt-4o-mini"
+`expected`: "gpt-6-luna"
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-audit-providers.R:14:3'): current provider requests produce validated categories
+Expected `requests[[1]]$model` to equal "gpt-6-luna".
+Differences:
+`actual`:   "gpt-4o-mini"
+`expected`: "gpt-6-luna"
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 37 ]

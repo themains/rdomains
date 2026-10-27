@@ -11,11 +11,10 @@ classify_domain_claude <- function(domain, categories, model, api_key) {
 
   request_body <- list(
     model = model,
-    max_tokens = 50,
+    max_tokens = 256,
     messages = list(
       list(role = "user", content = prompt)
-    ),
-    temperature = 0.1
+    )
   )
 
   result <- tryCatch(
@@ -25,20 +24,18 @@ classify_domain_claude <- function(domain, categories, model, api_key) {
         req_headers(`anthropic-version` = "2023-06-01") |>
         req_body_json(request_body, auto_unbox = TRUE) |>
         req_error(is_error = function(resp) FALSE) |>
+        req_timeout(30) |>
         req_perform()
 
       if (resp_status(response) == 200) {
-        # fromJSON() rather than resp_body_json(): the response is indexed as a
-        # data frame below, which needs jsonlite's simplification. resp_body_json()
-        # does not simplify by default and would return a list.
-        result <- fromJSON(resp_body_string(response))
-        category <- str_trim(result$content[1, ]$text)
-
-        if (category %in% categories) {
-          category
-        } else {
-          "other"
+        result <- fromJSON(resp_body_string(response), simplifyVector = FALSE)
+        if (!identical(result$stop_reason, "end_turn")) {
+          cli_warn("The provider did not complete the category response.")
+          return(tibble(domain_name = domain, claude_category = NA_character_))
         }
+        blocks <- Filter(function(x) identical(x$type, "text"), result$content)
+        value <- paste(vapply(blocks, function(x) x$text, character(1)), collapse = "")
+        checked_category(value, categories)
       } else {
         cli_warn("API call failed for domain {domain} - Status: {resp_status(response)}")
         NA_character_
@@ -58,14 +55,15 @@ classify_domain_claude <- function(domain, categories, model, api_key) {
 
 #' Get Category from Anthropic Claude
 #'
-#' Fetches category of content hosted by a domain using Anthropic's Claude API.
-#' The function uses Claude models to classify domains into specified categories.
+#' Infers a category from the domain name using Anthropic's Claude API.
+#' No page content is fetched. The answer reflects the provider's knowledge and the
+#' domain name, not a verified observation of the current website.
 #'
 #' @param domains vector of domain names
 #' @param api_key Anthropic API key. If not provided, looks for the
 #'   ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable
 #' @param categories vector of categories to classify into. If NULL, uses default web categories
-#' @param model Claude model to use (default: "claude-3-haiku-20240307" for cost efficiency)
+#' @param model Claude model to use (default: "claude-haiku-5-5" for cost efficiency)
 #' @param rate_limit delay in seconds between API calls (default: 0.5)
 #'
 #' @return data.frame with original list and content category of the domain
@@ -77,7 +75,7 @@ classify_domain_claude <- function(domain, categories, model, api_key) {
 #' claude_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
 #' }
 claude_cat <- function(domains = NULL, api_key = NULL, categories = NULL,
-                       model = "claude-3-haiku-20240307", rate_limit = 0.5) {
+                       model = "claude-haiku-5-5", rate_limit = 0.5) {
   validate_domains(domains)
   c_domains <- clean_domains(domains)
 
@@ -88,6 +86,7 @@ claude_cat <- function(domains = NULL, api_key = NULL, categories = NULL,
     )
   }
 
+  validate_llm_options(categories, model, rate_limit)
   api_key <- get_api_key(api_key, c("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"), "Anthropic")
 
   map_df(

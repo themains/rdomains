@@ -3,11 +3,15 @@
 #' Looks a domain up in the University of Toulouse (UT1) blacklists, the maintained
 #' successor to Shallalist. Unlike [shalla_cat()] and [dmoz_cat()], which answer from lists
 #' that stopped publishing in 2022 and 2017, this list is updated continuously — so
-#' `source_last_published` is the date of the copy you downloaded rather than a constant.
+#' publication and download dates are recorded separately.
 #'
 #' The categories are UT1's own (`drogue`, `publicite`, `tricheur`, `agressif`, ...) and are
 #' reported verbatim. They do not share names with Shallalist's, and mapping one onto the
 #' other would discard exactly the distinctions the two taxonomies disagree about.
+#'
+#' Publication dates come from the `.metadata.json` sidecar written by the downloader,
+#' checked against the file contents. `source_fetched_at` is the download time.
+#' Files without matching metadata return `NA` dates; filesystem timestamps are not used.
 #'
 #' @param domains Vector of domain names.
 #' @param use_file Path to the file written by [get_ut1_data()]. If `NULL`, looks for
@@ -38,15 +42,14 @@ ut1_cat <- function(domains = NULL, use_file = NULL) {
   )
 
   ut1 <- read_csv(data_file, show_col_types = FALSE)
-  published <- tryCatch(
-    format(as.Date(file.info(data_file)$mtime), "%Y-%m-%d"),
-    error = function(e) NA_character_
-  )
+  validate_lookup(ut1, c("domain", "category", "usage"))
+  metadata <- load_source_metadata(data_file)
 
   tibble(
     domain_name = c_domains,
     ut1_category = ut1$category[match(c_domains, ut1$domain)],
     ut1_usage = ut1$usage[match(c_domains, ut1$domain)],
-    source_last_published = published
+    source_last_published = metadata$source_last_published,
+    source_fetched_at = metadata$source_fetched_at
   )
 }

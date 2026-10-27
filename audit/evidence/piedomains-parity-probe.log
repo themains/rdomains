@@ -1,0 +1,10 @@
+extractor trafilatura
+direct_words 266 R_bridge_words 766
+direct_prefix election results independent journalists report on the election. parliament debates public policy and government budgets. our newspaper investigates political decisions and intervi
+R_bridge_prefix shopping shoes clothing fashion products prices sale checkout cart retail shopping shoes clothing fashion products prices sale checkout cart retail shopping shoes clothing fashion
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 6277.26it/s]
+2026-10-26 08:20:23,428 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on cpu: 44 classes, temperature 1.248
+direct news 0.7678741796056674 [{'category': 'news', 'probability': 0.7678741796056674}]
+R_bridge drugs 0.537566192886878 [{'category': 'drugs', 'probability': 0.537566192886878}]

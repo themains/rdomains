@@ -16,7 +16,7 @@ test_that("dmoz cat", {
   )
 
   expect_s3_class(report, "data.frame")
-  expect_equal(report$source_last_published, "2017-03")
+  expect_equal(report$source_last_published, "2015")
 
   # Clean up
   if (file.exists(data_file)) {

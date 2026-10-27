@@ -1,0 +1,24 @@
+ℹ Testing rdomains
+✔ | F W  S  OK | Context
+
+⠏ |          0 | page-cache
+✖ | 1       13 | page-cache
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-page-cache.R:75:3'): cache budget includes metadata and a completed compressed file
+Expected `cache_get(dir, "https://example.com", ttl = 60)` to be NULL.
+Differences:
+`actual` is a list
+`expected` is NULL
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-page-cache.R:75:3'): cache budget includes metadata and a completed compressed file
+Expected `cache_get(dir, "https://example.com", ttl = 60)` to be NULL.
+Differences:
+`actual` is a list
+`expected` is NULL
+
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 13 ]

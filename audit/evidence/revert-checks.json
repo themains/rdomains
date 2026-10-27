@@ -1,0 +1,122 @@
+[
+  {
+    "case": "html-extraction",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 41 ]"
+  },
+  {
+    "case": "duplicate-rows",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 40 ]"
+  },
+  {
+    "case": "threshold",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 40 ]"
+  },
+  {
+    "case": "inference-status",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 40 ]"
+  },
+  {
+    "case": "model-provenance",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 41 ]"
+  },
+  {
+    "case": "cache-case",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 23 ]"
+  },
+  {
+    "case": "cache-size",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 13 ]"
+  },
+  {
+    "case": "robots-path",
+    "detected": true,
+    "summary": "[ FAIL 5 | WARN 0 | SKIP 0 | PASS 49 ]"
+  },
+  {
+    "case": "robots-content-redirect",
+    "detected": true,
+    "summary": "[ FAIL 3 | WARN 0 | SKIP 0 | PASS 51 ]"
+  },
+  {
+    "case": "archive-empty-and-date",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 23 ]"
+  },
+  {
+    "case": "archive-as-of",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 23 ]"
+  },
+  {
+    "case": "llm-vocabulary",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 23 ]"
+  },
+  {
+    "case": "openai-default",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 37 ]"
+  },
+  {
+    "case": "claude-default",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 37 ]"
+  },
+  {
+    "case": "virustotal-key",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 24 ]"
+  },
+  {
+    "case": "blocklist-absence",
+    "detected": true,
+    "summary": "[ FAIL 3 | WARN 0 | SKIP 1 | PASS 36 ]"
+  },
+  {
+    "case": "boundary-validation",
+    "detected": true,
+    "summary": "[ FAIL 9 | WARN 8 | SKIP 0 | PASS 27 ]"
+  },
+  {
+    "case": "source-checksum",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 18 ]"
+  },
+  {
+    "case": "source-dates",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 24 ]"
+  },
+  {
+    "case": "robots-redirect-address",
+    "detected": true,
+    "summary": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 54 ]"
+  },
+  {
+    "case": "dmoz-vintage",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 21 ]"
+  },
+  {
+    "case": "source-download-date",
+    "detected": true,
+    "summary": "[ FAIL 3 | WARN 0 | SKIP 0 | PASS 16 ]"
+  },
+  {
+    "case": "url-host-parsing",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 24 ]"
+  },
+  {
+    "case": "cache-timestamp",
+    "detected": true,
+    "summary": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 14 ]"
+  }
+]

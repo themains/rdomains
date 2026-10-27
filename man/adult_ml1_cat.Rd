@@ -13,9 +13,15 @@ adult_ml1_cat(domains = NULL)
 data.frame with original list and content category of the domains
 }
 \description{
-Uses a validated ML model that uses keywords in the domain name
+Uses a historical ML model that uses keywords in the domain name
 and suffix to predict probability that the domain hosts adult content. For
 more information see \url{https://github.com/themains/keyword_porn}
+}
+\details{
+The bundled model artifact has not changed since November 2017. Its probabilities
+have not been validated on current domains. It uses only the name and suffix, not
+page content; use \code{\link[=pie_cat]{pie_cat()}} for content-based classification. Feature encoding
+remains the training-era encoding rather than silently changing a fitted model.
 }
 \examples{
 \dontrun{
