@@ -1,3 +1,8 @@
+## Changes since the initial submission
+
+Quoted the proper name 'UT-Capitole' in DESCRIPTION to address the incoming
+spelling NOTE for "Capitole" reported on Windows and Debian. No R code changed.
+
 ## Test environments
 
 * macOS arm64, R 4.6.0: devtools::check() with CRAN incoming checks and the PDF manual.

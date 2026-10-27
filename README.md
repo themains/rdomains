@@ -1,6 +1,7 @@
 # rdomains: Classify website content and look up domain categories
 
 [![CRAN version](https://www.r-pkg.org/badges/version/rdomains)](https://cran.r-project.org/package=rdomains)
+[![Total CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/rdomains)](https://cran.r-project.org/package=rdomains)
 [![R-CMD-check](https://github.com/themains/rdomains/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/themains/rdomains/actions/workflows/R-CMD-check.yml)
 
 `rdomains` collects website content and classifies it with
