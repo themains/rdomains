@@ -1,0 +1,12 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | pie-cat
+⠦ |          7 | pie-cat
+⠇ |         29 | pie-cat
+⠹ |         33 | pie-cat
+⠹ |         43 | pie-cat
+✔ |         58 | pie-cat
+
+══ Results ═════════════════════════════════════════════════════════════════════
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 58 ]
+ℹ Testing rdomains

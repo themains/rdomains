@@ -2,6 +2,10 @@
 
 ## Result contracts and migration
 
+- Explicit model selections and R environment changes reach an already initialized
+  Python interpreter. Model loading restores both runtimes' prior environment values,
+  including when a checkpoint fails to load.
+
 - Classifiers now return a common result with `input_id`, original `input`, provider,
   evidence type, structured outcomes, typed `labels`, and source-specific `details`.
   Provider-specific category columns become `category`; `pie_confidence` becomes

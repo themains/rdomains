@@ -1,0 +1,9 @@
+ℹ Loading rdomains
+2026-10-26 22:17:27,804 - piedomains - ERROR - Failed to load text models: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/tmp/nonexistent-rdomains-checkpoint'. Use `repo_type` argument if needed.
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 7488.96it/s]
+2026-10-26 22:17:30,580 - piedomains - INFO - Loaded text model from gojiberries/piedomains-text on mps: 44 classes, temperature 1.248
+Cold initialization: failed custom model restored both environments; default model then succeeded.
+/Users/soodoku/.local/share/uv/python/cpython-3.13.2-macos-aarch64-none/lib/python3.13/multiprocessing/resource_tracker.py:277: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-05rdbxx1'}
+  warnings.warn(

@@ -26,7 +26,7 @@ test_that("pie thresholds filter the full distribution and retain the argmax", {
 })
 
 test_that("classification failures preserve fetch provenance and remain retryable by caller", {
-  local_mocked_bindings(pie_backend = function() {
+  local_mocked_bindings(pie_backend = function(model = NULL) {
     function(domains, html, threshold) {
       pie_tidy(
         list(list(error_code = "thin_content", stage = "process", error = "short")),
@@ -40,7 +40,7 @@ test_that("classification failures preserve fetch provenance and remain retryabl
   expect_equal(res$error_code, "thin_content")
   expect_true(is.na(res$details[[1]]$label_source))
   expect_equal(fetch_report(res)$failed, 1L)
-  local_mocked_bindings(pie_backend = function() {
+  local_mocked_bindings(pie_backend = function(model = NULL) {
     function(domains, html, threshold) {
       pie_tidy(list(pie_prediction()), threshold, list(model_repo = "fixture/model"))
     }
@@ -54,7 +54,7 @@ test_that("classification failures preserve fetch provenance and remain retryabl
 })
 
 test_that("an unavailable model is never reported as a successful classification", {
-  local_mocked_bindings(pie_backend = function() stop("missing model"))
+  local_mocked_bindings(pie_backend = function(model = NULL) stop("missing model"))
   expect_warning(res <- pie_cat(pages = pie_page()), "classification failed")
   expect_equal(res$error_code, "model_load_error")
   expect_equal(res$status, "failed")
@@ -127,10 +127,73 @@ test_that("Python bridge preserves HTML, duplicate rows, threshold and checkpoin
 })
 
 test_that("prediction exceptions are distinct from unavailable backends", {
-  local_mocked_bindings(pie_backend = function() {
+  local_mocked_bindings(pie_backend = function(model = NULL) {
     function(domains, html, threshold) stop("prediction failed")
   })
   expect_warning(out <- pie_cat(pages = pie_page()), "classification failed")
   expect_equal(out$error_code, "model_error")
   expect_equal(out$status, "failed")
+})
+
+test_that("successive model choices reach Python and restore both environments", {
+  python <- Sys.getenv("RDOMAINS_TEST_PYTHON")
+  skip_if(!nzchar(python), "Set RDOMAINS_TEST_PYTHON to exercise installed piedomains")
+  skip_if_not_installed("reticulate")
+  reticulate::use_python(python, required = TRUE)
+  cached_model <- .rdomains_env$pie_model
+  .rdomains_env$pie_model <- NULL
+  withr::defer(.rdomains_env$pie_model <- cached_model)
+  withr::local_envvar(c(PIEDOMAINS_TEXT_MODEL = "r-original"))
+  reticulate::py_run_string(paste(
+    "import os",
+    "from piedomains.text import TextClassifier, resolve_text_model",
+    "from types import SimpleNamespace",
+    "_rd_previous_env = os.environ.get('PIEDOMAINS_TEXT_MODEL')",
+    "os.environ['PIEDOMAINS_TEXT_MODEL'] = 'python-original'",
+    "_rd_model_load = TextClassifier.load_models",
+    "_rd_model_score = TextClassifier._predict_text",
+    "_rd_selected_models = []",
+    "def _rd_select_model(self, latest=False):",
+    "    if self._model is not None and not latest:",
+    "        return",
+    "    source = resolve_text_model()",
+    "    _rd_selected_models.append(source)",
+    "    if source == 'fixture/failure':",
+    "        raise RuntimeError('fixture load failure')",
+    "    self._model = SimpleNamespace(config=SimpleNamespace(_commit_hash=source))",
+    "def _rd_select_score(self, text):",
+    "    return {'text_label':'news', 'text_prob':0.8,",
+    "            'text_domain_probs':{'news':0.8,'shopping':0.2}, 'text_categories':[]}",
+    "TextClassifier.load_models = _rd_select_model",
+    "TextClassifier._predict_text = _rd_select_score",
+    sep = "\n"
+  ))
+  withr::defer(reticulate::py_run_string(paste(
+    "TextClassifier.load_models = _rd_model_load",
+    "TextClassifier._predict_text = _rd_model_score",
+    "if _rd_previous_env is None:",
+    "    os.environ.pop('PIEDOMAINS_TEXT_MODEL', None)",
+    "else:",
+    "    os.environ['PIEDOMAINS_TEXT_MODEL'] = _rd_previous_env",
+    sep = "\n"
+  )))
+  Sys.setenv(PIEDOMAINS_TEXT_MODEL = "r-original")
+  page <- pie_page(paste(rep("election journalism government news", 20), collapse = " "))
+  for (choice in c("fixture/alpha", "fixture/beta")) {
+    result <- pie_cat(pages = page, model = choice)
+    expect_identical(result$status, "ok")
+    expect_identical(result$model_id, choice)
+    expect_identical(result$model_revision, choice)
+    expect_identical(Sys.getenv("PIEDOMAINS_TEXT_MODEL"), "r-original")
+    expect_identical(reticulate::py_eval("os.environ['PIEDOMAINS_TEXT_MODEL']"), "python-original")
+  }
+  expect_identical(pie_cat(pages = page)$model_id, "r-original")
+  expect_warning(
+    failed <- pie_cat(pages = page, model = "fixture/failure"), "classification failed"
+  )
+  expect_identical(failed$error_code, "model_load_error")
+  expect_identical(Sys.getenv("PIEDOMAINS_TEXT_MODEL"), "r-original")
+  expect_identical(reticulate::py_eval("os.environ['PIEDOMAINS_TEXT_MODEL']"), "python-original")
+  expect_equal(reticulate::py_eval("_rd_selected_models"),
+               c("fixture/alpha", "fixture/beta", "r-original", "fixture/failure"))
 })
