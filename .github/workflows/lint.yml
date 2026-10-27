@@ -11,4 +11,4 @@ permissions:
 
 jobs:
   lint:
-    uses: gojiplus/r-canon/.github/workflows/reusable-lint.yml@v2
+    uses: gojiplus/r-canon/.github/workflows/reusable-lint.yml@48db3249d3f6e50d9f8e57d53e57f8ffd60182cc

@@ -8,4 +8,4 @@ on:
 
 jobs:
   check:
-    uses: gojiplus/r-canon/.github/workflows/reusable-check.yml@v2
+    uses: gojiplus/r-canon/.github/workflows/reusable-check.yml@48db3249d3f6e50d9f8e57d53e57f8ffd60182cc
