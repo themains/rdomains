@@ -24,7 +24,8 @@ fake_provider <- function(provider = c("openai", "anthropic"), reply = list(cate
         auto_unbox = TRUE
       ))
     }
-    text <- as.character(jsonlite::toJSON(reply, auto_unbox = TRUE))
+    prompt <- if (provider == "openai") req$json$input[[1]]$content[[1]]$text else req$json$messages[[1]]$content
+    text <- if (is.function(reply)) reply(prompt) else as.character(jsonlite::toJSON(reply, auto_unbox = TRUE))
     body <- if (provider == "openai") {
       list(
         status = "completed", model = "gpt-6-luna",
@@ -158,6 +159,25 @@ test_that("repeated hosts are sent once and parallel mode sends every distinct h
   expect_equal(out$category, rep("news", 3))
   expect_equal(out$details[[1]]$mode, "parallel")
   expect_equal(calls(srv), 4L)
+})
+
+test_that("one malformed reply fails its own row and nothing else", {
+  # ellmer raises while parsing a 200 body that is not JSON, before any .error column
+  # exists, so without care one bad reply would abort the whole call and lose every row.
+  broken <- function(prompt) {
+    if (grepl("bad.com", prompt, fixed = TRUE)) "{\"category\":" else "{\"category\":\"news\"}"
+  }
+  srv <- local_fake("openai", reply = broken)
+  out <- openai_cat(c("a.com", "bad.com", "c.com"), api_key = "fixture",
+    categories = c("news", "sports"), base_url = base_url(srv)
+  )
+  expect_equal(out$status, c("ok", "failed", "ok"))
+  expect_equal(out$category, c("news", NA, "news"))
+  expect_equal(out$error_code[2], "invalid_response")
+  expect_false(out$retryable[2])
+  expect_match(out$details[[2]]$message, "parse|JSON|EOF", ignore.case = TRUE)
+  # 3 together, then halves [a] and [bad, c], then [bad] and [c]: 3 + 1 + 2 + 1 + 1.
+  expect_equal(calls(srv), 8L)
 })
 
 test_that("llm_cat accepts any ellmer chat", {

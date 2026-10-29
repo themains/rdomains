@@ -240,7 +240,9 @@ cache_clear <- function(dir = NULL) {
     cli_abort("{.arg dir} must be a single non-empty path.", class = "rdomains_invalid_input")
   }
   resolved <- normalizePath(path.expand(dir), mustWork = FALSE)
-  if (resolved %in% c("/", normalizePath("~", mustWork = FALSE))) {
+  # A filesystem root is its own dirname on every platform ("/" or "C:/").
+  if (identical(dirname(resolved), resolved) ||
+        identical(resolved, normalizePath("~", mustWork = FALSE))) {
     cli_abort("{.arg dir} must be a cache directory, not {.path {resolved}}.",
       class = "rdomains_invalid_input"
     )

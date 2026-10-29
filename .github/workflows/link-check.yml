@@ -25,8 +25,8 @@ jobs:
       # that answer 403 to anything that looks automated. All three are
       # reachable in a browser; none can be checked from CI.
       exclude: |
-        ^https://api\.openai\.com/v1/chat/completions$
-        ^https://api\.anthropic\.com/v1/messages$
+        ^https://api\.openai\.com/v1(/|$)
+        ^https://api\.anthropic\.com/v1(/|$)
         ^https://www\.science\.org/
         ^http://www\.washingtontimes\.com/
         ^https://web\.archive\.org/cdx/search/cdx$

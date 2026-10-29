@@ -94,18 +94,23 @@ llm_cat <- function(domains, chat, categories = NULL,
     category = ellmer::type_enum(categories, "The single best category for this domain.")
   )
   out <- if (mode == "batch") {
-    ellmer::batch_chat_structured(chat, prompts,
-      path = state_file, type = type, wait = wait,
-      convert = TRUE, include_tokens = TRUE, include_cost = TRUE
+    tryCatch(
+      ellmer::batch_chat_structured(chat, prompts,
+        path = state_file, type = type, wait = wait,
+        convert = TRUE, include_tokens = TRUE, include_cost = TRUE
+      ),
+      error = function(e) llm_failed_rows(length(prompts), e)
     )
   } else {
-    # ellmer warns about every failed request and unparseable reply; each becomes a
-    # structured outcome below, so the warnings would only repeat the result.
-    suppressWarnings(ellmer::parallel_chat_structured(chat, prompts,
-      type = type, convert = TRUE, include_tokens = TRUE, include_cost = TRUE,
-      max_active = if (mode == "sequential") 1L else max_active, rpm = rpm,
-      on_error = "continue"
-    ))
+    llm_run_prompts(prompts, function(batch) {
+      # ellmer warns about every failed request and unparseable reply; each becomes a
+      # structured outcome below, so the warnings would only repeat the result.
+      suppressWarnings(ellmer::parallel_chat_structured(chat, batch,
+        type = type, convert = TRUE, include_tokens = TRUE, include_cost = TRUE,
+        max_active = if (mode == "sequential") 1L else max_active, rpm = rpm,
+        on_error = "continue"
+      ))
+    })
   }
   outcomes <- llm_outcomes(out, length(hosts), categories)
 
@@ -130,6 +135,53 @@ llm_cat <- function(domains, chat, categories = NULL,
     )
   }
   result
+}
+
+#' Run prompts so that one unparseable reply fails only its own row
+#'
+#' ellmer raises while parsing a 200 response whose body is not the JSON it asked for,
+#' before its per-request `.error` column exists, which would abort the whole call and
+#' discard every other answer. On an error the prompts are split in half and each half
+#' run again, down to the single prompt that caused it. Successful halves pay for their
+#' requests again, at most once per level of the split.
+#'
+#' @keywords internal
+#' @noRd
+llm_run_prompts <- function(prompts, run) {
+  out <- tryCatch(run(prompts), error = function(e) e)
+  if (!inherits(out, "error")) {
+    return(llm_rows(out))
+  }
+  if (length(prompts) == 1L) {
+    return(llm_failed_rows(1L, out))
+  }
+  half <- seq_len(length(prompts) %/% 2)
+  bind_rows(llm_run_prompts(prompts[half], run), llm_run_prompts(prompts[-half], run))
+}
+
+#' Normalise ellmer's structured tibble so halves can be bound
+#' @keywords internal
+#' @noRd
+llm_rows <- function(out) {
+  if (!is.data.frame(out)) {
+    return(out)
+  }
+  out$category <- as.character(out$category)
+  if (!".error" %in% names(out)) {
+    out$.error <- vector("list", nrow(out))
+  }
+  out
+}
+
+#' Rows for prompts whose run raised instead of returning a result
+#' @keywords internal
+#' @noRd
+llm_failed_rows <- function(n, condition) {
+  tibble(
+    category = rep(NA_character_, n), input_tokens = rep(NA_integer_, n),
+    output_tokens = rep(NA_integer_, n), cost = rep(NA_real_, n),
+    .error = replicate(n, condition, simplify = FALSE)
+  )
 }
 
 #' Turn ellmer's structured result into one outcome per prompt
@@ -166,7 +218,14 @@ llm_outcomes <- function(out, n, categories) {
     err <- if (".error" %in% names(out)) out$.error[[i]] else NULL
     if (!is.null(err)) {
       status <- llm_error_status(err)
-      code <- if (is.na(status)) "service_error" else provider_error_code(status)
+      code <- if (!is.na(status)) {
+        provider_error_code(status)
+      } else if (inherits(err, "httr2_error")) {
+        "service_error"
+      } else {
+        # Not an HTTP failure: the provider answered and ellmer could not parse it.
+        "invalid_response"
+      }
       return(blank(code, conditionMessage(err), status, tokens(i), cost(i)))
     }
     category <- as.character(out$category[i])
