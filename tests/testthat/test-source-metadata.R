@@ -32,6 +32,31 @@ test_that("downloads distinguish server publication date from retrieval time", {
   }
 })
 
+test_that("UT1 symlink aliases are not read as a second category", {
+  # utils::tar() stores a symlink as a copy, so the archive is built with system tar.
+  testthat::skip_on_os("windows")
+  testthat::skip_if(!nzchar(Sys.which("tar")), "system tar not available")
+  source <- withr::local_tempdir()
+  destination <- withr::local_tempdir()
+  dir.create(file.path(source, "adult"))
+  writeLines("xvideos.com", file.path(source, "adult", "domains"))
+  writeLines("black", file.path(source, "adult", "usage"))
+  expect_true(file.symlink("adult", file.path(source, "porn")))
+  archive <- withr::local_tempfile(fileext = ".tar.gz")
+  withr::with_dir(source, system2("tar", c("-czf", shQuote(archive), "adult", "porn")))
+  expect_true(any(grepl("porn", untar(archive, list = TRUE), fixed = TRUE)))
+  local_mocked_bindings(download_source = function(url, path) {
+    file.copy(archive, path)
+    list(source_last_published = "2026-10-28", source_fetched_at = "2026-10-29T12:00:00Z")
+  })
+  expect_message(get_ut1_data(destination), "alias")
+  written <- read.csv(file.path(destination, "ut1_domain_category.csv"))
+  expect_equal(written$category, "adult")
+  result <- ut1_cat("xvideos.com", file.path(destination, "ut1_domain_category.csv"))
+  expect_equal(result$category, "adult")
+  expect_equal(result$status, "ok")
+})
+
 test_that("UT1 extraction resolves duplicates deterministically and records provenance", {
   source <- withr::local_tempdir()
   destination <- withr::local_tempdir()

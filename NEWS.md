@@ -35,6 +35,12 @@
 
 ## Fixes
 
+- `get_ut1_data()` no longer follows the seven symlink aliases in the UT1 archive
+  (`porn` -> `adult`, `ads` -> `publicite`, `drugs` -> `drogue`, `aggressive` and
+  `violence` -> `agressif`, `mail` -> `forums`, `proxy` -> `redirector`). Every domain
+  on those lists was written twice under two names, so `ut1_cat()` reported no single
+  `category` for 4.6 million adult domains. Re-run `get_ut1_data(overwrite = TRUE)`.
+
 - `html_text_content()` hands the body to xml2 as bytes. A tagless string was opened
   as a file path or URL.
 - The private-address guard checks every resolved address, not curl's first.
