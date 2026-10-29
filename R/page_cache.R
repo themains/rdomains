@@ -239,10 +239,10 @@ cache_clear <- function(dir = NULL) {
   if (!is.character(dir) || length(dir) != 1L || is.na(dir) || !nzchar(trimws(dir))) {
     cli_abort("{.arg dir} must be a single non-empty path.", class = "rdomains_invalid_input")
   }
-  resolved <- normalizePath(path.expand(dir), mustWork = FALSE)
-  # A filesystem root is its own dirname on every platform ("/" or "C:/").
-  if (identical(dirname(resolved), resolved) ||
-        identical(resolved, normalizePath("~", mustWork = FALSE))) {
+  resolved <- normalizePath(path.expand(dir), winslash = "/", mustWork = FALSE)
+  # A filesystem root ("/" or "C:/") is its own dirname and has an empty basename.
+  is_root <- identical(dirname(resolved), resolved) || !nzchar(basename(resolved))
+  if (is_root || identical(resolved, normalizePath("~", winslash = "/", mustWork = FALSE))) {
     cli_abort("{.arg dir} must be a cache directory, not {.path {resolved}}.",
       class = "rdomains_invalid_input"
     )
