@@ -106,7 +106,8 @@ check_url <- function(url, resolver = nslookup, allow_hosts = character()) {
     return("invalid_domain")
   }
 
-  ips <- tryCatch(resolver(host, error = FALSE), error = function(e) NULL)
+  # Every address, not curl's default first one: libcurl may connect to any of them.
+  ips <- tryCatch(resolver(host, multiple = TRUE, error = FALSE), error = function(e) NULL)
   if (is.null(ips) || !length(ips)) {
     return("dns_error")
   }

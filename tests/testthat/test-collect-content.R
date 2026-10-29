@@ -30,10 +30,22 @@ test_that("is_global_ip rejects garbage rather than defaulting to allow", {
   expect_false(is_global_ip("999.1.1.1"))
 })
 
+test_that("check_url inspects every resolved address, not the first", {
+  # curl::nslookup() returns one address unless multiple = TRUE. A host with one public
+  # and one private record must be refused: libcurl may connect to either.
+  seen <- NULL
+  mixed <- function(host, multiple = FALSE, error = TRUE) {
+    seen <<- multiple
+    if (multiple) c("93.184.216.34", "10.0.0.1") else "93.184.216.34"
+  }
+  expect_equal(check_url("https://example.com", resolver = mixed), "private_address")
+  expect_true(seen)
+})
+
 test_that("check_url refuses what should never be fetched", {
   # DNS is injected so this never touches the network.
-  global <- function(host, error = FALSE) "8.8.8.8"
-  private <- function(host, error = FALSE) "10.0.0.1"
+  global <- function(host, ..., error = FALSE) "8.8.8.8"
+  private <- function(host, ..., error = FALSE) "10.0.0.1"
 
   expect_null(check_url("https://example.com", resolver = global))
   expect_equal(check_url("https://example.com", resolver = private), "private_address")
@@ -43,7 +55,7 @@ test_that("check_url refuses what should never be fetched", {
   expect_equal(check_url("https://localhost", resolver = global), "invalid_domain")
   expect_equal(check_url("https://box.local", resolver = global), "invalid_domain")
   expect_equal(
-    check_url("https://example.com", resolver = function(host, error = FALSE) NULL),
+    check_url("https://example.com", resolver = function(host, ..., error = FALSE) NULL),
     "dns_error"
   )
 })
