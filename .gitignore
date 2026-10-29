@@ -23,3 +23,7 @@ docs
 
 # Written by devtools::submit_cran(); regenerated at each release.
 CRAN-SUBMISSION
+
+# testthat failure snapshots
+tests/testthat/_problems/
+tests/testthat/testthat-problems.rds

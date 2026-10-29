@@ -1,18 +1,43 @@
 #' Clean and Normalize Domain Names
 #'
-#' @param domains character vector of domain names
-#' @return character vector of cleaned domains
+#' The one host normaliser: lowercase, drop scheme, userinfo, port, path, query,
+#' fragment, trailing dots and a leading `www.`. Vectorised with regular expressions
+#' because lookup tables run to millions of keys. Input that is not URL-shaped is
+#' returned lowercased and trimmed so it can still be echoed back to the caller.
+#'
+#' @param domains character vector of domain names or URLs
+#' @return character vector of hostnames
 #' @keywords internal
 #' @noRd
 clean_domains <- function(domains) {
-  vapply(domains, function(value) {
-    parsed <- tryCatch(url_parse(request_url(value)), error = function(e) NULL)
-    host <- parsed$hostname
-    if (is.null(host) || !nzchar(host)) {
-      return(tolower(trimws(value)))
-    }
-    sub("^www\\.", "", sub("\\.$", "", tolower(host)))
-  }, character(1), USE.NAMES = FALSE)
+  host <- tolower(trimws(domains))
+  host <- sub("^[a-z][a-z0-9+.-]*://", "", host)
+  host <- sub("^[^/?#@]*@", "", host)
+  host <- sub("[/?#].*$", "", host)
+  host <- sub(":[0-9]+$", "", host)
+  host <- sub("\\.+$", "", host)
+  sub("^www\\.", "", host)
+}
+
+#' Registrable domain of a host (public suffix plus one label)
+#'
+#' Uses the Public Suffix List through `urltools::suffix_extract()`, so `news.bbc.co.uk`
+#' gives `bbc.co.uk` and `foo.github.io` stays `foo.github.io`. Hosts without a known
+#' suffix (IP addresses, `localhost`, junk) are returned unchanged.
+#'
+#' @param hosts character vector of normalised hostnames
+#' @return character vector, same length
+#' @keywords internal
+#' @noRd
+registrable_domain <- function(hosts) {
+  if (!length(hosts)) {
+    return(character())
+  }
+  parts <- suffix_extract(hosts)
+  known <- !is.na(parts$domain) & !is.na(parts$suffix) & nzchar(parts$suffix)
+  out <- hosts
+  out[known] <- paste(parts$domain[known], parts$suffix[known], sep = ".")
+  out
 }
 
 #' Validate Domain Input
@@ -105,25 +130,11 @@ get_api_key <- function(api_key = NULL, env_vars, service_name) {
 #' @keywords internal
 #' @noRd
 build_categorization_prompt <- function(domain, categories) {
-  glue(
+  as.character(glue(
     "Classify the website domain '{domain}' into exactly one of these categories: ",
     "{paste(categories, collapse = ', ')}. ",
-    "Consider what type of content this domain likely hosts. ",
-    "Respond with only the category name, no explanation or punctuation."
-  )
-}
-
-#' Apply Rate Limiting
-#'
-#' @param i current iteration
-#' @param total total iterations
-#' @param rate_limit delay in seconds
-#' @keywords internal
-#' @noRd
-apply_rate_limit <- function(i, total, rate_limit) {
-  if (i < total && rate_limit > 0) {
-    Sys.sleep(rate_limit)
-  }
+    "Consider what type of content this domain likely hosts."
+  ))
 }
 
 #' Validate a finite scalar within a closed interval
@@ -138,27 +149,22 @@ validate_number <- function(x, name, lower = 0, upper = Inf, integer = FALSE) {
   invisible(x)
 }
 
-#' Validate a requested category vocabulary and request controls
+#' Validate a requested category vocabulary
 #' @keywords internal
 #' @noRd
-validate_llm_options <- function(categories, model, delay) {
+validate_categories <- function(categories) {
   assert_character(categories, min.len = 1, any.missing = FALSE, min.chars = 1)
   if (any(!nzchar(trimws(categories))) || anyDuplicated(categories)) {
     cli_abort("{.arg categories} must contain distinct nonblank names.")
   }
-  assert_character(model, len = 1, any.missing = FALSE, min.chars = 1)
-  if (!nzchar(trimws(model))) cli_abort("{.arg model} must not be blank.")
-  validate_number(delay, "delay")
+  invisible(categories)
 }
 
-#' Reject a provider response that is not a requested category
+#' Validate a model name
 #' @keywords internal
 #' @noRd
-checked_category <- function(value, categories) {
-  if (!is.character(value) || length(value) != 1L || is.na(value) ||
-        !trimws(value) %in% categories) {
-    cli_warn("The provider did not return a category in the requested vocabulary.")
-    return(NA_character_)
-  }
-  trimws(value)
+validate_model <- function(model) {
+  assert_character(model, len = 1, any.missing = FALSE, min.chars = 1)
+  if (!nzchar(trimws(model))) cli_abort("{.arg model} must not be blank.")
+  invisible(model)
 }

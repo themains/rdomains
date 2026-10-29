@@ -40,6 +40,9 @@ virustotal_cat <- function(domains, api_key = NULL) {
       result$http_status[i] <- as.integer(status)
       result$error_code[i] <- if (inherits(response, "virustotal_auth_error")) {
         "authentication_error"
+      } else if (inherits(response, "virustotal_validation_error")) {
+        # The package rejected the input before any request; retrying cannot help.
+        "invalid_domain"
       } else if (inherits(response, "virustotal_rate_limit_error")) {
         "rate_limited"
       } else {

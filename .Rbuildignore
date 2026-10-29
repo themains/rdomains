@@ -24,3 +24,5 @@ AGENTS.md
 ^\.lintr$
 
 ^audit$
+^tests/testthat/_problems$
+^tests/testthat/testthat-problems\.rds$

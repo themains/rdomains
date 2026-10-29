@@ -50,6 +50,7 @@ RD_ERROR_CODES <- tribble(
   "authentication_error", "infer", FALSE, "Provider credentials were rejected.",
   "provider_error", "infer", FALSE, "Provider rejected the request.",
   "invalid_response", "infer", FALSE, "Provider returned an incomplete or invalid label.",
+  "batch_pending", "infer", TRUE, "Batch job submitted; results not yet available.",
   "unknown", NA, FALSE, "Unclassified failure."
 )
 
@@ -84,7 +85,8 @@ fetch_error_codes <- function() {
 #' @param x A tibble from [collect_content()] or [pie_cat()].
 #'
 #' @return A one-row tibble: `n`, `ok`, `failed`, `no_match`, `retryable`, and list-columns
-#'   `by_stage`, `by_reason` and `missing` (the domains that produced nothing).
+#'   `by_stage`, `by_reason` and `missing` (the `domain_name` of every failed row;
+#'   `no_match` rows are a result, not a failure, and are not listed).
 #'
 #' @export
 #' @examples

@@ -106,7 +106,8 @@ check_url <- function(url, resolver = nslookup, allow_hosts = character()) {
     return("invalid_domain")
   }
 
-  ips <- tryCatch(resolver(host, error = FALSE), error = function(e) NULL)
+  # Every address, not curl's default first one: libcurl may connect to any of them.
+  ips <- tryCatch(resolver(host, multiple = TRUE, error = FALSE), error = function(e) NULL)
   if (is.null(ips) || !length(ips)) {
     return("dns_error")
   }
@@ -373,8 +374,10 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
     ))
   }
 
-  # Cache hits retain the original collection time and outcome.
-  hit <- cache_get(cache_dir, url, cache_ttl)
+  # Cache hits retain the original collection time and outcome. They are keyed by the
+  # guard settings too, because a hit skips every request-time check.
+  settings <- cache_settings(obey_robots, allow_hosts, max_bytes)
+  hit <- cache_get(cache_dir, url, cache_ttl, settings)
   if (!is.null(hit)) {
     return(acquired_row(domain, input, hit$fetched_at, hit$html, hit$meta$http_status,
       hit$meta$final_url,
@@ -433,7 +436,7 @@ fetch_one <- function(domain, input, delay, timeout, max_bytes, obey_robots,
           error_code = row$error_code, robots_allowed = fetched$robots_allowed,
           fetched_at = format(started, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
         ),
-        max_size = cache_max_size
+        max_size = cache_max_size, settings = settings
       ),
       # A cache that cannot be written must not fail the fetch.
       error = function(e) NULL

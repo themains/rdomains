@@ -59,3 +59,15 @@ test_that("a page with no body still yields its text", {
   got <- html_text_content("<html><head><title>T</title></head></html>")
   expect_type(got$text, "character")
 })
+
+test_that("a tagless string is parsed as markup, never opened as a path or URL", {
+  # xml2::read_html() treats a string without angle brackets as a file path or URL.
+  # A server can send text/html whose body is a bare path, so the body must always be
+  # handed over as bytes.
+  path <- withr::local_tempfile(fileext = ".txt")
+  writeLines("secret file contents", path)
+  got <- html_text_content(path)
+  expect_false(grepl("secret file contents", got$text, fixed = TRUE))
+  expect_equal(got$text, tolower(path))
+  expect_s3_class(page_signals(path), "data.frame")
+})

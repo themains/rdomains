@@ -102,16 +102,23 @@ test_that("build_categorization_prompt creates valid prompt", {
   expect_true(grepl("other", prompt))
 })
 
-test_that("apply_rate_limit sleeps appropriately", {
-  start_time <- Sys.time()
-  rdomains:::apply_rate_limit(1, 3, 0.1)
-  elapsed <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-  expect_true(elapsed >= 0.1)
+test_that("clean_domains strips ports, userinfo, trailing dots and query strings", {
+  expect_equal(
+    rdomains:::clean_domains(c(
+      "HTTPS://User@WWW.Example.COM:8443/a?b=c#d", "example.com.", "www.example.com:80",
+      "sub.example.co.uk/path", "not a domain"
+    )),
+    c("example.com", "example.com", "example.com", "sub.example.co.uk", "not a domain")
+  )
 })
 
-test_that("apply_rate_limit doesn't sleep on last iteration", {
-  start_time <- Sys.time()
-  rdomains:::apply_rate_limit(3, 3, 1.0)
-  elapsed <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-  expect_true(elapsed < 0.5)
+test_that("registrable_domain uses the public suffix list and falls back to the host", {
+  expect_equal(
+    rdomains:::registrable_domain(c(
+      "cs.stanford.edu", "stanford.edu", "news.bbc.co.uk", "foo.github.io",
+      "a.b.c.ac.in", "localhost", "192.168.0.1", "not a domain"
+    )),
+    c("stanford.edu", "stanford.edu", "bbc.co.uk", "foo.github.io",
+      "c.ac.in", "localhost", "192.168.0.1", "not a domain")
+  )
 })

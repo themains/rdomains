@@ -32,8 +32,10 @@ html_text_content <- function(html) {
     return(empty)
   }
 
+  # Bytes, not the string: xml2 treats a string without angle brackets as a file path
+  # or URL and opens it. A response body is never a path.
   doc <- tryCatch(
-    read_html(html),
+    read_html(charToRaw(enc2utf8(html)), encoding = "UTF-8"),
     error = function(e) NULL
   )
   if (is.null(doc)) {

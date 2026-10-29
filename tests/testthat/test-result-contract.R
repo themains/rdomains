@@ -1,22 +1,12 @@
-test_that("provider outcomes preserve input identity, reason and model", {
-  local_mocked_bindings(req_perform = function(...) httr2::response(status_code = 429))
-  result <- openai_cat(c("https://example.com/a", "https://example.com/b"),
-    api_key = "fixture", delay = 0
-  )
-  expect_identical(result$input_id, 1:2)
-  expect_identical(result$input, c("https://example.com/a", "https://example.com/b"))
-  expect_equal(result$error_code, rep("rate_limited", 2))
-  expect_true(all(result$retryable))
-  expect_equal(result$model_id, rep("gpt-6-luna", 2))
-})
-
 test_that("empty inputs are typed results and perform no I/O", {
   local_mocked_bindings(
     req_perform = function(...) stop("unexpected request"),
     fromJSON = function(...) stop("unexpected lookup")
   )
+  chat <- ellmer::chat_openai(model = "fixture", credentials = function() "fixture")
   results <- list(
-    openai_cat(character()), claude_cat(character()), virustotal_cat(character()),
+    openai_cat(character(), api_key = "fixture"), claude_cat(character(), api_key = "fixture"),
+    llm_cat(character(), chat), virustotal_cat(character()),
     shalla_cat(character()), dmoz_cat(character()), ut1_cat(character()),
     uni_cat(character()), stevenblack_cat(character()), collect_content(character())
   )
@@ -140,6 +130,21 @@ test_that("VirusTotal retries transient conditions and retains available HTTP st
                  "rate_limited", "service_unavailable"))
   expect_equal(result$retryable, c(FALSE, TRUE, FALSE, TRUE, TRUE))
   expect_identical(result$http_status, c(NA_integer_, NA_integer_, 404L, 429L, 503L))
+})
+
+test_that("VirusTotal input rejections are not retryable", {
+  # The virustotal package raises virustotal_validation_error with no status_code for
+  # a malformed domain. Retrying the same input cannot succeed.
+  local_mocked_bindings(domain_report = function(...) {
+    stop(structure(list(message = "Invalid domain format"),
+      class = c("virustotal_validation_error", "virustotal_error", "error", "condition")
+    ))
+  })
+  result <- virustotal_cat("bad_domain.example", api_key = "fixture")
+  expect_identical(result$status, "failed")
+  expect_identical(result$error_code, "invalid_domain")
+  expect_false(result$retryable)
+  expect_identical(result$http_status, NA_integer_)
 })
 
 test_that("malformed vendor labels fail one row without aborting the batch", {

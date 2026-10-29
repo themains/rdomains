@@ -21,12 +21,15 @@ jobs:
   links:
     uses: gojiplus/r-canon/.github/workflows/reusable-link-check.yml@v2
     with:
-      # An API endpoint that answers 401 without a key, and two publishers
-      # that answer 403 to anything that looks automated. All three are
-      # reachable in a browser; none can be checked from CI.
+      # API base URLs that answer 404 or 401 without a real request, two
+      # publishers that answer 403 to anything that looks automated, and
+      # curlie.org, which answers 502/503 intermittently (twice in one day
+      # of CI runs). All are reachable in a browser; none can be checked
+      # from CI.
       exclude: |
-        ^https://api\.openai\.com/v1/chat/completions$
-        ^https://api\.anthropic\.com/v1/messages$
+        ^https://api\.openai\.com/v1(/|$)
+        ^https://api\.anthropic\.com/v1(/|$)
         ^https://www\.science\.org/
         ^http://www\.washingtontimes\.com/
+        ^https://curlie\.org/
         ^https://web\.archive\.org/cdx/search/cdx$

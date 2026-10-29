@@ -29,3 +29,18 @@ test_that("uni_cat still matches single-domain universities and misses non-match
   expect_equal(uni_cat("http://www.a.edu")$details[[1]]$records$name, "A Uni")
   expect_equal(uni_cat("google.com")$status, "no_match")
 })
+
+test_that("a subdomain falls back to its registrable domain and says so", {
+  local_mocked_bindings(
+    fromJSON = function(...) fake_uni_list(),
+    lookup_source_file = function(...) "fixture"
+  )
+  hit <- uni_cat("https://cs.a.edu/people")
+  expect_equal(hit$category, "university")
+  expect_equal(hit$details[[1]]$matched_key, "a.edu")
+  exact <- uni_cat("a.edu")
+  expect_equal(exact$details[[1]]$matched_key, "a.edu")
+  miss <- uni_cat("cs.google.com")
+  expect_equal(miss$status, "no_match")
+  expect_null(miss$details[[1]]$matched_key)
+})

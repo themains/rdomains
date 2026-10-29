@@ -3,13 +3,16 @@
 #' Classifiers preserve input order and return one row per input. `input_id` is the
 #' one-based position in that call; retain it when saving and resuming a batch.
 #' `status` is `ok`, `no_match` or `failed`. An absent lookup membership is not a
-#' failed request. `category` is populated only when there is one selected label;
-#' `labels` preserves every label in a tibble with `category`, `score` and `vendor`.
+#' failed request. `category` is the single selected label, or for a scored classifier
+#' the highest-scoring label with its score in `confidence`; `labels` preserves every
+#' label in a tibble with `category`, `score` and `vendor`.
 #' Unknown scores are `NA`, not probabilities inferred from list membership.
 #'
 #' `provider` identifies the classifier or list; `evidence_type` distinguishes page
 #' content, archived content, name inference and list membership. `details` retains
 #' source-specific records, including the collected page for piedomains results.
+#' List lookups match the normalised host first and then its registrable domain
+#' (public suffix plus one label); `details$matched_key` records which key matched.
 #' Model and source identifiers are reported where known; missing dates stay missing.
 #'
 #' @name classification_results
@@ -66,16 +69,28 @@ set_result_labels <- function(result, i, labels) {
 lookup_result <- function(domains, data, key, label, provider, metadata = list()) {
   validate_lookup(data, c(key, label))
   result <- classification_result(domains, provider, "list_membership", "lookup")
-  keys <- sub("^www\\.", "", tolower(trimws(data[[key]])))
-  keep <- keys %in% result$domain_name
+  keys <- clean_domains(data[[key]])
+  # Exact host first; otherwise the registrable domain, so cs.stanford.edu finds a list
+  # entry for stanford.edu. `matched_key` in details records which one applied.
+  fallback <- registrable_domain(result$domain_name)
+  wanted <- unique(c(result$domain_name, fallback))
+  keep <- keys %in% wanted
   data <- data[keep, , drop = FALSE]
   keys <- keys[keep]
   groups <- split(seq_along(keys), keys)
   for (i in seq_along(domains)) {
-    rows <- data[groups[[result$domain_name[i]]] %||% integer(), , drop = FALSE]
+    matched_key <- if (!is.null(groups[[result$domain_name[i]]])) {
+      result$domain_name[i]
+    } else if (!is.null(groups[[fallback[i]]])) {
+      fallback[i]
+    } else {
+      NULL
+    }
+    rows <- data[groups[[matched_key %||% ""]] %||% integer(), , drop = FALSE]
     result <- set_result_labels(result, i, label_table(rows[[label]]))
     result$details[[i]] <- list(
-      records = rows, source_url = metadata$source_url %||% NA_character_,
+      records = rows, matched_key = matched_key,
+      source_url = metadata$source_url %||% NA_character_,
       checksum = metadata$checksum %||% NA_character_
     )
   }

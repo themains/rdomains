@@ -11,7 +11,8 @@ fetch_report(x)
 }
 \value{
 A one-row tibble: \code{n}, \code{ok}, \code{failed}, \code{no_match}, \code{retryable}, and list-columns
-\code{by_stage}, \code{by_reason} and \code{missing} (the domains that produced nothing).
+\code{by_stage}, \code{by_reason} and \code{missing} (the \code{domain_name} of every failed row;
+\code{no_match} rows are a result, not a failure, and are not listed).
 }
 \description{
 A pure function over the returned tibble, deliberately \strong{not} a stored summary. A

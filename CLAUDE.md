@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-rdomains is an R package that classifies domains based on their content. It provides access to multiple domain categorization services including Shallalist, VirusTotal, DMOZ, Steven Black's hosts list, OpenAI and Claude, and a machine learning model trained on Shallalist data.
+rdomains is an R package that classifies domains based on their content. It provides access to multiple domain categorization services including Shallalist, VirusTotal, DMOZ, Steven Black's hosts list, the piedomains content model, and any LLM provider ellmer supports (OpenAI and Claude have wrappers).
 
 Two of the lookup sources are no longer published (DMOZ closed March 2017, Shallalist 2022). `source_vintage()` reports which, and the affected lookups return a `source_last_published` column and warn once per session. A label has a date; serving it without one is a bug.
 
@@ -62,7 +62,8 @@ The package is organized into several main functional areas:
   - `dmoz_cat()`: Categories from DMOZ
   - `virustotal_cat()`: Categories from VirusTotal API
   - `uni_cat()`: University domain classification
-  - `adult_ml1_cat()`: ML-based adult content classification
+  - `pie_cat()`: piedomains content model via reticulate
+  - `llm_cat()`: any ellmer chat; batch mode is the default
   - `openai_cat()`: Categories from OpenAI GPT models
   - `claude_cat()`: Categories from Anthropic Claude models
   
@@ -77,11 +78,10 @@ The package is organized into several main functional areas:
 
 ### Data (data-raw/)
 - Contains raw data files and processing scripts for different categorization sources
-- Models are stored in `data-raw/models/` including the GLM Shallalist model
 
 ### Key Dependencies
 - **urltools**: URL parsing and manipulation
-- **glmnet**: Machine learning model implementation
+- **ellmer**: LLM providers, structured output, parallel and batch inference
 - **virustotal**: VirusTotal API access
 - **httr/curl**: HTTP requests and API calls
 - **XML/xml2**: XML parsing
@@ -123,8 +123,10 @@ openai_cat(c("google.com", "facebook.com", "github.com"))
 # Custom categories
 openai_cat("domain.com", categories = c("technology", "social", "ecommerce", "other"))
 
-# With specific model and rate limiting
-openai_cat("domain.com", model = "gpt-4", rate_limit = 1.0)
+# Default mode is a provider batch job (half price, resumable from a derived state file);
+# parallel answers in seconds
+openai_cat(domains, mode = "parallel", max_active = 5)
+openai_cat(domains, state_file = "job.json", wait = FALSE)
 ```
 
 ### Claude Classification
