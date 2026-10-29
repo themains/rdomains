@@ -87,3 +87,38 @@ this record was written. `evidence/llm-eval-2026-10-29/after-40.csv`.
 - Not submitted to CRAN with this record. 0.6.1 was accepted on 2026-10-29; CRAN asks
   for no more than one update every one to two months unless requested, so 0.7.0 should
   wait until late November at the earliest.
+
+## Independent review
+
+gpt-6-astra (codex exec, fresh context, isolated worktrees). Round 1 on `c6117a2`:
+[evidence/0.7.0-independent-review-round1.md](evidence/0.7.0-independent-review-round1.md).
+Round 2 on `6251d20`:
+[evidence/0.7.0-independent-review-round2.md](evidence/0.7.0-independent-review-round2.md).
+Counts reproduced by the reviewer matched the local runs (631 then 637 passed, 0 failed;
+CRAN-mode 502 passed, 0 failed; the reviewer's single NOTE is the worktree's `.git`
+file entering the bundle, absent from the real checkout).
+
+Findings and dispositions:
+
+- **P1, fixed (`6a77818`).** One malformed 200 body aborted the whole call because
+  ellmer raised before its `.error` column existed. `llm_run_prompts()` now bisects on
+  error down to the single offender, reported as `invalid_response`; HTTP errors are
+  told apart by the `httr2_error` class. Reviewer re-ran five scenarios (middle reply
+  malformed, all malformed, parallel mode, invalid outer JSON in both modes): rows
+  preserved, offender failed, 8 requests each for three prompts. Cost of the fallback:
+  successful prompts in a failed half are re-sent once per level of the split.
+- **P2, accepted as a documented limitation, reviewer dissenting.** A response marked
+  `incomplete`/`max_tokens` whose text nevertheless parses to a valid `{"category": enum}`
+  is reported as ok. ellmer's structured path discards the finish reason, so checking it
+  would mean giving up `parallel_chat_structured()`. Maintainer's reasoning: the schema
+  is a one-field enum object, so a reply that parses and holds a valid enum value is
+  complete regardless of why generation stopped; no partial label is possible. The
+  reviewer's position is that provider documentation asks callers to check the stop
+  reason and that JSON parseability does not establish normal completion. Neither side
+  has a captured live response exhibiting the case. Revisit if ellmer exposes finish
+  reasons from its structured helpers.
+
+## CI
+
+PR #21 on `edb5410`: all jobs pass after excluding curlie.org from link checks (502 on
+two separate runs the same day) and the provider base URLs (404 by design).
