@@ -20,22 +20,28 @@ web_categories <- function() {
 #' name, not a verified observation of the current website. [openai_cat()] and
 #' [claude_cat()] are thin wrappers that build the chat for you.
 #'
-#' `mode = "sequential"` sends one request at a time. `"parallel"` keeps up to
-#' `max_active` requests in flight under a ceiling of `rpm` requests per minute.
-#' `"batch"` submits every prompt to the provider's batch API (OpenAI, Anthropic,
-#' Google Gemini and Groq): roughly half the price, results within 24 hours, and a job
-#' that survives interruption because `state_file` records it. Calling again with the
-#' same arguments resumes or collects the job. In every mode ellmer retries transient
-#' failures (HTTP 429 and 503) up to three times before a row is reported as failed.
+#' The default, `mode = "batch"`, submits every prompt to the provider's batch API
+#' (OpenAI, Anthropic, Google Gemini and Groq): roughly half the price, results within
+#' 24 hours and usually much sooner, and a job that survives interruption because
+#' `state_file` records it. When `state_file` is `NULL` the file is named from a hash of
+#' the provider, model and prompts under [rdomains_cache_dir()], so
+#' calling again with the same arguments resumes or collects the job instead of paying
+#' twice; the path is reported in `details` and in a message. Providers without a batch
+#' API are refused rather than emulated; pass `mode = "parallel"` for them.
+#' `"parallel"` keeps up to `max_active` requests in flight under a ceiling of `rpm`
+#' requests per minute and answers in seconds. `"sequential"` sends one request at a
+#' time. In every mode ellmer retries transient failures (HTTP 429 and 503) up to three
+#' times before a row is reported as failed.
 #'
 #' @param domains character vector of domain names or URLs
 #' @param chat an ellmer chat object, for example
 #'   `ellmer::chat_openai(model = "gpt-6-luna")`
 #' @param categories vector of categories to classify into. If NULL, uses
 #'   [web_categories()]
-#' @param mode one of `"sequential"`, `"parallel"` or `"batch"`
-#' @param state_file path of a `.json` file that records the batch job; required when
-#'   `mode = "batch"`, not allowed otherwise
+#' @param mode one of `"batch"` (default), `"parallel"` or `"sequential"`
+#' @param state_file batch mode only: path of a `.json` file that records the job.
+#'   `NULL` derives one from the provider, model and prompts under the user cache
+#'   directory. Not allowed in the other modes.
 #' @param max_active maximum simultaneous requests in parallel mode
 #' @param rpm requests per minute allowed in parallel mode
 #' @param wait batch mode only: wait for the job to complete (`TRUE`) or return at once.
@@ -51,12 +57,12 @@ web_categories <- function() {
 #' @export
 #' @examples \dontrun{
 #' chat <- ellmer::chat_openai(model = "gpt-6-luna")
-#' llm_cat(c("nytimes.com", "amazon.com"), chat)
-#' llm_cat(domains, chat, mode = "parallel", max_active = 5)
-#' llm_cat(domains, chat, mode = "batch", state_file = "domains-batch.json")
+#' llm_cat(domains, chat) # batch job, resumable
+#' llm_cat(domains, chat, state_file = "domains-batch.json", wait = FALSE)
+#' llm_cat(c("nytimes.com", "amazon.com"), chat, mode = "parallel")
 #' }
 llm_cat <- function(domains, chat, categories = NULL,
-                    mode = c("sequential", "parallel", "batch"), state_file = NULL,
+                    mode = c("batch", "parallel", "sequential"), state_file = NULL,
                     max_active = 10, rpm = 500, wait = TRUE) {
   validate_domains(domains)
   mode <- arg_match(mode)
@@ -66,9 +72,11 @@ llm_cat <- function(domains, chat, categories = NULL,
   validate_number(rpm, "rpm", lower = 1)
   assert_logical(wait, len = 1, any.missing = FALSE)
   if (mode == "batch") {
-    assert_character(state_file, len = 1, any.missing = FALSE, min.chars = 1)
-    if (!grepl("\\.json$", state_file)) {
-      cli_abort("{.arg state_file} must be a path ending in {.file .json}.")
+    if (!is.null(state_file)) {
+      assert_character(state_file, len = 1, any.missing = FALSE, min.chars = 1)
+      if (!grepl("\\.json$", state_file)) {
+        cli_abort("{.arg state_file} must be a path ending in {.file .json}.")
+      }
     }
   } else if (!is.null(state_file)) {
     cli_abort("{.arg state_file} applies only to {.code mode = \"batch\"}.")
@@ -88,18 +96,36 @@ llm_cat <- function(domains, chat, categories = NULL,
   }
 
   # One request per distinct host: repeated inputs share the answer and the cost.
-  hosts <- unique(result$domain_name)
+  # Sorted, so the same set of hosts in any order is the same batch job.
+  hosts <- sort(unique(result$domain_name))
   prompts <- lapply(hosts, build_categorization_prompt, categories = categories)
   type <- ellmer::type_object(
     category = ellmer::type_enum(categories, "The single best category for this domain.")
   )
   out <- if (mode == "batch") {
+    if (is.null(state_file)) {
+      state_file <- llm_state_file(provider, model, prompts)
+      cli_inform(
+        "Batch job recorded in {.file {state_file}}; rerun the same call to resume.",
+        class = "rdomains_batch_state"
+      )
+    }
     tryCatch(
       ellmer::batch_chat_structured(chat, prompts,
         path = state_file, type = type, wait = wait,
         convert = TRUE, include_tokens = TRUE, include_cost = TRUE
       ),
-      error = function(e) llm_failed_rows(length(prompts), e)
+      error = function(e) {
+        # ellmer's own refusal for providers without a batch API; emulating one would
+        # hide the price and turnaround difference, so refuse the same way.
+        if (grepl("not currently supported", conditionMessage(e), fixed = TRUE)) {
+          cli_abort(c(
+            "{.val {provider}} has no batch API.",
+            "i" = "Use {.code mode = \"parallel\"} for this provider."
+          ), class = "rdomains_invalid_input")
+        }
+        llm_failed_rows(length(prompts), e)
+      }
     )
   } else {
     llm_run_prompts(prompts, function(batch) {
@@ -135,6 +161,14 @@ llm_cat <- function(domains, chat, categories = NULL,
     )
   }
   result
+}
+
+# A batch job is identified by what was asked of whom, so the same call always finds
+# the same state file and a different vocabulary or model never collects another job.
+llm_state_file <- function(provider, model, prompts) {
+  dir <- file.path(rdomains_cache_dir(), "llm-batches")
+  dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+  file.path(dir, paste0(rlang::hash(list(provider, model, prompts)), ".json"))
 }
 
 #' Run prompts so that one unparseable reply fails only its own row

@@ -7,10 +7,13 @@
   providers work too. Replies are constrained to the category vocabulary through the
   providers' structured-output APIs, transient failures (429, 503) are retried, and
   repeated hosts are sent once.
-- New `mode` argument: `"sequential"` (default), `"parallel"` (`max_active`, `rpm`) and
-  `"batch"`, which uses the provider batch API at about half the price with a
-  `state_file` for interruption and resume. A batch that is not yet complete returns
-  rows with the new retryable `error_code` `"batch_pending"`.
+- New `mode` argument. The default, `"batch"`, uses the provider batch API at about
+  half the price with a `state_file` for interruption and resume; when `state_file` is
+  not given it is derived from the provider, model and prompts under
+  `rdomains_cache_dir()`, so the same call collects the same job. A batch that is not
+  yet complete returns rows with the new retryable `error_code` `"batch_pending"`.
+  Providers without a batch API are refused with a pointer to `"parallel"`
+  (`max_active`, `rpm`); `"sequential"` sends one request at a time.
 - Removed the `delay` argument; ellmer's rate limiting replaces the fixed sleep.
   `provider` for Claude results is now `"anthropic"`. `http_status` is `NA` for
   successful requests because ellmer does not expose the response. `details` gains

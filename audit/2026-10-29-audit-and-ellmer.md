@@ -77,6 +77,21 @@ answer differs from the sequential run, `bloomberg.com` finance → news (the ba
 answer). `evidence/llm-eval-2026-10-29/batch-40.csv`. Batch pricing is half of list, so
 ≈ $0.0003.
 
+## Batch as the default (after user review)
+
+The user asked that the conventional path be the batch path, as in their batchlane
+package. `mode` now defaults to `"batch"` in `llm_cat()`, `openai_cat()` and
+`claude_cat()`. A missing `state_file` is derived from a hash of provider, model and the
+sorted prompts under `rdomains_cache_dir()/llm-batches/`, so the same set of hosts in
+any order collects the same job and a different vocabulary or model never does.
+Providers without a batch API are refused with a pointer to `mode = "parallel"`
+(batchlane's rule: no lane, no emulation). Live check of the default path with no
+`state_file`: three domains submitted in 2.4 s, state file created under the cache dir,
+all rows `batch_pending` (OpenAI job `batch_6ae378d171a4819099c8ffaf14d354b5`).
+Collection by the same call in a different host order is recorded below once the job
+completes. Fake-server tests name a non-batch mode explicitly; two tests cover the
+derived path and the refusal.
+
 ## Checks on the candidate
 
 - Unrestricted suite (`NOT_CRAN=true`): FAIL 0 | WARN 0 | SKIP 13 | PASS 631.

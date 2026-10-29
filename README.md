@@ -108,13 +108,14 @@ and retrieval dates are separate; an unverified file has unknown dates.
 
 ```r
 web_categories()
+openai_cat(domains)                                   # batch job, resumable
+openai_cat(domains, state_file = "job.json", wait = FALSE)
+claude_cat(domains, mode = "parallel", max_active = 5) # answers in seconds
 openai_cat("example.com", categories = c("news", "shopping", "other"))
-claude_cat(domains, mode = "parallel", max_active = 5)
-openai_cat(domains, mode = "batch", state_file = "domains-batch.json")
 
 # any provider ellmer supports
 llm_cat(domains, ellmer::chat_google_gemini(model = "gemini-2.5-flash"))
-llm_cat(domains, ellmer::chat_ollama(model = "llama3.2"))
+llm_cat(domains, ellmer::chat_ollama(model = "llama3.2"), mode = "parallel")
 ```
 
 The LLM functions run on [ellmer](https://ellmer.tidyverse.org): the reply is
@@ -123,12 +124,16 @@ transient failures are retried, and repeated hosts are sent once. Set `OPENAI_AP
 or `ANTHROPIC_API_KEY`, or pass `api_key`. Explicit credentials win over environment
 variables. Defaults are `gpt-6-luna` and `claude-haiku-5-5`.
 
-`mode = "sequential"` sends one request at a time, `"parallel"` keeps `max_active`
-requests in flight under `rpm` requests per minute, and `"batch"` uses the provider's
-batch API: about half the price, results within 24 hours, and a `state_file` that lets
-you interrupt and resume. Failed or out-of-vocabulary responses retain a structured
-reason and no category. These functions infer from the domain name; they do not
-inspect current content.
+The default `mode = "batch"` submits the job to the provider's batch API (OpenAI,
+Anthropic, Gemini, Groq): about half the price, results within 24 hours and usually
+sooner, and a `state_file` that lets you interrupt and resume. Leave `state_file`
+unset and it is derived from the provider, model and prompts under
+`rdomains_cache_dir()`, so repeating the call collects the finished job instead of
+paying again. Providers without a batch API are refused; use `mode = "parallel"`,
+which keeps `max_active` requests in flight under `rpm` requests per minute and
+answers in seconds. `"sequential"` sends one request at a time. Failed or
+out-of-vocabulary responses retain a structured reason and no category. These
+functions infer from the domain name; they do not inspect current content.
 
 ## Resume a batch
 
@@ -145,9 +150,9 @@ Reuse the same collection options when retrying. The example uses default live
 collection. Empty inputs return typed empty results without downloads or API calls.
 For an inference-only retry, pass the saved piedomains results as `pages`; their
 `details` retain the original HTML and fetch metadata. For API batches, apply the
-same pattern with the original provider, vocabulary, and model, or use
-`mode = "batch"` with a `state_file`: re-running the same call collects a finished
-batch without paying twice. Input identifiers are positions within a call; retain
+same pattern with the original provider, vocabulary, and model, or rely on the
+default batch mode: re-running the same call collects a finished batch without paying
+twice. Input identifiers are positions within a call; retain
 your original identifiers when combining chunks.
 
 Page caching lasts for the session by default. Pass

@@ -21,7 +21,7 @@
 #' claude_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
 #' }
 claude_cat <- function(domains, api_key = NULL, categories = NULL, model = "claude-haiku-5-5",
-                       mode = c("sequential", "parallel", "batch"), state_file = NULL,
+                       mode = c("batch", "parallel", "sequential"), state_file = NULL,
                        max_active = 10, rpm = 500, wait = TRUE, base_url = NULL) {
   validate_domains(domains)
   validate_model(model)

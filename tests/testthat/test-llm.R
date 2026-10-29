@@ -80,7 +80,7 @@ requests <- function(srv) {
 test_that("openai_cat classifies through structured output and records the request", {
   srv <- local_fake("openai")
   out <- openai_cat("https://www.A.com/x", api_key = "fixture", categories = c("news", "sports"),
-    base_url = base_url(srv)
+    mode = "sequential", base_url = base_url(srv)
   )
   expect_equal(out$domain_name, "a.com")
   expect_equal(out$category, "news")
@@ -106,7 +106,7 @@ test_that("openai_cat classifies through structured output and records the reque
 test_that("claude_cat classifies through Anthropic structured output", {
   srv <- local_fake("anthropic")
   out <- claude_cat("a.com", api_key = "fixture", categories = c("news", "sports"),
-    base_url = base_url(srv)
+    mode = "sequential", base_url = base_url(srv)
   )
   expect_equal(out$category, "news")
   expect_equal(out$provider, "anthropic")
@@ -121,7 +121,7 @@ test_that("claude_cat classifies through Anthropic structured output", {
 test_that("a reply outside the vocabulary is a failure, not a category", {
   srv <- local_fake("openai", reply = list(category = "wrong"))
   out <- openai_cat("a.com", api_key = "fixture", categories = c("news", "sports"),
-    base_url = base_url(srv)
+    mode = "sequential", base_url = base_url(srv)
   )
   expect_equal(out$status, "failed")
   expect_true(is.na(out$category))
@@ -133,7 +133,7 @@ test_that("HTTP failures keep their status and retry policy", {
   cases <- list(list(401L, "authentication_error", FALSE), list(500L, "service_unavailable", TRUE))
   for (case in cases) {
     srv <- local_fake("openai", status = case[[1]])
-    out <- openai_cat("a.com", api_key = "fixture", base_url = base_url(srv))
+    out <- openai_cat("a.com", api_key = "fixture", mode = "sequential", base_url = base_url(srv))
     expect_equal(out$status, "failed")
     expect_true(is.na(out$category))
     expect_equal(out$error_code, case[[2]])
@@ -146,7 +146,7 @@ test_that("HTTP failures keep their status and retry policy", {
 
 test_that("a rate limit is retried before it is reported", {
   srv <- local_fake("openai", fail_first = 1L)
-  out <- openai_cat("a.com", api_key = "fixture", base_url = base_url(srv))
+  out <- openai_cat("a.com", api_key = "fixture", mode = "sequential", base_url = base_url(srv))
   expect_equal(out$status, "ok")
   expect_equal(out$category, "news")
   expect_equal(calls(srv), 2L)
@@ -155,7 +155,7 @@ test_that("a rate limit is retried before it is reported", {
 test_that("repeated hosts are sent once and parallel mode sends every distinct host", {
   srv <- local_fake("openai")
   out <- openai_cat(c("a.com", "A.com", "http://www.a.com/x"), api_key = "fixture",
-    base_url = base_url(srv)
+    mode = "sequential", base_url = base_url(srv)
   )
   expect_equal(out$category, rep("news", 3))
   expect_identical(out$input_id, 1:3)
@@ -177,7 +177,7 @@ test_that("one malformed reply fails its own row and nothing else", {
   }
   srv <- local_fake("openai", reply = broken)
   out <- openai_cat(c("a.com", "bad.com", "c.com"), api_key = "fixture",
-    categories = c("news", "sports"), base_url = base_url(srv)
+    categories = c("news", "sports"), mode = "sequential", base_url = base_url(srv)
   )
   expect_equal(out$status, c("ok", "failed", "ok"))
   expect_equal(out$category, c("news", NA, "news"))
@@ -193,7 +193,7 @@ test_that("llm_cat accepts any ellmer chat", {
   chat <- ellmer::chat_anthropic(model = "claude-haiku-5-5", credentials = function() "fixture",
     base_url = base_url(srv)
   )
-  out <- llm_cat(c("a.com", "b.com"), chat, categories = c("news", "sports"))
+  out <- llm_cat(c("a.com", "b.com"), chat, categories = c("news", "sports"), mode = "parallel")
   expect_equal(out$category, c("news", "news"))
   expect_equal(out$provider, c("anthropic", "anthropic"))
   expect_equal(calls(srv), 2L)
@@ -225,6 +225,51 @@ test_that("batch mode reports a pending job and collects a finished one", {
   expect_equal(done$details[[2]]$input_tokens, 11L)
 })
 
+test_that("the default is a batch job with a state file derived from the request", {
+  chat <- ellmer::chat_openai(model = "gpt-6-luna", credentials = function() "fixture")
+  withr::local_envvar(R_USER_CACHE_DIR = withr::local_tempdir())
+  seen <- list()
+  local_mocked_bindings(
+    batch_chat_structured = function(chat, prompts, path, type, wait, ...) {
+      seen[[length(seen) + 1]] <<- path
+      NULL
+    },
+    .package = "ellmer"
+  )
+  expect_message(
+    out <- openai_cat(c("a.com", "b.com"), api_key = "fixture", wait = FALSE),
+    class = "rdomains_batch_state"
+  )
+  expect_equal(out$details[[1]]$mode, "batch")
+  expect_equal(out$error_code, rep("batch_pending", 2))
+  expect_match(seen[[1]], "rdomains/llm-batches/[0-9a-f]{32}\\.json$")
+  expect_true(dir.exists(dirname(seen[[1]])))
+  expect_equal(out$details[[1]]$state_file, seen[[1]])
+
+  # Same request, same job; a different vocabulary or model is a different job.
+  suppressMessages(openai_cat(c("b.com", "a.com", "A.com"), api_key = "fixture", wait = FALSE))
+  suppressMessages(openai_cat(c("a.com", "b.com"), api_key = "fixture", wait = FALSE,
+    categories = c("news", "sports")
+  ))
+  suppressMessages(openai_cat(c("a.com", "b.com"), api_key = "fixture", wait = FALSE,
+    model = "gpt-6-astra"
+  ))
+  expect_equal(seen[[2]], seen[[1]])
+  expect_false(seen[[3]] == seen[[1]])
+  expect_false(seen[[4]] == seen[[1]])
+  expect_false(seen[[4]] == seen[[3]])
+})
+
+test_that("a provider without a batch API is refused, not emulated", {
+  chat <- ellmer::chat_openai_compatible(base_url = "http://127.0.0.1:9", model = "x",
+    credentials = function() "fixture"
+  )
+  expect_error(
+    suppressMessages(llm_cat("a.com", chat)),
+    "no batch API", class = "rdomains_invalid_input"
+  )
+})
+
 test_that("options fail before any request and empty input performs none", {
   chat <- ellmer::chat_openai(model = "gpt-6-luna", credentials = function() "fixture",
     base_url = "http://127.0.0.1:9"
@@ -233,9 +278,8 @@ test_that("options fail before any request and empty input performs none", {
     expect_error(llm_cat("a.com", chat, categories = bad), "categories")
   }
   expect_error(llm_cat("a.com", chat, mode = "nope"), "mode")
-  expect_error(llm_cat("a.com", chat, mode = "batch"), "state_file")
-  expect_error(llm_cat("a.com", chat, mode = "batch", state_file = "job.txt"), "json")
-  expect_error(llm_cat("a.com", chat, state_file = "job.json"), "state_file")
+  expect_error(llm_cat("a.com", chat, state_file = "job.txt"), "json")
+  expect_error(llm_cat("a.com", chat, mode = "parallel", state_file = "job.json"), "state_file")
   expect_error(llm_cat("a.com", chat, max_active = 0), "max_active")
   expect_error(llm_cat("a.com", "gpt-6-luna"), "ellmer chat")
   expect_error(openai_cat("a.com", api_key = "fixture", model = ""), "model")

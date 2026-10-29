@@ -8,7 +8,7 @@ llm_cat(
   domains,
   chat,
   categories = NULL,
-  mode = c("sequential", "parallel", "batch"),
+  mode = c("batch", "parallel", "sequential"),
   state_file = NULL,
   max_active = 10,
   rpm = 500,
@@ -24,10 +24,11 @@ llm_cat(
 \item{categories}{vector of categories to classify into. If NULL, uses
 \code{\link[=web_categories]{web_categories()}}}
 
-\item{mode}{one of \code{"sequential"}, \code{"parallel"} or \code{"batch"}}
+\item{mode}{one of \code{"batch"} (default), \code{"parallel"} or \code{"sequential"}}
 
-\item{state_file}{path of a \code{.json} file that records the batch job; required when
-\code{mode = "batch"}, not allowed otherwise}
+\item{state_file}{batch mode only: path of a \code{.json} file that records the job.
+\code{NULL} derives one from the provider, model and prompts under the user cache
+directory. Not allowed in the other modes.}
 
 \item{max_active}{maximum simultaneous requests in parallel mode}
 
@@ -54,19 +55,24 @@ name, not a verified observation of the current website. \code{\link[=openai_cat
 \code{\link[=claude_cat]{claude_cat()}} are thin wrappers that build the chat for you.
 }
 \details{
-\code{mode = "sequential"} sends one request at a time. \code{"parallel"} keeps up to
-\code{max_active} requests in flight under a ceiling of \code{rpm} requests per minute.
-\code{"batch"} submits every prompt to the provider's batch API (OpenAI, Anthropic,
-Google Gemini and Groq): roughly half the price, results within 24 hours, and a job
-that survives interruption because \code{state_file} records it. Calling again with the
-same arguments resumes or collects the job. In every mode ellmer retries transient
-failures (HTTP 429 and 503) up to three times before a row is reported as failed.
+The default, \code{mode = "batch"}, submits every prompt to the provider's batch API
+(OpenAI, Anthropic, Google Gemini and Groq): roughly half the price, results within
+24 hours and usually much sooner, and a job that survives interruption because
+\code{state_file} records it. When \code{state_file} is \code{NULL} the file is named from a hash of
+the provider, model and prompts under \code{\link[=rdomains_cache_dir]{rdomains_cache_dir()}}, so
+calling again with the same arguments resumes or collects the job instead of paying
+twice; the path is reported in \code{details} and in a message. Providers without a batch
+API are refused rather than emulated; pass \code{mode = "parallel"} for them.
+\code{"parallel"} keeps up to \code{max_active} requests in flight under a ceiling of \code{rpm}
+requests per minute and answers in seconds. \code{"sequential"} sends one request at a
+time. In every mode ellmer retries transient failures (HTTP 429 and 503) up to three
+times before a row is reported as failed.
 }
 \examples{
 \dontrun{
 chat <- ellmer::chat_openai(model = "gpt-6-luna")
-llm_cat(c("nytimes.com", "amazon.com"), chat)
-llm_cat(domains, chat, mode = "parallel", max_active = 5)
-llm_cat(domains, chat, mode = "batch", state_file = "domains-batch.json")
+llm_cat(domains, chat) # batch job, resumable
+llm_cat(domains, chat, state_file = "domains-batch.json", wait = FALSE)
+llm_cat(c("nytimes.com", "amazon.com"), chat, mode = "parallel")
 }
 }

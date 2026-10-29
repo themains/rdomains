@@ -9,7 +9,7 @@ openai_cat(
   api_key = NULL,
   categories = NULL,
   model = "gpt-6-luna",
-  mode = c("sequential", "parallel", "batch"),
+  mode = c("batch", "parallel", "sequential"),
   state_file = NULL,
   max_active = 10,
   rpm = 500,
@@ -28,10 +28,11 @@ environment variable}
 
 \item{model}{OpenAI model to use (default: "gpt-6-luna" for cost efficiency)}
 
-\item{mode}{one of \code{"sequential"}, \code{"parallel"} or \code{"batch"}}
+\item{mode}{one of \code{"batch"} (default), \code{"parallel"} or \code{"sequential"}}
 
-\item{state_file}{path of a \code{.json} file that records the batch job; required when
-\code{mode = "batch"}, not allowed otherwise}
+\item{state_file}{batch mode only: path of a \code{.json} file that records the job.
+\code{NULL} derives one from the provider, model and prompts under the user cache
+directory. Not allowed in the other modes.}
 
 \item{max_active}{maximum simultaneous requests in parallel mode}
 
@@ -55,10 +56,10 @@ domain name, not a verified observation of the current website.
 }
 \examples{
 \dontrun{
-openai_cat("google.com")
+openai_cat(domains) # batch job, about half price, resumable
+openai_cat(domains, state_file = "openai-batch.json", wait = FALSE)
 openai_cat(c("google.com", "facebook.com"), mode = "parallel")
 openai_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
-openai_cat(domains, mode = "batch", state_file = "openai-batch.json")
 }
 }
 \seealso{

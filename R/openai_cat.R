@@ -17,13 +17,13 @@
 #' @export
 #' @seealso [llm_cat()] for any ellmer provider and the parallel and batch modes.
 #' @examples \dontrun{
-#' openai_cat("google.com")
+#' openai_cat(domains) # batch job, about half price, resumable
+#' openai_cat(domains, state_file = "openai-batch.json", wait = FALSE)
 #' openai_cat(c("google.com", "facebook.com"), mode = "parallel")
 #' openai_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
-#' openai_cat(domains, mode = "batch", state_file = "openai-batch.json")
 #' }
 openai_cat <- function(domains, api_key = NULL, categories = NULL, model = "gpt-6-luna",
-                       mode = c("sequential", "parallel", "batch"), state_file = NULL,
+                       mode = c("batch", "parallel", "sequential"), state_file = NULL,
                        max_active = 10, rpm = 500, wait = TRUE, base_url = NULL) {
   validate_domains(domains)
   validate_model(model)
