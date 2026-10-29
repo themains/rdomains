@@ -20,3 +20,6 @@ docs
 # pkgdown output. Disposable local build product; CI builds and
 # publishes the definitive site.
 /docs/
+
+# Written by devtools::submit_cran(); regenerated at each release.
+CRAN-SUBMISSION

@@ -6,9 +6,12 @@
 # address and watching the fetcher refuse it proves the guard.
 #
 # webfakes runs a real server on a loopback port, so these are local-socket tests rather
-# than network tests -- no skip_on_cran() needed, only skip_if_not_installed().
+# than network tests. They are nonetheless skipped on CRAN: CRAN's slow check hosts (the
+# noLD flavor, October 2026) took longer than webfakes' 5 s start timeout to bring up the
+# server subprocess, which webfakes then killed, failing every test here. CI runs them.
 
 skip_if_not_installed("webfakes")
+skip_on_cran()
 
 `%||%` <- function(x, y) if (is.null(x)) y else x # nolint: object_name_linter.
 

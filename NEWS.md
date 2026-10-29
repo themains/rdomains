@@ -1,3 +1,10 @@
+# rdomains 0.6.1
+
+- Tests that start a local webfakes HTTP server are skipped on CRAN. CRAN's noLD check
+  host was too slow to start the server subprocess within webfakes' 5 s limit, which
+  failed 12 tests. The tests still run locally and in continuous integration. No
+  package code changed.
+
 # rdomains 0.6.0
 
 ## Result contracts and migration

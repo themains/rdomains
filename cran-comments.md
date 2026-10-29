@@ -1,7 +1,10 @@
-## Changes since the initial submission
+## Resubmission
 
-Quoted the proper name 'UT-Capitole' in DESCRIPTION to address the incoming
-spelling NOTE for "Capitole" reported on Windows and Debian. No R code changed.
+CRAN reported 12 test errors on the noLD additional check for 0.6.0. All 12 came from
+tests that start a local webfakes HTTP server: on that host the server subprocess did
+not start within webfakes' 5 s default timeout, so webfakes killed it and the tests
+errored. All other flavors passed. Those 12 tests now call skip_on_cran() and run only
+locally and in continuous integration. No package code changed.
 
 ## Test environments
 
