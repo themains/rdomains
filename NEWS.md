@@ -1,3 +1,47 @@
+# rdomains 0.7.0
+
+## LLM classification on ellmer
+
+- `openai_cat()` and `claude_cat()` now run on the ellmer package and a new
+  `llm_cat()` accepts any ellmer chat object, so Gemini, Ollama, Bedrock and other
+  providers work too. Replies are constrained to the category vocabulary through the
+  providers' structured-output APIs, transient failures (429, 503) are retried, and
+  repeated hosts are sent once.
+- New `mode` argument: `"sequential"` (default), `"parallel"` (`max_active`, `rpm`) and
+  `"batch"`, which uses the provider batch API at about half the price with a
+  `state_file` for interruption and resume. A batch that is not yet complete returns
+  rows with the new retryable `error_code` `"batch_pending"`.
+- Removed the `delay` argument; ellmer's rate limiting replaces the fixed sleep.
+  `provider` for Claude results is now `"anthropic"`. `http_status` is `NA` for
+  successful requests because ellmer does not expose the response. `details` gains
+  per-request `input_tokens`, `output_tokens` and ellmer's `cost` estimate.
+
+## Removed
+
+- `adult_name_probability()` and the bundled `glm_shalla` model. The 2017 keyword
+  scorer gave every plain `.com` without a keyword hit the intercept (p = 0.31) and
+  fired on substrings (`analytics.com` 0.82, `essex.ac.uk` 0.52). Use `ut1_cat()` for
+  dated adult-list membership or `pie_cat()` for content.
+
+## Lookups
+
+- Hosts are normalised in one place. List lookups match the exact host and then its
+  registrable domain from the Public Suffix List, so `cs.stanford.edu` matches a list
+  entry for `stanford.edu`; `details$matched_key` records which key applied. Steven
+  Black stays host-level.
+
+## Fixes
+
+- `html_text_content()` hands the body to xml2 as bytes. A tagless string was opened
+  as a file path or URL.
+- The private-address guard checks every resolved address, not curl's first.
+- VirusTotal input rejections are `invalid_domain` and not retryable.
+- Page-cache entries are bound to the robots, `allow_hosts` and `max_bytes` settings
+  they were fetched under, and are stored byte for byte. The cache namespace moved
+  to `v3`, so old entries are ignored. `cache_clear()` validates its argument.
+- Documentation: `fetch_report()$missing` lists failed rows; the result contract
+  describes the top-scoring `category` that `pie_cat()` returns.
+
 # rdomains 0.6.1
 
 - Tests that start a local webfakes HTTP server are skipped on CRAN. CRAN's noLD check
