@@ -102,20 +102,6 @@ test_that("build_categorization_prompt creates valid prompt", {
   expect_true(grepl("other", prompt))
 })
 
-test_that("apply_rate_limit sleeps appropriately", {
-  start_time <- Sys.time()
-  rdomains:::apply_rate_limit(1, 3, 0.1)
-  elapsed <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-  expect_true(elapsed >= 0.1)
-})
-
-test_that("apply_rate_limit doesn't sleep on last iteration", {
-  start_time <- Sys.time()
-  rdomains:::apply_rate_limit(3, 3, 1.0)
-  elapsed <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-  expect_true(elapsed < 0.5)
-})
-
 test_that("clean_domains strips ports, userinfo, trailing dots and query strings", {
   expect_equal(
     rdomains:::clean_domains(c(

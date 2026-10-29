@@ -1,12 +1,13 @@
 Package: rdomains
 Title: Get the Category of Content Hosted by a Domain
-Version: 0.6.1
+Version: 0.7.0
 Authors@R: person("Gaurav", "Sood", email = "gsood07@gmail.com", role = c("aut", "cre"))
 Description: Fetch website content and classify it through the Python 'piedomains'
     text model. Look up domains in 'UT-Capitole', Steven Black, university, archived
     'Shallalist' and 'DMOZ' lists, or use 'VirusTotal' <https://www.virustotal.com/>,
-    'OpenAI' and 'Anthropic' APIs. Report collection outcomes and source provenance.
-    Includes a historical domain-name classifier trained on 'Shallalist' data.
+    'OpenAI' and 'Anthropic' APIs or any model 'ellmer' supports, sequentially, in
+    parallel or through provider batch APIs. Report collection outcomes and source
+    provenance.
 URL: https://themains.github.io/rdomains/, https://github.com/themains/rdomains
 BugReports: https://github.com/themains/rdomains/issues
 Depends:
@@ -14,6 +15,7 @@ Depends:
 Imports:
     urltools,
     httr2,
+    ellmer (>= 0.5.0),
     xml2,
     curl,
     virustotal (>= 0.7.0),

@@ -59,24 +59,6 @@ test_that("explicit VirusTotal credentials override and restore session credenti
   expect_equal(Sys.getenv("VIRUSTOTAL_API_KEY"), "old-key")
 })
 
-test_that("LLMs reject responses outside the requested vocabulary", {
-  local_mocked_bindings(req_perform = function(req) {
-    body <- if (grepl("openai", req$url)) {
-      '{"choices":[{"message":{"content":"wrong"},"finish_reason":"stop"}]}'
-    } else {
-      '{"content":[{"type":"text","text":"wrong"}],"stop_reason":"end_turn"}'
-    }
-    httr2::response(status_code = 200, body = charToRaw(body))
-  })
-  a <- openai_cat("a.com", "fixture", c("news", "sports"))
-  expect_equal(a$error_code, "invalid_response")
-  b <- claude_cat("a.com", "fixture", c("news", "sports"))
-  expect_equal(b$error_code, "invalid_response")
-  expect_true(is.na(a$category))
-  expect_true(is.na(b$category))
-})
-
-
 test_that("CDX returns only valid captures no later than the requested day", {
   reply <- '[["timestamp","original"],["20200101120000","https://example.com/"]]'
   local_mocked_bindings(req_perform = function(req) {

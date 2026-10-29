@@ -12,13 +12,16 @@ model_revision, source_last_published, source_fetched_at and details.
 Classifiers preserve input order and return one row per input. \code{input_id} is the
 one-based position in that call; retain it when saving and resuming a batch.
 \code{status} is \code{ok}, \code{no_match} or \code{failed}. An absent lookup membership is not a
-failed request. \code{category} is populated only when there is one selected label;
-\code{labels} preserves every label in a tibble with \code{category}, \code{score} and \code{vendor}.
+failed request. \code{category} is the single selected label, or for a scored classifier
+the highest-scoring label with its score in \code{confidence}; \code{labels} preserves every
+label in a tibble with \code{category}, \code{score} and \code{vendor}.
 Unknown scores are \code{NA}, not probabilities inferred from list membership.
 }
 \details{
 \code{provider} identifies the classifier or list; \code{evidence_type} distinguishes page
 content, archived content, name inference and list membership. \code{details} retains
 source-specific records, including the collected page for piedomains results.
+List lookups match the normalised host first and then its registrable domain
+(public suffix plus one label); \code{details$matched_key} records which key matched.
 Model and source identifiers are reported where known; missing dates stay missing.
 }

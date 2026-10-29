@@ -50,6 +50,7 @@ RD_ERROR_CODES <- tribble(
   "authentication_error", "infer", FALSE, "Provider credentials were rejected.",
   "provider_error", "infer", FALSE, "Provider rejected the request.",
   "invalid_response", "infer", FALSE, "Provider returned an incomplete or invalid label.",
+  "batch_pending", "infer", TRUE, "Batch job submitted; results not yet available.",
   "unknown", NA, FALSE, "Unclassified failure."
 )
 

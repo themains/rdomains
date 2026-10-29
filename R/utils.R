@@ -130,25 +130,11 @@ get_api_key <- function(api_key = NULL, env_vars, service_name) {
 #' @keywords internal
 #' @noRd
 build_categorization_prompt <- function(domain, categories) {
-  glue(
+  as.character(glue(
     "Classify the website domain '{domain}' into exactly one of these categories: ",
     "{paste(categories, collapse = ', ')}. ",
-    "Consider what type of content this domain likely hosts. ",
-    "Respond with only the category name, no explanation or punctuation."
-  )
-}
-
-#' Apply Rate Limiting
-#'
-#' @param i current iteration
-#' @param total total iterations
-#' @param rate_limit delay in seconds
-#' @keywords internal
-#' @noRd
-apply_rate_limit <- function(i, total, rate_limit) {
-  if (i < total && rate_limit > 0) {
-    Sys.sleep(rate_limit)
-  }
+    "Consider what type of content this domain likely hosts."
+  ))
 }
 
 #' Validate a finite scalar within a closed interval
@@ -163,27 +149,22 @@ validate_number <- function(x, name, lower = 0, upper = Inf, integer = FALSE) {
   invisible(x)
 }
 
-#' Validate a requested category vocabulary and request controls
+#' Validate a requested category vocabulary
 #' @keywords internal
 #' @noRd
-validate_llm_options <- function(categories, model, delay) {
+validate_categories <- function(categories) {
   assert_character(categories, min.len = 1, any.missing = FALSE, min.chars = 1)
   if (any(!nzchar(trimws(categories))) || anyDuplicated(categories)) {
     cli_abort("{.arg categories} must contain distinct nonblank names.")
   }
-  assert_character(model, len = 1, any.missing = FALSE, min.chars = 1)
-  if (!nzchar(trimws(model))) cli_abort("{.arg model} must not be blank.")
-  validate_number(delay, "delay")
+  invisible(categories)
 }
 
-#' Reject a provider response that is not a requested category
+#' Validate a model name
 #' @keywords internal
 #' @noRd
-checked_category <- function(value, categories) {
-  if (!is.character(value) || length(value) != 1L || is.na(value) ||
-        !trimws(value) %in% categories) {
-    cli_warn("The provider did not return a category in the requested vocabulary.")
-    return(NA_character_)
-  }
-  trimws(value)
+validate_model <- function(model) {
+  assert_character(model, len = 1, any.missing = FALSE, min.chars = 1)
+  if (!nzchar(trimws(model))) cli_abort("{.arg model} must not be blank.")
+  invisible(model)
 }

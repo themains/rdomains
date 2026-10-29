@@ -9,33 +9,58 @@ openai_cat(
   api_key = NULL,
   categories = NULL,
   model = "gpt-6-luna",
-  delay = 0.5
+  mode = c("sequential", "parallel", "batch"),
+  state_file = NULL,
+  max_active = 10,
+  rpm = 500,
+  wait = TRUE,
+  base_url = NULL
 )
 }
 \arguments{
-\item{domains}{vector of domain names}
+\item{domains}{character vector of domain names or URLs}
 
-\item{api_key}{OpenAI API key. If not provided, looks for OPENAI_API_KEY environment variable}
+\item{api_key}{OpenAI API key. If not provided, looks for the \code{OPENAI_API_KEY}
+environment variable}
 
-\item{categories}{vector of categories to classify into. If NULL, uses default web categories}
+\item{categories}{vector of categories to classify into. If NULL, uses
+\code{\link[=web_categories]{web_categories()}}}
 
 \item{model}{OpenAI model to use (default: "gpt-6-luna" for cost efficiency)}
 
-\item{delay}{delay in seconds between API calls (default: 0.5)}
+\item{mode}{one of \code{"sequential"}, \code{"parallel"} or \code{"batch"}}
+
+\item{state_file}{path of a \code{.json} file that records the batch job; required when
+\code{mode = "batch"}, not allowed otherwise}
+
+\item{max_active}{maximum simultaneous requests in parallel mode}
+
+\item{rpm}{requests per minute allowed in parallel mode}
+
+\item{wait}{batch mode only: wait for the job to complete (\code{TRUE}) or return at once.
+Rows whose results are not yet available carry \code{error_code = "batch_pending"} and
+are retryable; call again with the same \code{state_file} to collect them.}
+
+\item{base_url}{API endpoint; \code{NULL} uses OpenAI's. Set it for an OpenAI-compatible
+gateway.}
 }
 \value{
-A tibble following \link{classification_results}, including provider failures and model
-identity.
+A tibble following \link{classification_results}, including provider failures and
+model identity.
 }
 \description{
-Infers a category from the domain name using OpenAI's chat completion API.
+Infers a category from the domain name with an OpenAI model through \code{\link[=llm_cat]{llm_cat()}}.
 No page content is fetched. The answer reflects the provider's knowledge and the
 domain name, not a verified observation of the current website.
 }
 \examples{
 \dontrun{
 openai_cat("google.com")
-openai_cat(c("google.com", "facebook.com"))
+openai_cat(c("google.com", "facebook.com"), mode = "parallel")
 openai_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
+openai_cat(domains, mode = "batch", state_file = "openai-batch.json")
 }
+}
+\seealso{
+\code{\link[=llm_cat]{llm_cat()}} for any ellmer provider and the parallel and batch modes.
 }

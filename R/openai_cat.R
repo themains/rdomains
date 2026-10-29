@@ -1,55 +1,44 @@
-#' Classify Domain Using OpenAI (Internal Helper)
-#'
-#' @param domain single domain name
-#' @param categories allowed categories
-#' @param model OpenAI model name
-#' @param api_key API key
-#' @keywords internal
-#' @noRd
-classify_domain_openai <- function(domain, categories, model, api_key) {
-  req <- request("https://api.openai.com/v1/chat/completions") |>
-    req_headers_redacted(Authorization = paste("Bearer", api_key)) |>
-    req_body_json(list(
-      model = model, messages = list(list(
-        role = "user",
-        content = build_categorization_prompt(domain, categories)
-      )),
-      max_completion_tokens = 256, reasoning_effort = "none"
-    ), auto_unbox = TRUE)
-  llm_response(req, categories, function(body) {
-    choice <- body$choices[[1]]
-    if (!identical(choice$finish_reason, "stop")) {
-      return(NA_character_)
-    }
-    choice$message$content
-  }, model)
-}
-
 #' Get Category from OpenAI
 #'
-#' Infers a category from the domain name using OpenAI's chat completion API.
+#' Infers a category from the domain name with an OpenAI model through [llm_cat()].
 #' No page content is fetched. The answer reflects the provider's knowledge and the
 #' domain name, not a verified observation of the current website.
 #'
-#' @param domains vector of domain names
-#' @param api_key OpenAI API key. If not provided, looks for OPENAI_API_KEY environment variable
-#' @param categories vector of categories to classify into. If NULL, uses default web categories
+#' @inheritParams llm_cat
+#' @param api_key OpenAI API key. If not provided, looks for the `OPENAI_API_KEY`
+#'   environment variable
 #' @param model OpenAI model to use (default: "gpt-6-luna" for cost efficiency)
-#' @param delay delay in seconds between API calls (default: 0.5)
+#' @param base_url API endpoint; `NULL` uses OpenAI's. Set it for an OpenAI-compatible
+#'   gateway.
 #'
-#' @return A tibble following [classification_results], including provider failures and model
-#' identity.
+#' @return A tibble following [classification_results], including provider failures and
+#'   model identity.
 #'
 #' @export
+#' @seealso [llm_cat()] for any ellmer provider and the parallel and batch modes.
 #' @examples \dontrun{
 #' openai_cat("google.com")
-#' openai_cat(c("google.com", "facebook.com"))
+#' openai_cat(c("google.com", "facebook.com"), mode = "parallel")
 #' openai_cat("google.com", categories = c("search", "social", "ecommerce", "news", "other"))
+#' openai_cat(domains, mode = "batch", state_file = "openai-batch.json")
 #' }
-openai_cat <- function(domains, api_key = NULL, categories = NULL,
-                       model = "gpt-6-luna", delay = 0.5) {
-  llm_cat(
-    domains, api_key, categories, model, delay, "openai",
-    "OPENAI_API_KEY", classify_domain_openai
+openai_cat <- function(domains, api_key = NULL, categories = NULL, model = "gpt-6-luna",
+                       mode = c("sequential", "parallel", "batch"), state_file = NULL,
+                       max_active = 10, rpm = 500, wait = TRUE, base_url = NULL) {
+  validate_domains(domains)
+  validate_model(model)
+  if (!length(domains)) {
+    return(classification_result(domains, "openai", "domain_name"))
+  }
+  key <- get_api_key(api_key, "OPENAI_API_KEY", "OpenAI")
+  chat <- ellmer::chat_openai(
+    model = model, credentials = function() key,
+    base_url = base_url %||% "https://api.openai.com/v1",
+    # Reasoning adds cost and nothing to a one-word label.
+    params = ellmer::params(max_tokens = 64, reasoning_effort = "none"),
+    echo = "none"
+  )
+  llm_cat(domains, chat, categories,
+    mode = mode, state_file = state_file, max_active = max_active, rpm = rpm, wait = wait
   )
 }
