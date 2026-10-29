@@ -97,11 +97,10 @@ answer). `evidence/llm-eval-2026-10-29/batch-40.csv`. Batch pricing is half of l
 
 ## Independent review
 
-gpt-6-astra (codex exec, fresh context, isolated worktrees). Round 1 on `c6117a2`:
-[evidence/0.7.0-independent-review-round1.md](evidence/0.7.0-independent-review-round1.md).
-Round 2 on `6251d20`:
-[evidence/0.7.0-independent-review-round2.md](evidence/0.7.0-independent-review-round2.md).
-Counts reproduced by the reviewer matched the local runs (631 then 637 passed, 0 failed;
+gpt-6-astra (codex exec, fresh context, isolated worktrees). Round 1 on `c6117a2`
+(codex session `01a18733-174c-7dd0-adab-6c5822ec9ec8`), round 2 on `6251d20` (session
+`01a18767-f317-70e0-ace0-57b095ffb509`). The reviewer's reports are not kept in the repo;
+what they changed is recorded below. Counts reproduced by the reviewer matched the local runs (631 then 637 passed, 0 failed;
 CRAN-mode 502 passed, 0 failed; the reviewer's single NOTE is the worktree's `.git`
 file entering the bundle, absent from the real checkout).
 
