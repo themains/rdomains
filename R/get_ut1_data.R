@@ -63,9 +63,15 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
     "liste_blanche", "liste_bu", "exceptions_liste_bu",
     "update", "reaffected", "special", "examen_pix"
   )
+  # Seven lists are symlink aliases of another (porn -> adult, ads -> publicite, ...).
+  # Following them writes every domain twice under two names, and a domain with two
+  # distinct labels has no single `category`. Keep the link target only. Windows does
+  # not restore directory symlinks, so the alias directories do not exist there.
   categories <- basename(dirname(files))
-  keep <- !categories %in% CONTENTLESS
-  dropped_lists <- categories[!keep]
+  alias <- nzchar(Sys.readlink(dirname(files)))
+  keep <- !categories %in% CONTENTLESS & !alias
+  dropped_lists <- categories[!keep & !alias]
+  aliases <- categories[alias]
   files <- files[keep]
 
   usages <- vapply(files, function(f) {
@@ -106,6 +112,9 @@ get_ut1_data <- function(outdir = "./", overwrite = FALSE) {
         "Skipped {length(dropped_lists)} list{?s} with no content meaning:",
         "{.val {dropped_lists}}"
       ))
+    },
+    if (length(aliases)) {
+      c("i" = "Skipped {length(aliases)} alias{?es} of another list: {.val {aliases}}")
     },
     if (multi > 0) {
       c("i" = "{multi} domain{?s} have additional category memberships; all are retained")
