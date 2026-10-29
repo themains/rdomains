@@ -65,10 +65,17 @@ out-of-vocabulary → `invalid_response`; 401 → `authentication_error`; 500 �
 Live, after (gpt-6-luna, authorized cap $0.25): 10 sequential 10/10 in 9.3 s
 (1,166 in / 130 out tokens); 30 parallel (`max_active = 5`) 30/30 in 8.5 s. 40/40 overall;
 one changed answer vs baseline, `bloomberg.com` news → finance (both acceptable).
-Total tokens 4,671 in / 531 out ≈ $0.0007 at list price; baseline ≈ $0.0003. A real
-batch job for the 40 domains was submitted with `wait = FALSE` (state file retained in the
-session scratchpad) and reported `batch_pending` for every row; it had not completed when
-this record was written. `evidence/llm-eval-2026-10-29/after-40.csv`.
+Total tokens 4,671 in / 531 out ≈ $0.0007 at list price; baseline ≈ $0.0003.
+`evidence/llm-eval-2026-10-29/after-40.csv`.
+
+Live, batch (OpenAI Batch API via `openai_cat(mode = "batch", wait = FALSE)`): job
+`batch_6ae31eb5fa1881908f1880780e51d43e` on `/v1/responses`, 40 requests, submitted
+2026-10-29 and completed 125 minutes later (provider `request_counts`: 40 completed,
+0 failed). The first call returned `batch_pending` for every row; a later call with the
+same `state_file` returned 40 `ok` rows. 40/40 correct against the expected set; one
+answer differs from the sequential run, `bloomberg.com` finance → news (the baseline's
+answer). `evidence/llm-eval-2026-10-29/batch-40.csv`. Batch pricing is half of list, so
+≈ $0.0003.
 
 ## Checks on the candidate
 
@@ -120,5 +127,7 @@ Findings and dispositions:
 
 ## CI
 
-PR #21 on `edb5410`: all jobs pass after excluding curlie.org from link checks (502 on
-two separate runs the same day) and the provider base URLs (404 by design).
+PR #21 on `871976a`: all jobs pass. Along the way: curlie.org excluded from link checks
+(502 on two separate runs the same day) and the provider base URLs (404 by design);
+`cache_clear("/")` was not refused on Windows because `normalizePath("/")` yields `D:\`,
+fixed by comparing `dirname(resolved)` to `resolved` with `winslash = "/"`.
