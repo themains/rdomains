@@ -142,6 +142,21 @@ test_that("VirusTotal retries transient conditions and retains available HTTP st
   expect_identical(result$http_status, c(NA_integer_, NA_integer_, 404L, 429L, 503L))
 })
 
+test_that("VirusTotal input rejections are not retryable", {
+  # The virustotal package raises virustotal_validation_error with no status_code for
+  # a malformed domain. Retrying the same input cannot succeed.
+  local_mocked_bindings(domain_report = function(...) {
+    stop(structure(list(message = "Invalid domain format"),
+      class = c("virustotal_validation_error", "virustotal_error", "error", "condition")
+    ))
+  })
+  result <- virustotal_cat("bad_domain.example", api_key = "fixture")
+  expect_identical(result$status, "failed")
+  expect_identical(result$error_code, "invalid_domain")
+  expect_false(result$retryable)
+  expect_identical(result$http_status, NA_integer_)
+})
+
 test_that("malformed vendor labels fail one row without aborting the batch", {
   local_mocked_bindings(domain_report = function(domain) {
     list(data = list(attributes = list(categories = if (domain == "bad.example") {
