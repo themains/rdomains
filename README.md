@@ -141,13 +141,11 @@ Page caching lasts for the session by default. Pass
 retrieval time. Lookup downloads for Steven Black and universities are cached for
 the session; pass `use_file` to reproduce a run from a saved source.
 
-## Historical name and URL heuristics
+## URL heuristics
 
-`adult_name_probability()` returns a probability from the unchanged 2017
-name/suffix model. Its probabilities have not been validated on current domains.
 `news_url_signals()` returns independent `soft_news` and `hard_news` keyword flags;
-it is not a general news detector. These measurements are separate from the
-classification-result contract.
+it is not a general news detector. It is separate from the classification-result
+contract.
 
 ## Development
 

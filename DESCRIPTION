@@ -12,11 +12,7 @@ BugReports: https://github.com/themains/rdomains/issues
 Depends:
     R (>= 4.5.0)
 Imports:
-    Matrix,
     urltools,
-    glmnet,
-    stats,
-    methods,
     httr2,
     xml2,
     curl,
