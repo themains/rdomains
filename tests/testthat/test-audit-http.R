@@ -1,5 +1,6 @@
 test_that("robots restrictions apply to the requested path and redirect destination", {
   skip_if_not_installed("webfakes")
+  skip_on_cran()
   app <- webfakes::new_app()
   app$locals$hits <- 0L
   app$get("/robots.txt", function(req, res) {
@@ -31,6 +32,7 @@ test_that("robots restrictions apply to the requested path and redirect destinat
 
 test_that("robots redirects cannot bypass address guards", {
   skip_if_not_installed("webfakes")
+  skip_on_cran()
   app <- webfakes::new_app()
   app$get("/robots.txt", function(req, res) {
     res$set_status(302L)$set_header("Location", "http://10.0.0.1/robots.txt")$send("")
@@ -82,6 +84,7 @@ test_that("a robots redirect never sends an HTTP request to a rejected destinati
 
 test_that("transient failures are retried for content and robots requests", {
   skip_if_not_installed("webfakes")
+  skip_on_cran()
   for (retry_path in c("robots", "page")) {
     app <- webfakes::new_app()
     app$locals$retry_path <- retry_path
@@ -125,6 +128,7 @@ test_that("transient failures are retried for content and robots requests", {
 
 test_that("an empty redirect location does not create a self-loop", {
   skip_if_not_installed("webfakes")
+  skip_on_cran()
   app <- webfakes::new_app()
   app$locals$hits <- 0L
   app$get("/empty-location", function(req, res) {
