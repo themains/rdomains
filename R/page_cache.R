@@ -37,20 +37,35 @@ default_cache_dir <- function() {
   file.path(tempdir(), "rdomains-cache")
 }
 
-#' Cache key for a URL
+#' Cache key for a URL fetched under given settings
 #'
-#' Hostnames are case-insensitive; paths and query values retain their case.
+#' Hostnames are case-insensitive; paths and query values retain their case. The
+#' settings that gate a fetch (robots, exempted hosts, byte cap) are part of the key:
+#' a hit skips every request-time guard, so it must have been stored under the same
+#' guards.
 #'
 #' @param url the requested URL
+#' @param settings named list of guard settings, or NULL
 #' @return a hex key
 #' @keywords internal
 #' @noRd
-cache_key <- function(url) {
+cache_key <- function(url, settings = NULL) {
   parsed <- url_parse(trimws(url))
   parsed$scheme <- tolower(parsed$scheme)
   parsed$hostname <- tolower(parsed$hostname)
   parsed$fragment <- NULL
-  hash(httr2::url_build(parsed))
+  hash(list(url = httr2::url_build(parsed), settings = settings))
+}
+
+#' The fetch settings a cache entry is bound to
+#' @keywords internal
+#' @noRd
+cache_settings <- function(obey_robots, allow_hosts, max_bytes) {
+  list(
+    obey_robots = isTRUE(obey_robots),
+    allow_hosts = sort(unique(tolower(allow_hosts))),
+    max_bytes = as.numeric(max_bytes)
+  )
 }
 
 #' Paths for one cache entry, sharded two levels deep
@@ -65,8 +80,8 @@ cache_key <- function(url) {
 cache_paths <- function(dir, key) {
   shard <- substr(key, 1, 2)
   list(
-    html = file.path(dir, "v2", "html", shard, paste0(key, ".html.gz")),
-    meta = file.path(dir, "v2", "meta", shard, paste0(key, ".json"))
+    html = file.path(dir, "v3", "html", shard, paste0(key, ".html.gz")),
+    meta = file.path(dir, "v3", "meta", shard, paste0(key, ".json"))
   )
 }
 
@@ -75,11 +90,12 @@ cache_paths <- function(dir, key) {
 #' @param dir cache root
 #' @param url requested URL
 #' @param ttl seconds an entry stays fresh
+#' @param settings guard settings the entry must have been stored under
 #' @return list(meta, html) or NULL
 #' @keywords internal
 #' @noRd
-cache_get <- function(dir, url, ttl) {
-  key <- tryCatch(cache_key(url), error = function(e) NULL)
+cache_get <- function(dir, url, ttl, settings = NULL) {
+  key <- tryCatch(cache_key(url, settings), error = function(e) NULL)
   if (is.null(key)) {
     return(NULL)
   }
@@ -115,14 +131,9 @@ cache_get <- function(dir, url, ttl) {
   if (is.na(fetched) || difftime(Sys.time(), fetched, units = "secs") > ttl) {
     return(NULL)
   }
-  html <- tryCatch(
-    {
-      con <- gzfile(paths$html, "rt")
-      on.exit(close(con), add = TRUE)
-      paste(readLines(con, warn = FALSE), collapse = "\n")
-    },
-    error = function(e) NULL
-  )
+  # Bytes, not lines: readLines() drops the final newline and normalises CRLF, so a
+  # replayed page would differ from the live one.
+  html <- tryCatch(read_gz_text(paths$html), error = function(e) NULL)
   if (is.null(html)) {
     return(NULL)
   }
@@ -136,19 +147,37 @@ cache_get <- function(dir, url, ttl) {
 #' @param html response body
 #' @param meta named list of provenance
 #' @param max_size prune the cache above this many bytes
+#' @param settings guard settings the entry is bound to
 #' @keywords internal
 #' @noRd
-cache_put <- function(dir, url, html, meta, max_size = 1024^3) {
-  paths <- cache_paths(dir, cache_key(url))
+cache_put <- function(dir, url, html, meta, max_size = 1024^3, settings = NULL) {
+  paths <- cache_paths(dir, cache_key(url, settings))
   dir.create(dirname(paths$html), recursive = TRUE, showWarnings = FALSE)
   dir.create(dirname(paths$meta), recursive = TRUE, showWarnings = FALSE)
 
-  con <- gzfile(paths$html, "wt")
-  tryCatch(writeLines(html, con), finally = close(con))
+  con <- gzfile(paths$html, "wb")
+  tryCatch(writeBin(charToRaw(enc2utf8(html)), con), finally = close(con))
 
   writeLines(toJSON(meta, auto_unbox = TRUE, null = "null"), paths$meta)
   cache_prune(dir, max_size)
   invisible(TRUE)
+}
+
+#' Read a gzip file back as the exact UTF-8 string that was written
+#' @keywords internal
+#' @noRd
+read_gz_text <- function(path) {
+  con <- gzfile(path, "rb")
+  on.exit(close(con), add = TRUE)
+  chunks <- list()
+  repeat {
+    chunk <- readBin(con, "raw", n = 1024^2)
+    if (!length(chunk)) break
+    chunks[[length(chunks) + 1L]] <- chunk
+  }
+  text <- rawToChar(unlist(chunks))
+  Encoding(text) <- "UTF-8"
+  text
 }
 
 #' Keep the cache under a size budget, evicting oldest first
@@ -159,7 +188,7 @@ cache_put <- function(dir, url, html, meta, max_size = 1024^3) {
 #' @keywords internal
 #' @noRd
 cache_prune <- function(dir, max_size) {
-  root <- file.path(dir, "v2", "html")
+  root <- file.path(dir, "v3", "html")
   if (!dir.exists(root)) {
     return(invisible(0L))
   }
@@ -207,7 +236,16 @@ cache_prune <- function(dir, max_size) {
 #' }
 cache_clear <- function(dir = NULL) {
   dir <- dir %||% default_cache_dir()
-  root <- file.path(dir, "v2")
+  if (!is.character(dir) || length(dir) != 1L || is.na(dir) || !nzchar(trimws(dir))) {
+    cli_abort("{.arg dir} must be a single non-empty path.", class = "rdomains_invalid_input")
+  }
+  resolved <- normalizePath(path.expand(dir), mustWork = FALSE)
+  if (resolved %in% c("/", normalizePath("~", mustWork = FALSE))) {
+    cli_abort("{.arg dir} must be a cache directory, not {.path {resolved}}.",
+      class = "rdomains_invalid_input"
+    )
+  }
+  root <- file.path(dir, "v3")
   n <- if (dir.exists(file.path(root, "html"))) {
     length(list.files(file.path(root, "html"), recursive = TRUE))
   } else {

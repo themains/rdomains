@@ -92,3 +92,40 @@ test_that("valid JSON with an invalid cache timestamp is a cache miss", {
     expect_null(cache_get(dir, url, ttl = 86400))
   }
 })
+
+test_that("a hit requires the same fetch settings it was stored under", {
+  # A page cached with robots ignored, a wider byte cap or an exempted host must not be
+  # replayed under stricter settings: the hit would skip every request-time guard.
+  dir <- withr::local_tempdir()
+  url <- "https://a.com/page"
+  loose <- list(obey_robots = FALSE, allow_hosts = character(), max_bytes = 1e7)
+  strict <- list(obey_robots = TRUE, allow_hosts = character(), max_bytes = 1e7)
+  meta <- list(
+    status = "ok", stage = "process", http_status = 200L, final_url = url,
+    content_bytes = 14L, fetched_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+  )
+  cache_put(dir, url, "<html>x</html>", meta = meta, settings = loose)
+  expect_false(is.null(cache_get(dir, url, ttl = 3600, settings = loose)))
+  expect_null(cache_get(dir, url, ttl = 3600, settings = strict))
+})
+
+test_that("cached HTML round-trips byte for byte", {
+  dir <- withr::local_tempdir()
+  html <- "<html>\r\n<body>café — line</body>\r\n</html>\n"
+  meta <- list(
+    status = "ok", stage = "process", http_status = 200L, final_url = "https://a.com",
+    content_bytes = nchar(html, type = "bytes"),
+    fetched_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+  )
+  cache_put(dir, "https://a.com", html, meta = meta)
+  hit <- cache_get(dir, "https://a.com", ttl = 3600)
+  expect_identical(hit$html, html)
+  expect_identical(nchar(hit$html, type = "bytes"), meta$content_bytes)
+})
+
+test_that("cache_clear refuses a directory it should never touch", {
+  expect_error(cache_clear(""), class = "rdomains_invalid_input")
+  expect_error(cache_clear(c("a", "b")), class = "rdomains_invalid_input")
+  expect_error(cache_clear("~"), class = "rdomains_invalid_input")
+  expect_error(cache_clear("/"), class = "rdomains_invalid_input")
+})
