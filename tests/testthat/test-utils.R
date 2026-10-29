@@ -115,3 +115,24 @@ test_that("apply_rate_limit doesn't sleep on last iteration", {
   elapsed <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   expect_true(elapsed < 0.5)
 })
+
+test_that("clean_domains strips ports, userinfo, trailing dots and query strings", {
+  expect_equal(
+    rdomains:::clean_domains(c(
+      "HTTPS://User@WWW.Example.COM:8443/a?b=c#d", "example.com.", "www.example.com:80",
+      "sub.example.co.uk/path", "not a domain"
+    )),
+    c("example.com", "example.com", "example.com", "sub.example.co.uk", "not a domain")
+  )
+})
+
+test_that("registrable_domain uses the public suffix list and falls back to the host", {
+  expect_equal(
+    rdomains:::registrable_domain(c(
+      "cs.stanford.edu", "stanford.edu", "news.bbc.co.uk", "foo.github.io",
+      "a.b.c.ac.in", "localhost", "192.168.0.1", "not a domain"
+    )),
+    c("stanford.edu", "stanford.edu", "bbc.co.uk", "foo.github.io",
+      "c.ac.in", "localhost", "192.168.0.1", "not a domain")
+  )
+})
