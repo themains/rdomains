@@ -24,8 +24,16 @@ fake_provider <- function(provider = c("openai", "anthropic"), reply = list(cate
         auto_unbox = TRUE
       ))
     }
-    prompt <- if (provider == "openai") req$json$input[[1]]$content[[1]]$text else req$json$messages[[1]]$content
-    text <- if (is.function(reply)) reply(prompt) else as.character(jsonlite::toJSON(reply, auto_unbox = TRUE))
+    prompt <- if (provider == "openai") {
+      req$json$input[[1]]$content[[1]]$text
+    } else {
+      req$json$messages[[1]]$content
+    }
+    text <- if (is.function(reply)) {
+      reply(prompt)
+    } else {
+      as.character(jsonlite::toJSON(reply, auto_unbox = TRUE))
+    }
     body <- if (provider == "openai") {
       list(
         status = "completed", model = "gpt-6-luna",
