@@ -87,9 +87,10 @@ any order collects the same job and a different vocabulary or model never does.
 Providers without a batch API are refused with a pointer to `mode = "parallel"`
 (batchlane's rule: no lane, no emulation). Live check of the default path with no
 `state_file`: three domains submitted in 2.4 s, state file created under the cache dir,
-all rows `batch_pending` (OpenAI job `batch_6ae378d171a4819099c8ffaf14d354b5`).
-Collection by the same call in a different host order is recorded below once the job
-completes. Fake-server tests name a non-batch mode explicitly; two tests cover the
+all rows `batch_pending` (OpenAI job `batch_6ae378d171a4819099c8ffaf14d354b5`). The job
+completed 303 minutes after submission; the same call with the hosts in a different
+order then collected it with no new submission: github.com technology, nytimes.com
+news, amazon.com shopping, all `ok`. Fake-server tests name a non-batch mode explicitly; two tests cover the
 derived path and the refusal.
 
 ## Checks on the candidate
