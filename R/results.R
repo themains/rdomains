@@ -3,8 +3,9 @@
 #' Classifiers preserve input order and return one row per input. `input_id` is the
 #' one-based position in that call; retain it when saving and resuming a batch.
 #' `status` is `ok`, `no_match` or `failed`. An absent lookup membership is not a
-#' failed request. `category` is populated only when there is one selected label;
-#' `labels` preserves every label in a tibble with `category`, `score` and `vendor`.
+#' failed request. `category` is the single selected label, or for a scored classifier
+#' the highest-scoring label with its score in `confidence`; `labels` preserves every
+#' label in a tibble with `category`, `score` and `vendor`.
 #' Unknown scores are `NA`, not probabilities inferred from list membership.
 #'
 #' `provider` identifies the classifier or list; `evidence_type` distinguishes page
