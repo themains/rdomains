@@ -267,7 +267,7 @@ test_that("archive_date fetches a domain as it was, not as it is", {
   )
 
   expect_equal(res$status, "ok")
-  # The realised capture, not the date asked for -- they are rarely identical.
+  # The realized capture, not the date asked for -- they are rarely identical.
   expect_match(res$snapshot_timestamp, "^2020")
   expect_gt(res$n_tokens, 30)
 })

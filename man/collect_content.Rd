@@ -34,7 +34,7 @@ piedomains' 10 MB. A smaller cap looks prudent and is not: cnn.com's homepage
 alone is roughly 6 MB, so a 2 MB limit rejects major news sites as
 \code{content_too_large} while they return HTTP 200.}
 
-\item{obey_robots}{Whether to fetch and honour robots.txt. Turning this off is
+\item{obey_robots}{Whether to fetch and honor robots.txt. Turning this off is
 discouraged and is your responsibility, not the package's.}
 
 \item{max_crawl_delay}{Skip a host that asks for a longer delay than this rather than
@@ -64,7 +64,7 @@ hidden. Dead domains and explicitly exempted hosts are not recovered this way.}
 \item{archive_date}{Fetch each domain as it was on this date (\code{"YYYYMMDD"}) from the
 Internet Archive instead of fetching it live. This is how you ask what a domain
 \emph{used to be} -- and, set against a live run, how you measure whether a label has gone
-stale. Rows carry \code{source = "archive"} and the realised \code{snapshot_timestamp}, which
+stale. Rows carry \code{source = "archive"} and the realized \code{snapshot_timestamp}, which
 is the latest capture on or before the requested day.}
 
 \item{user_agent}{Override the identifying user-agent.}
@@ -96,6 +96,6 @@ again <- collect_content(res$input[res$retryable])
 }
 }
 \seealso{
-\code{\link[=fetch_report]{fetch_report()}} to summarise the run, \code{\link[=page_signals]{page_signals()}} for what the page
+\code{\link[=fetch_report]{fetch_report()}} to summarize the run, \code{\link[=page_signals]{page_signals()}} for what the page
 states are, \code{\link[=source_vintage]{source_vintage()}} for how a live fetch compares with the static lists.
 }

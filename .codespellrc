@@ -1,0 +1,4 @@
+[codespell]
+builtin = clear,rare,en-GB_to_en-US
+skip = *.pdf,*.png,*.jpg,*.jpeg,*.gif,*.csv,*.tsv,*.json,*.geojson,*.graphml,*.ipynb,*.html,*.svg,*.bib,*.bbl,*.lock,*.parquet,*.rda,*.rds,*.RData,*.dta,*.xlsx,*.xml,*.min.js,*.map,*.log,*.aux,*.txt,./data-raw/shallalist/accomplist/ads,./data-raw/shallalist/accomplist/black,./data-raw/shallalist/accomplist/finance,./data-raw/shallalist/accomplist/gambling,./data-raw/shallalist/accomplist/porn,./data-raw/shallalist/accomplist/spyware,./data-raw/shallalist/accomplist/tracker,./data-raw/shallalist/accomplist/violence
+ignore-words-list = doubleclick,honour,honoured,ist,unparseable

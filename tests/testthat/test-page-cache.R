@@ -1,5 +1,5 @@
 test_that("a cache hit replays stored provenance rather than inventing it", {
-  # The defect this cache exists to avoid: piedomains' collector synthesises a fresh
+  # The defect this cache exists to avoid: piedomains' collector synthesizes a fresh
   # timestamp and fetch_success = TRUE on a hit, reporting a fetch that never happened at
   # a time it did not happen. A replayed row must say when it is really from.
   dir <- withr::local_tempdir()

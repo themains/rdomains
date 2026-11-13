@@ -28,7 +28,7 @@
 
 ## Lookups
 
-- Hosts are normalised in one place. List lookups match the exact host and then its
+- Hosts are normalized in one place. List lookups match the exact host and then its
   registrable domain from the Public Suffix List, so `cs.stanford.edu` matches a list
   entry for `stanford.edu`; `details$matched_key` records which key applied. Steven
   Black stays host-level.
@@ -126,13 +126,13 @@ of current calibration remain documented. No new model-quality claim is made.
 
 - `collect_content()` now caches fetched pages. A cache hit **replays the stored
   provenance** -- the time the page was really fetched, the URL it really resolved
-  to -- rather than synthesising a fresh timestamp, so a cached row still says when
+  to -- rather than synthesizing a fresh timestamp, so a cached row still says when
   it is from. Entries expire (`cache_ttl`), the cache is pruned to a size budget
   (`cache_max_size`), and a corrupt entry is a miss rather than an error.
   Nothing persists past the session unless you pass `rdomains_cache_dir()`.
 - New `rdomains_cache_dir()` and `cache_clear()`.
 - `collect_content()` and `pie_cat()` take an `archive_date`, fetching each domain as it
-  was on or before that date. Rows carry the *realised*
+  was on or before that date. Rows carry the *realized*
   `snapshot_timestamp`, which is the capture found and rarely the date asked for.
 - `collect_content()` recovers pages from the Internet Archive when a host serves an
   anti-bot interstitial -- detection plus a fallback rather than an evasion arms race.
@@ -145,7 +145,7 @@ of current calibration remain documented. No new model-quality claim is made.
   ago. It reaches the model through the Python package via `reticulate`, so the four
   fragile pieces of the model input -- the domain prefix, temperature scaling, label
   projection and the text cleaner -- stay on the Python side rather than becoming a
-  second place they can drift. `parked` and `unavailable` pages are labelled from the
+  second place they can drift. `parked` and `unavailable` pages are labeled from the
   page itself and cost no model call.
 - `collect_content()`'s `max_bytes` default is now 10 MB, matching piedomains. At 2 MB
   it rejected cnn.com -- roughly 6 MB of homepage -- as `content_too_large` while the
@@ -155,7 +155,7 @@ of current calibration remain documented. No new model-quality claim is made.
   January 2022, this one is updated continuously. Categories are UT1's own and are
   reported verbatim, with `ut1_usage` saying whether UT1 maintains the list for blocking
   or for allowing -- both describe content.
-- `collect_content()` honours an explicit `http://` or `https://` in the input, keeping
+- `collect_content()` honors an explicit `http://` or `https://` in the input, keeping
   its port and path. Forcing `https://` meant http-only hosts were unreachable.
 - An oversized response is now reported as `content_too_large` rather than
   `connection_error`. curl aborts the transfer, so the limit surfaced as a request
@@ -195,7 +195,7 @@ It returns one row per requested domain, never dropped, each carrying `status`,
 `stage`, `error_code` and `retryable` -- so a transient failure is
 distinguishable from a permanent one and only the right rows get retried.
 `fetch_error_codes()` documents the closed set of reasons; `fetch_report()`
-summarises a run.
+summarizes a run.
 
 Supporting functions, all usable on their own if you already hold HTML:
 
