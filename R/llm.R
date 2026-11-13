@@ -193,7 +193,7 @@ llm_run_prompts <- function(prompts, run) {
   bind_rows(llm_run_prompts(prompts[half], run), llm_run_prompts(prompts[-half], run))
 }
 
-#' Normalise ellmer's structured tibble so halves can be bound
+#' Normalize ellmer's structured tibble so halves can be bound
 #' @keywords internal
 #' @noRd
 llm_rows <- function(out) {

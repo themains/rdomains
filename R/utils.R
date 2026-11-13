@@ -1,7 +1,7 @@
 #' Clean and Normalize Domain Names
 #'
 #' The one host normaliser: lowercase, drop scheme, userinfo, port, path, query,
-#' fragment, trailing dots and a leading `www.`. Vectorised with regular expressions
+#' fragment, trailing dots and a leading `www.`. Vectorized with regular expressions
 #' because lookup tables run to millions of keys. Input that is not URL-shaped is
 #' returned lowercased and trimmed so it can still be echoed back to the caller.
 #'
@@ -25,7 +25,7 @@ clean_domains <- function(domains) {
 #' gives `bbc.co.uk` and `foo.github.io` stays `foo.github.io`. Hosts without a known
 #' suffix (IP addresses, `localhost`, junk) are returned unchanged.
 #'
-#' @param hosts character vector of normalised hostnames
+#' @param hosts character vector of normalized hostnames
 #' @return character vector, same length
 #' @keywords internal
 #' @noRd

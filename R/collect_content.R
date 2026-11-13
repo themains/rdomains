@@ -59,7 +59,7 @@ is_global_ip <- function(ip) {
 #' Build the URL to request for one input
 #'
 #' A bare domain becomes `https://<domain>`. An input that already carries a scheme is
-#' honoured as given, keeping its port and path -- otherwise an http-only host is
+#' honored as given, keeping its port and path -- otherwise an http-only host is
 #' unreachable, and the package cannot be exercised against a local test server.
 #'
 #' @param input the caller's original string
@@ -174,7 +174,7 @@ classify_condition <- function(cnd) {
 #'   piedomains' 10 MB. A smaller cap looks prudent and is not: cnn.com's homepage
 #'   alone is roughly 6 MB, so a 2 MB limit rejects major news sites as
 #'   `content_too_large` while they return HTTP 200.
-#' @param obey_robots Whether to fetch and honour robots.txt. Turning this off is
+#' @param obey_robots Whether to fetch and honor robots.txt. Turning this off is
 #'   discouraged and is your responsibility, not the package's.
 #' @param max_crawl_delay Skip a host that asks for a longer delay than this rather than
 #'   sleeping on it.
@@ -191,7 +191,7 @@ classify_condition <- function(cnd) {
 #' @param archive_date Fetch each domain as it was on this date (`"YYYYMMDD"`) from the
 #'   Internet Archive instead of fetching it live. This is how you ask what a domain
 #'   *used to be* -- and, set against a live run, how you measure whether a label has gone
-#'   stale. Rows carry `source = "archive"` and the realised `snapshot_timestamp`, which
+#'   stale. Rows carry `source = "archive"` and the realized `snapshot_timestamp`, which
 #'   is the latest capture on or before the requested day.
 #' @param archive_fallback Opt in to archived content (default `FALSE`). When a host serves an
 #' anti-bot interstitial, try the
@@ -208,7 +208,7 @@ classify_condition <- function(cnd) {
 #'   Live pages have no inferred publication date; `fetched_at` records retrieval.
 #'
 #' @export
-#' @seealso [fetch_report()] to summarise the run, [page_signals()] for what the page
+#' @seealso [fetch_report()] to summarize the run, [page_signals()] for what the page
 #'   states are, [source_vintage()] for how a live fetch compares with the static lists.
 #' @examples \dontrun{
 #' res <- collect_content(c("example.com", "wikipedia.org"))

@@ -13,7 +13,7 @@ taken by the maintainer (see "Decisions").
 
 ## Intuitive tests (before changes)
 
-- `uni_cat`: case, scheme, path and `www.` normalised; exact host only, so
+- `uni_cat`: case, scheme, path and `www.` normalized; exact host only, so
   `cs.stanford.edu` was `no_match`. `news_url_signals`: Bakshy regex over the whole URL.
   NA and `""` inputs rejected at the boundary.
 - `adult_name_probability`: intercept p = 0.313 for any plain `.com` without a keyword
@@ -36,7 +36,7 @@ after it. One commit per item on the branch.
 | 5 | Cache read-back altered bytes (readLines/paste), `content_bytes` recomputed | code read | raw gz write/read, `6a13fb3` |
 | 6 | `fetch_report()$missing` documented as "produced nothing", holds failed rows | code read | doc, `30d5844` |
 | 7 | `cache_clear(dir)` unvalidated | code read | string check, refuses `/` and home, `6a13fb3` |
-| 8 | `pie_cat` top-1 `category` vs contract text "single label only" | code read; maintainer: keep behaviour | contract text, `30d5844` |
+| 8 | `pie_cat` top-1 `category` vs contract text "single label only" | code read; maintainer: keep behavior | contract text, `30d5844` |
 | 9 | Three hand-rolled host normalisers; exact-host lookups | code read; `urltools` already imported | one `clean_domains()`, registrable-domain fallback, `details$matched_key`, `0cafc72` |
 | 10 | 2017 adult keyword model | smoke test above | removed with `glm_shalla` and Matrix/glmnet/stats/methods imports, `8c5ad5b` |
 
@@ -105,7 +105,7 @@ derived path and the refusal.
 ## Decisions
 
 - Maintainer chose: ellmer migration; fix all confirmed defects; keep `pie_cat` top-1
-  and amend the contract text; add host normalisation with registrable-domain fallback;
+  and amend the contract text; add host normalization with registrable-domain fallback;
   remove the adult model; paid smoke tests up to $0.25.
 - Not submitted to CRAN with this record. 0.6.1 was accepted on 2026-10-29; CRAN asks
   for no more than one update every one to two months unless requested, so 0.7.0 should

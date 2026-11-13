@@ -2,7 +2,7 @@
 % Please edit documentation in R/outcomes.R
 \name{fetch_report}
 \alias{fetch_report}
-\title{Summarise the outcome of a fetch or classification run}
+\title{Summarize the outcome of a fetch or classification run}
 \usage{
 fetch_report(x)
 }

@@ -49,12 +49,12 @@ retail. Live, today:
 | domain | prediction | |
 |---|---|---|
 | `walmart.com` | **drugs 0.56** | `shopping` only 0.14 |
-| `zappos.com` | **drugs 0.40** | a shoe catalogue |
+| `zappos.com` | **drugs 0.40** | a shoe catalog |
 | `amazon.com` | shopping 0.37 | `drugs` second at 0.20 |
 | `rei.com` | sports 0.20 | `drugs` second at 0.17 |
 
 `drugs` is in the top two for four of five retailers tested. Treat a `drugs` label on a
-commercial site as unreliable. The fix is a labelling pass, not more data.
+commercial site as unreliable. The fix is a labeling pass, not more data.
 
 ## It is not mutually exclusive, deliberately
 

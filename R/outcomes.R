@@ -65,7 +65,7 @@ RD_ERROR_CODES <- tribble(
 #' @return A tibble with columns `code`, `stage`, `retryable` and `description`.
 #'
 #' @export
-#' @seealso [fetch_report()] to summarise an actual run, [source_vintage()] for the
+#' @seealso [fetch_report()] to summarize an actual run, [source_vintage()] for the
 #'   provenance of the static label sources.
 #' @examples
 #' fetch_error_codes()
@@ -76,7 +76,7 @@ fetch_error_codes <- function() {
   RD_ERROR_CODES
 }
 
-#' Summarise the outcome of a fetch or classification run
+#' Summarize the outcome of a fetch or classification run
 #'
 #' A pure function over the returned tibble, deliberately **not** a stored summary. A
 #' snapshot goes stale the moment you filter the rows; recomputing means

@@ -21,7 +21,7 @@ Unknown scores are \code{NA}, not probabilities inferred from list membership.
 \code{provider} identifies the classifier or list; \code{evidence_type} distinguishes page
 content, archived content, name inference and list membership. \code{details} retains
 source-specific records, including the collected page for piedomains results.
-List lookups match the normalised host first and then its registrable domain
+List lookups match the normalized host first and then its registrable domain
 (public suffix plus one label); \code{details$matched_key} records which key matched.
 Model and source identifiers are reported where known; missing dates stay missing.
 }

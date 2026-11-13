@@ -24,6 +24,6 @@ fetch_error_codes()
 subset(fetch_error_codes(), retryable)
 }
 \seealso{
-\code{\link[=fetch_report]{fetch_report()}} to summarise an actual run, \code{\link[=source_vintage]{source_vintage()}} for the
+\code{\link[=fetch_report]{fetch_report()}} to summarize an actual run, \code{\link[=source_vintage]{source_vintage()}} for the
 provenance of the static label sources.
 }

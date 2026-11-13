@@ -131,7 +131,7 @@ cache_get <- function(dir, url, ttl, settings = NULL) {
   if (is.na(fetched) || difftime(Sys.time(), fetched, units = "secs") > ttl) {
     return(NULL)
   }
-  # Bytes, not lines: readLines() drops the final newline and normalises CRLF, so a
+  # Bytes, not lines: readLines() drops the final newline and normalizes CRLF, so a
   # replayed page would differ from the live one.
   html <- tryCatch(read_gz_text(paths$html), error = function(e) NULL)
   if (is.null(html)) {
