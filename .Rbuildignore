@@ -27,3 +27,4 @@ AGENTS.md
 ^tests/testthat/_problems$
 ^tests/testthat/testthat-problems\.rds$
 ^\.codespellrc$
+^lychee\.toml$
